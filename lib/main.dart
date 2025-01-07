@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      begin: Alignment(0.5, 0.8),
+                      begin: Alignment(0.5, 0.2),
                       end: Alignment(0.5, 1),
                       colors: <Color>[
                       Color.fromARGB(255, 230, 255, 230),
