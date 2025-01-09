@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
             NavigationDestination(
               selectedIcon: Icon(Icons.route),
               icon: Icon(Icons.route_outlined),
-              label: 'Verkehr',
+              label: 'Sexualverkehr',
             ),
                  /*      NavigationDestination(
               icon: Badge(
