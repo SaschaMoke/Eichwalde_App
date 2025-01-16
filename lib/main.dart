@@ -62,6 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
     case 1:
       page = FavoritesPage();
       break;
+    case 2:
+      page = GewerbePage();
+      break;
     /*  case 2;
       page = Placeholder();
       break;*/
@@ -113,7 +116,13 @@ class _MyHomePageState extends State<MyHomePage> {
               selectedIcon: Icon(Icons.route),
               icon: Icon(Icons.route_outlined),
               label: 'Verkehr',
+
             ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.store),
+              icon: Icon(Icons.store_outlined),
+              label: 'Gewerbe',
+            )
                  /*      NavigationDestination(
               icon: Badge(
                 label: Text('2'),
@@ -169,6 +178,14 @@ class FavoritesPage extends StatelessWidget {
           ),
       ],
     );
+  }
+}
+
+
+class GewerbePage extends StatelessWidget {
+  Widget build(BuildContext context) {
+   return 
+    Text('hallo');
   }
 }
 
