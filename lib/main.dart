@@ -1,6 +1,46 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Future<Album> fetchAlbum() async {
+  final response = await http.get(Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&remarks=false'));
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response, then parse the JSON.
+    return Album.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  } else {
+    // If the server did not return a 200 OK response, then throw an exception.
+    throw Exception('No data available');
+  }
+}
+
+class Album {
+  final List departures;
+  final int lastUpdate;
+
+  const Album({
+    required this.departures,
+    required this.lastUpdate,
+  });
+
+  factory Album.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {
+        "departures": List departures,       // 'name in tabelle', was ich brauche pro ding
+        'realtimeDataUpdatedAt': int lastUpdate,       
+      } =>
+        Album(
+          departures: departures,           // wie es im album heißen soll
+          lastUpdate: lastUpdate,
+        ),
+      _ => throw const FormatException('Failed to fetch data.'),
+    };
+  }
+}
+
 void main() {
   runApp(const MyApp());
 }
@@ -57,14 +97,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget page;
   switch (selectedIndex) {
     case 0:
-      page = GeneratorPage();
+      page = Homepage();
       break;
     case 1:
-      page = FavoritesPage();
+      page = Verkehrspage();
       break;
-    /*  case 2;
+    case 2:
+      page = APITestPage();
+      break;
+    case 3:
       page = Placeholder();
-      break;*/
+      break;
     default:
       throw UnimplementedError('no widget for $selectedIndex');
   }
@@ -87,56 +130,58 @@ class _MyHomePageState extends State<MyHomePage> {
           //),
 
           bottomNavigationBar: NavigationBarTheme(
-            data:  NavigationBarThemeData(
-            labelTextStyle: WidgetStatePropertyAll(const TextStyle(
-                  color: Colors.white,
+            data:  const NavigationBarThemeData(
+            labelTextStyle: WidgetStatePropertyAll(TextStyle(
+                  color: Colors.black,
+               ),
+              )
             ),
-            )),
             child: NavigationBar(
-              //backgroundColor: Theme.of(context).colorScheme.primary,
-              backgroundColor: Color.fromRGBO(108, 181, 108, 1),
+              backgroundColor: Color.fromRGBO(150, 200, 150, 1),
               onDestinationSelected: (int index) {
                 setState(() {
                   selectedIndex = index;
             });
-              },
+            },
             indicatorColor: Theme.of(context).colorScheme.primaryContainer,
             selectedIndex: selectedIndex,
             destinations: const <Widget>[
-            NavigationDestination(
-              selectedIcon: Icon(Icons.home),
-              icon: Icon(Icons.home_outlined),
-              label: 'Home', 
-              
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(Icons.route),
-              icon: Icon(Icons.route_outlined),
-              label: 'Verkehr',
-            ),
-                 /*      NavigationDestination(
-              icon: Badge(
-                label: Text('2'),
-                child: Icon(Icons.messenger_sharp),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.home),
+                icon: Icon(Icons.home_outlined),
+                label: 'Home', 
               ),
-              label:'Messages',
-            ), */
-                    ],
-                    ),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.route),
+                icon: Icon(Icons.route_outlined),
+                label: 'Verkehr',
+              ),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.route),
+                icon: Icon(Icons.route_outlined),
+                label: 'Verkehr',
+              ),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.route),
+                icon: Icon(Icons.route_outlined),
+                label: 'Verkehr',
+              ),
+            ],
+            ),
           ),
         body:Container(
                   //color: Theme.of(context).colorScheme.primaryContainer,
                 
-                  decoration: const BoxDecoration(
+                  /* decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment(0.5, 0.8),
                       end: Alignment(0.5, 1),
                       colors: <Color>[
                       Color.fromARGB(255, 230, 255, 230),
-                      Color.fromARGB(255, 151, 209, 151),
+                      Color.fromARGB(255, 150, 200, 150),
                       ],
                     ),
-                  ),
+                  ), */
                   child: page,
           ),
         );
@@ -145,7 +190,64 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class FavoritesPage extends StatelessWidget {
+class APITestPage extends StatefulWidget {
+  @override
+  State<APITestPage> createState() => _APITestPageState();
+}
+
+class _APITestPageState extends State<APITestPage> {
+    late Future<Album> futureAlbum;
+
+ @override
+  void initState() {
+    super.initState();
+    futureAlbum = fetchAlbum();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // return MaterialApp(
+    //   home: Scaffold(
+    //     body: Center(
+    //       child: FutureBuilder<Album>(
+    //         future: futureAlbum,
+    //         builder: (context, snapshot) {
+    //           if (snapshot.hasData) {
+    //             for (var element in snapshot.data!.departures) {
+                  
+    //             };
+    //             return Text('hallo');
+    //           } else if (snapshot.hasError) {
+    //             return Text('${snapshot.error}');
+    //           }
+    //           // By default, show a loading spinner.
+    //           return const CircularProgressIndicator();
+    //         },
+    //       ),
+    //     ),
+    //   ),
+    // );
+
+    return Scaffold(
+        body:ListView.builder(
+          itemBuilder: (context, index) {
+              final departure = [index];
+
+              return ListTile(
+                title: Text(departure.destination),
+                subtitle: Text(
+                  'From: ${departure.stopName}\nWhen: ${departure.when}\nDelay: ${departure.delay} mins',
+                ),
+                trailing: Text(departure.platform ?? 'N/A'),
+              );
+          },
+        ),
+    );
+  }
+}
+
+
+class Verkehrspage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
@@ -172,7 +274,7 @@ class FavoritesPage extends StatelessWidget {
   }
 }
 
-class GeneratorPage extends StatelessWidget {
+class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
