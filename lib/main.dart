@@ -103,10 +103,10 @@ class _MyHomePageState extends State<MyHomePage> {
       page = Verkehrspage();
       break;
     case 2:
-      page = APITestPage();
+      page = GewerbePage();
       break;
     case 3:
-      page = Placeholder();
+      page = APITestPage();
       break;
     default:
       throw UnimplementedError('no widget for $selectedIndex');
@@ -157,9 +157,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: 'Verkehr',
               ),
               NavigationDestination(
-                selectedIcon: Icon(Icons.route),
-                icon: Icon(Icons.route_outlined),
-                label: 'Verkehr',
+                selectedIcon: Icon(Icons.store),
+                icon: Icon(Icons.store_outlined),
+                label: 'Gewerbe',
               ),
               NavigationDestination(
                 selectedIcon: Icon(Icons.route),
@@ -229,19 +229,19 @@ class _APITestPageState extends State<APITestPage> {
     // );
 
     return Scaffold(
-        body:ListView.builder(
-          itemBuilder: (context, index) {
-              final departure = [index];
+        // body:ListView.builder(
+        //   itemBuilder: (context, index) {
+        //       final departure = [index];
 
-              return ListTile(
-                title: Text(departure.destination),
-                subtitle: Text(
-                  'From: ${departure.stopName}\nWhen: ${departure.when}\nDelay: ${departure.delay} mins',
-                ),
-                trailing: Text(departure.platform ?? 'N/A'),
-              );
-          },
-        ),
+        //       return ListTile(
+        //         title: Text(departure.destination),
+        //         subtitle: Text(
+        //           'From: ${departure.stopName}\nWhen: ${departure.when}\nDelay: ${departure.delay} mins',
+        //         ),
+        //         trailing: Text(departure.platform ?? 'N/A'),
+        //       );
+        //   },
+        // ),
     );
   }
 }
@@ -317,6 +317,16 @@ class Homepage extends StatelessWidget {
       );
   }
 }
+
+class GewerbePage extends StatelessWidget{
+@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+
+    );
+  }
+}
+
 
 class RandomBox extends StatelessWidget {
   const RandomBox({
