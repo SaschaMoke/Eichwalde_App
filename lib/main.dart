@@ -134,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
       page = GewerbePage();
       break;
     case 3:
-      page = APITestPage();
+      page = BelaPage();
       break;
     default:
       throw UnimplementedError('no widget for $selectedIndex');
@@ -218,12 +218,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class APITestPage extends StatefulWidget {
+class Verkehrspage extends StatefulWidget {
   @override
-  State<APITestPage> createState() => _APITestPageState();
+  State<Verkehrspage> createState() => _VerkehrspageState();
 }
 
-class _APITestPageState extends State<APITestPage> {
+class _VerkehrspageState extends State<Verkehrspage> {
     late Future<VBBApiResponse> futureAlbum;
 
  @override
@@ -321,34 +321,6 @@ class _APITestPageState extends State<APITestPage> {
   }
 }
 
-
-class Verkehrspage extends StatelessWidget {
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    if (appState.favorites.isEmpty) {
-      return Center(
-        child: Text('No favorites yet.'),
-      );
-    }
-
-  return ListView(
-  children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text('You have '
-              '${appState.favorites.length} favorites:'),
-        ),
-        for (var pair in appState.favorites)
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
-          ),
-      ],
-    );
-  }
-}
-
 class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -396,12 +368,20 @@ class Homepage extends StatelessWidget {
 class GewerbePage extends StatelessWidget{
 @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
 
     );
   }
 }
 
+class BelaPage extends StatelessWidget{
+@override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+
+    );
+  }
+}
 
 class RandomBox extends StatelessWidget {
   const RandomBox({
@@ -428,3 +408,33 @@ class RandomBox extends StatelessWidget {
     );
   }
 }
+
+
+
+
+// class Verkehrspage extends StatelessWidget {
+//   Widget build(BuildContext context) {
+//     var appState = context.watch<MyAppState>();
+
+//     if (appState.favorites.isEmpty) {
+//       return Center(
+//         child: Text('No favorites yet.'),
+//       );
+//     }
+
+//   return ListView(
+//   children: [
+//         Padding(
+//           padding: const EdgeInsets.all(20),
+//           child: Text('You have '
+//               '${appState.favorites.length} favorites:'),
+//         ),
+//         for (var pair in appState.favorites)
+//           ListTile(
+//             leading: Icon(Icons.favorite),
+//             title: Text(pair.asLowerCase),
+//           ),
+//       ],
+//     );
+//   }
+// }
