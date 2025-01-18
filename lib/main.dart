@@ -229,7 +229,7 @@ class _APITestPageState extends State<APITestPage> {
  @override
   void initState() {
     super.initState();
-    futureAlbum = fetchAlbum();
+    futureAlbum = fetchAlbum();   //regelmäßig update
   }
 
   @override
@@ -240,51 +240,74 @@ class _APITestPageState extends State<APITestPage> {
             future: futureAlbum,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Container(
-                  width: 400,
-                  height: 250,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 150, 200, 150),
-                    border: Border.all(
-                      color: Color.fromARGB(255, 255, 255, 255)
+                return Column(
+                  children: [
+                    const SizedBox(
+                      height: 250,
                     ),
-                    borderRadius: BorderRadius.circular(20)
-                  ),
-
-                  child: ListView.builder(
-                    itemCount: snapshot.data!.departures.length,
-                    itemBuilder: (context, index) {
-                    final departure = snapshot.data!.departures[index];
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children:[
-                          Container(
-                            width: 380,
-                            height: 75,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 150, 200, 150),
-                                border: Border.all(
-                                  color: Color.fromARGB(255, 255, 255, 255)
-                                ),
-                                borderRadius: BorderRadius.circular(20)
-                              ),
-                              padding: const EdgeInsets.all(10), //Padding machen, regelmäßig update
-                              child: ListTile(
-                                  tileColor: const Color.fromARGB(50, 50, 50, 50),
-                                  
-                                  title: Text(departure.destination),
-                                  subtitle: Text('When: ${departure.when}\nDelay: ${departure.delay} mins',
-                                  ),
-                                  trailing: Text(departure.platform ?? 'N/A'),
-                                ),
-                            ),
-                          
-                      ],
+                    Container(
+                      width: 400,
+                      height: 400,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 150, 200, 150),
+                        border: Border.all(
+                          color: Color.fromARGB(255, 255, 255, 255)
+                        ),
+                        borderRadius: BorderRadius.circular(20)
                       ),
-                    );
-                    },
-                  ),
+
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                            width: 370,
+                            child: Text(
+                              textAlign: TextAlign.left,                //auf jeden Fall schöner machen
+                              style: TextStyle(
+                                fontSize: 30,
+                              ),'S Eichwalde'),
+                          ),
+
+                          SizedBox(
+                            height: 348,
+                            child: ListView.builder(
+                              itemCount: snapshot.data!.departures.length,
+                              itemBuilder: (context, index) {
+                              final departure = snapshot.data!.departures[index];
+                              return Center(
+                                child: Column(
+                                  children:[
+                                    Container(
+                                      width: 380,
+                                      height: 75,
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(255, 150, 175, 150),
+                                          border: Border.all(
+                                            color: const Color.fromARGB(255, 255, 255, 255)
+                                          ),
+                                          borderRadius: BorderRadius.circular(10)
+                                        ),
+                                        padding: const EdgeInsets.all(5),
+                                        child: ListTile(
+                                            tileColor: const Color.fromARGB(50, 50, 50, 50),
+                                            
+                                            title: Text(departure.destination),
+                                            subtitle: Text('When: ${departure.when}\nDelay: ${departure.delay} mins',
+                                            ),
+                                            trailing: Text(departure.platform ?? 'N/A'),
+                                          ),
+                                      ),
+                                    
+                                ],
+                                ),
+                              );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
