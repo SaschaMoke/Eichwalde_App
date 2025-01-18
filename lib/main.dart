@@ -240,35 +240,52 @@ class _APITestPageState extends State<APITestPage> {
             future: futureAlbum,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.departures.length,
-                  itemBuilder: (context, index) {
-                  final departure = snapshot.data!.departures[index];
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children:[
-                        Container(
-                          padding: const EdgeInsets.all(20), 
-                          color: const Color.fromARGB(50, 50, 50, 50),          //Padding machen, regelmäßig update
-                          child: ListTile(
-                              tileColor: const Color.fromARGB(50, 50, 50, 50),
-                              
-                              title: Text(departure.destination),
-                              subtitle: Text('When: ${departure.when}\nDelay: ${departure.delay} mins',
-                              ),
-                              trailing: Text(departure.platform ?? 'N/A'),
-                            ),
-                        ),
-                    ],
+                return Container(
+                  width: 400,
+                  height: 250,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 150, 200, 150),
+                    border: Border.all(
+                      color: Color.fromARGB(255, 255, 255, 255)
                     ),
-                  );
-                  },
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.departures.length,
+                    itemBuilder: (context, index) {
+                    final departure = snapshot.data!.departures[index];
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children:[
+                          Container(
+                            width: 380,
+                            height: 75,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 150, 200, 150),
+                                border: Border.all(
+                                  color: Color.fromARGB(255, 255, 255, 255)
+                                ),
+                                borderRadius: BorderRadius.circular(20)
+                              ),
+                              padding: const EdgeInsets.all(10), //Padding machen, regelmäßig update
+                              child: ListTile(
+                                  tileColor: const Color.fromARGB(50, 50, 50, 50),
+                                  
+                                  title: Text(departure.destination),
+                                  subtitle: Text('When: ${departure.when}\nDelay: ${departure.delay} mins',
+                                  ),
+                                  trailing: Text(departure.platform ?? 'N/A'),
+                                ),
+                            ),
+                          
+                      ],
+                      ),
+                    );
+                    },
+                  ),
                 );
-          
-               
-                
-                //return Text('hallo');
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
@@ -278,22 +295,6 @@ class _APITestPageState extends State<APITestPage> {
           ),
         ),
       );
-
-    // return Scaffold(
-    //     body:ListView.builder(
-    //       itemBuilder: (context, index) {
-    //           final departure = [index];
-
-    //           return ListTile(
-    //             title: Text(departure.destination),
-    //             subtitle: Text(
-    //               'From: ${departure.stopName}\nWhen: ${departure.when}\nDelay: ${departure.delay} mins',
-    //             ),
-    //             trailing: Text(departure.platform ?? 'N/A'),
-    //           );
-    //       },
-    //     ),
-    // );
   }
 }
 
