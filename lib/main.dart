@@ -5,39 +5,67 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<Album> fetchAlbum() async {
+Future<VBBApiResponse> fetchAlbum() async {
   final response = await http.get(Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&remarks=false'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, then parse the JSON.
-    return Album.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    return VBBApiResponse.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   } else {
     // If the server did not return a 200 OK response, then throw an exception.
     throw Exception('No data available');
   }
 }
 
-class Album {
+class Departure {
+  final String destination;
+  final String when;
+  final int delay;
+  final String? platform;
+
+  Departure({
+    required this.destination,
+    required this.when,
+    required this.delay,
+    this.platform,
+  });
+  
+  factory Departure.fromJson(Map<String, dynamic> json) {
+    return Departure(
+      destination: json['destination']['name'],
+      when: json['when'],
+      delay: json['delay'],
+      platform: json['platform'],
+    );
+  }
+}
+
+class VBBApiResponse {
   final List departures;
   final int lastUpdate;
 
-  const Album({
+  const VBBApiResponse({
     required this.departures,
     required this.lastUpdate,
   });
 
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {
-        "departures": List departures,       // 'name in tabelle', was ich brauche pro ding
-        'realtimeDataUpdatedAt': int lastUpdate,       
-      } =>
-        Album(
-          departures: departures,           // wie es im album heißen soll
-          lastUpdate: lastUpdate,
-        ),
-      _ => throw const FormatException('Failed to fetch data.'),
-    };
+  factory VBBApiResponse.fromJson(Map<String, dynamic> json) {
+    return VBBApiResponse(
+      departures: List.from(json['departures'].map((x) => Departure.fromJson(x)),),
+      lastUpdate: json['realtimeDataUpdatedAt'],
+    );
+  
+    // return switch (json) {
+    //   {
+    //     "departures": List departures,       // 'name in tabelle', was ich brauche pro ding
+    //     'realtimeDataUpdatedAt': int lastUpdate,       
+    //   } =>
+    //     VBBApiResponse(
+    //       departures: departures,           // wie es im album heißen soll
+    //       lastUpdate: lastUpdate,
+    //     ),
+    //   _ => throw const FormatException('Failed to fetch data.'),
+    // };
   }
 }
 
@@ -164,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
               NavigationDestination(
                 selectedIcon: Icon(Icons.route),
                 icon: Icon(Icons.route_outlined),
-                label: 'Verkehr',
+                label: 'apitestgedöns',
               ),
             ],
             ),
@@ -196,7 +224,7 @@ class APITestPage extends StatefulWidget {
 }
 
 class _APITestPageState extends State<APITestPage> {
-    late Future<Album> futureAlbum;
+    late Future<VBBApiResponse> futureAlbum;
 
  @override
   void initState() {
@@ -206,43 +234,66 @@ class _APITestPageState extends State<APITestPage> {
 
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp(
-    //   home: Scaffold(
-    //     body: Center(
-    //       child: FutureBuilder<Album>(
-    //         future: futureAlbum,
-    //         builder: (context, snapshot) {
-    //           if (snapshot.hasData) {
-    //             for (var element in snapshot.data!.departures) {
-                  
-    //             };
-    //             return Text('hallo');
-    //           } else if (snapshot.hasError) {
-    //             return Text('${snapshot.error}');
-    //           }
-    //           // By default, show a loading spinner.
-    //           return const CircularProgressIndicator();
-    //         },
-    //       ),
-    //     ),
-    //   ),
-    // );
-
     return Scaffold(
-        // body:ListView.builder(
-        //   itemBuilder: (context, index) {
-        //       final departure = [index];
+        body: Center(
+          child: FutureBuilder<VBBApiResponse>(
+            future: futureAlbum,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.departures.length,
+                  itemBuilder: (context, index) {
+                  final departure = snapshot.data!.departures[index];
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:[
+                        Container(
+                          padding: const EdgeInsets.all(20), 
+                          color: const Color.fromARGB(50, 50, 50, 50),          //Padding machen, regelmäßig update
+                          child: ListTile(
+                              tileColor: const Color.fromARGB(50, 50, 50, 50),
+                              
+                              title: Text(departure.destination),
+                              subtitle: Text('When: ${departure.when}\nDelay: ${departure.delay} mins',
+                              ),
+                              trailing: Text(departure.platform ?? 'N/A'),
+                            ),
+                        ),
+                    ],
+                    ),
+                  );
+                  },
+                );
+          
+               
+                
+                //return Text('hallo');
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              // By default, show a loading spinner.
+              return const CircularProgressIndicator();
+            },
+          ),
+        ),
+      );
 
-        //       return ListTile(
-        //         title: Text(departure.destination),
-        //         subtitle: Text(
-        //           'From: ${departure.stopName}\nWhen: ${departure.when}\nDelay: ${departure.delay} mins',
-        //         ),
-        //         trailing: Text(departure.platform ?? 'N/A'),
-        //       );
-        //   },
-        // ),
-    );
+    // return Scaffold(
+    //     body:ListView.builder(
+    //       itemBuilder: (context, index) {
+    //           final departure = [index];
+
+    //           return ListTile(
+    //             title: Text(departure.destination),
+    //             subtitle: Text(
+    //               'From: ${departure.stopName}\nWhen: ${departure.when}\nDelay: ${departure.delay} mins',
+    //             ),
+    //             trailing: Text(departure.platform ?? 'N/A'),
+    //           );
+    //       },
+    //     ),
+    // );
   }
 }
 
