@@ -11,20 +11,29 @@ class Departure {
   final String when;
   final int delay;
   final String? platform;
+  final String line;
+  final String product;
+  //final bool? cancelled;
 
   Departure({
     required this.destination,
-    this.when = 'Cancelled',
+    this.when = 'Fahrt fällt aus',
     this.delay = 0,
     this.platform,
+    this.line = 'Unbekannt',
+    this.product = 'Unbekannt',
+    //this.cancelled,
   });
   
   factory Departure.fromJson(Map<String, dynamic> json) {
     return Departure(
       destination: json['destination']['name'],
-      when: json['when'] ?? 'Cancelled',
+      when: json['when'] ?? 'Fahrt fällt aus',
       delay: json['delay'] ?? 0,
       platform: json['platform'],
+      line: json['line']['name'],
+      product: json['line']['product'],
+      //cancelled: json['cancelled'],
     );
   }
   String get formattedHour {
@@ -32,7 +41,7 @@ class Departure {
       final dateTime = DateTime.parse(when).toLocal();
       return DateFormat('HH').format(dateTime); // Nur Stunden
     } catch (e) {
-      return "N/A"; // Falls das Parsen fehlschlägt
+      return "N/A"; 
     }
   }
   String get formattedMin {
@@ -40,7 +49,7 @@ class Departure {
       final dateTime = DateTime.parse(when).toLocal();
       return DateFormat('mm').format(dateTime); // Nur Minuten
     } catch (e) {
-      return "N/A"; // Falls das Parsen fehlschlägt
+      return "N/A"; 
     }
   }
 }
@@ -282,7 +291,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         textAlign: TextAlign.left,                //auf jeden Fall schöner machen
                         style: TextStyle(
                           fontSize: 30, 
-                        ),'S Eichwalde'
+                        ),
+                        'S Eichwalde'
                       ),
                     ),
                     SizedBox(
@@ -292,6 +302,17 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         itemBuilder: (context, index) {
                         final departure = departures[index];
                         
+                        Color timecolor = const Color.fromARGB(255, 0, 0, 0);
+                        var delay = (departure.delay)/60;
+                        if (delay > 0 && delay < 5)  {
+                          timecolor = const Color.fromARGB(255, 255, 175, 0);
+                        } else if (delay > 5) {
+                          timecolor = const Color.fromARGB(255, 255, 0, 0);
+                        }
+                        else {
+                          timecolor = const Color.fromARGB(255, 0, 0, 0);
+                        }
+
                         int mincount;
                         String deptime;
                         var formattedHour = int.parse(departure.formattedHour);
@@ -302,53 +323,89 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           mincount = (formattedMin+(60-currentMin));
                         }
                         if (mincount == 0) {
-                          deptime = 'jetzt';
+                          if (delay > 0) {
+                            deptime = 'jetzt (+ ${delay.round()})';
+                          } else {
+                            deptime = 'jetzt';
+                          }
                         } else {
-                          deptime = 'in $mincount min';
+                          if (delay > 0) {
+                            deptime = 'in $mincount min (+ ${delay.round()})';
+                          } else {
+                            deptime = 'in $mincount min';
+                          }
                         }
-                          return Center(
-                            child: Column(
-                              children:[
-                                SizedBox(
-                                  width: 380,
-                                  height: 80,
 
-                                  //decoration: BoxDecoration(
-                                  //  color: const Color.fromARGB(255, 150, 175, 150),
-                                  //  border: Border.all(
-                                  //    color: const Color.fromARGB(255, 255, 255, 255)
-                                  //),
-                                  //  borderRadius: BorderRadius.circular(10)
-                                  //),
-                                  //padding: const EdgeInsets.all(5),
-                                  child: Card(
-                                    child: ListTile(
-                                      leading: const Icon(Icons.bus_alert),
-                                      title: Text(departure.destination),
-                                      trailing: Text(
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                        ),
-                                        deptime
-                                      ), 
-                                      //subtitle: Text('$formattedHour $formattedMin'),
-                                      //trailing: Text(departure.platform ?? 'N/A'),
+                        TextStyle deststyle;
+                        if (departure.when == 'Fahrt fällt aus') {
+                          deststyle = const TextStyle(
+                            fontSize: 17,
+                            color: Color.fromARGB(255, 255, 0, 0),
+                            decoration: TextDecoration.lineThrough,
+                          );
+                        } else {
+                            deststyle = const TextStyle(
+                            fontSize: 17,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            decoration: TextDecoration.none,
+                          );
+                        }
+
+                        AssetImage lineImage = const AssetImage('Assets/Bus.png');
+                        if (departure.product == 'suburban') {
+                          if (departure.line == 'S46') {
+                            lineImage = const AssetImage('Assets/S46.png');
+                          } else if (departure.line == 'S8') {
+                            lineImage = const AssetImage('Assets/S8.png');
+                          }
+                        } else {
+                          //bus logo, linie schreiben
+                        }
+
+                        return Center(
+                          child: Column(
+                            children:[
+                              SizedBox(
+                                width: 380,
+                                height: 80,
+                                child: Card(
+                                  child: ListTile(
+                                    leading: Image(
+                                      image: lineImage,
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                      title: Text(
+                                        style: deststyle,
+                                        maxLines: 1,
+                                        departure.destination),
+                                    subtitle: Text(
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: timecolor,
+                                      ),
+                                      deptime
+                                    ), 
+                                    trailing: const Icon(
+                                      size: 25,
+                                      Icons.keyboard_arrow_down_rounded
                                     ),
                                   ),
-                                ),  
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                                ),
+                              ),  
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          )
-        ),
-      );
+            ),
+          ],
+        )
+      ),
+    );
   }
 }
 
