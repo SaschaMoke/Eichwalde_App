@@ -27,10 +27,18 @@ class Departure {
       platform: json['platform'],
     );
   }
-  String get formattedTime {
+  String get formattedHour {
     try {
-      final dateTime = DateTime.parse(when);
-      return DateFormat('HH:mm').format(dateTime); // Nur Stunden und Minuten
+      final dateTime = DateTime.parse(when).toLocal();
+      return DateFormat('HH').format(dateTime); // Nur Stunden
+    } catch (e) {
+      return "N/A"; // Falls das Parsen fehlschlägt
+    }
+  }
+  String get formattedMin {
+    try {
+      final dateTime = DateTime.parse(when).toLocal();
+      return DateFormat('mm').format(dateTime); // Nur Minuten
     } catch (e) {
       return "N/A"; // Falls das Parsen fehlschlägt
     }
@@ -244,6 +252,10 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    var currentHour = int.parse(DateFormat('HH').format(now));
+    var currentMin = int.parse(DateFormat('mm').format(now));
+
     return Scaffold(
         body: Center(
           child: Column(  
@@ -257,7 +269,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 150, 200, 150),
                   border: Border.all(
-                    color: Color.fromARGB(255, 255, 255, 255)
+                    color: const Color.fromARGB(255, 255, 255, 255)
                   ),
                   borderRadius: BorderRadius.circular(20)
                 ),
@@ -279,12 +291,28 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         itemCount: departures.length,
                         itemBuilder: (context, index) {
                         final departure = departures[index];
+                        
+                        int mincount;
+                        String deptime;
+                        var formattedHour = int.parse(departure.formattedHour);
+                        var formattedMin = int.parse(departure.formattedMin);
+                        if (formattedHour == currentHour) {
+                          mincount = (formattedMin-currentMin);
+                        } else {
+                          mincount = (formattedMin+(60-currentMin));
+                        }
+                        if (mincount == 0) {
+                          deptime = 'jetzt';
+                        } else {
+                          deptime = 'in $mincount min';
+                        }
                           return Center(
                             child: Column(
                               children:[
                                 SizedBox(
                                   width: 380,
                                   height: 80,
+
                                   //decoration: BoxDecoration(
                                   //  color: const Color.fromARGB(255, 150, 175, 150),
                                   //  border: Border.all(
@@ -295,11 +323,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                   //padding: const EdgeInsets.all(5),
                                   child: Card(
                                     child: ListTile(
-                                      leading: Icon(Icons.bus_alert),
+                                      leading: const Icon(Icons.bus_alert),
                                       title: Text(departure.destination),
-                                      //hier rechnungen wegen min machen
-                                      trailing: Text(departure.formattedTime), 
-                                      //subtitle: Text('When: ${departure.when}\nDelay: ${departure.delay} mins',),
+                                      trailing: Text(
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                        ),
+                                        deptime
+                                      ), 
+                                      //subtitle: Text('$formattedHour $formattedMin'),
                                       //trailing: Text(departure.platform ?? 'N/A'),
                                     ),
                                   ),
