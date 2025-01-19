@@ -4,18 +4,7 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-Future<VBBApiResponse> fetchAlbum() async {
-  final response = await http.get(Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&remarks=false'));
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response, then parse the JSON.
-    return VBBApiResponse.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-  } else {
-    // If the server did not return a 200 OK response, then throw an exception.
-    throw Exception('No data available');
-  }
-}
+import 'package:intl/intl.dart';
 
 class Departure {
   final String destination;
@@ -25,21 +14,28 @@ class Departure {
 
   Departure({
     required this.destination,
-    required this.when,
-    required this.delay,
+    this.when = 'Cancelled',
+    this.delay = 0,
     this.platform,
   });
   
   factory Departure.fromJson(Map<String, dynamic> json) {
     return Departure(
       destination: json['destination']['name'],
-      when: json['when'],
-      delay: json['delay'],
+      when: json['when'] ?? 'Cancelled',
+      delay: json['delay'] ?? 0,
       platform: json['platform'],
     );
   }
+  String get formattedTime {
+    try {
+      final dateTime = DateTime.parse(when);
+      return DateFormat('HH:mm').format(dateTime); // Nur Stunden und Minuten
+    } catch (e) {
+      return "N/A"; // Falls das Parsen fehlschlägt
+    }
+  }
 }
-
 class VBBApiResponse {
   final List departures;
   final int lastUpdate;
@@ -54,18 +50,6 @@ class VBBApiResponse {
       departures: List.from(json['departures'].map((x) => Departure.fromJson(x)),),
       lastUpdate: json['realtimeDataUpdatedAt'],
     );
-  
-    // return switch (json) {
-    //   {
-    //     "departures": List departures,       // 'name in tabelle', was ich brauche pro ding
-    //     'realtimeDataUpdatedAt': int lastUpdate,       
-    //   } =>
-    //     VBBApiResponse(
-    //       departures: departures,           // wie es im album heißen soll
-    //       lastUpdate: lastUpdate,
-    //     ),
-    //   _ => throw const FormatException('Failed to fetch data.'),
-    // };
   }
 }
 
@@ -224,98 +208,113 @@ class Verkehrspage extends StatefulWidget {
 }
 
 class _VerkehrspageState extends State<Verkehrspage> {
-    late Future<VBBApiResponse> futureAlbum;
+    List departures = [];
+    Timer? timer;
 
  @override
   void initState() {
     super.initState();
-    futureAlbum = fetchAlbum();   //regelmäßig update
+    fetchAndUpdateData(); 
+    timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
+  }
+  @override
+    void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> fetchAndUpdateData() async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&remarks=false&duration=60'),
+      );
+
+      if (response.statusCode == 200) {
+        final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
+        setState(() {
+          departures = apiResponse.departures;
+        });
+      } else {
+        throw Exception('Failed to load data');        //evtl anzeigen lassen 
+      }
+    } catch (error) {
+      print('Error fetching data: $error');             //evtl anzeigen lassen
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-          child: FutureBuilder<VBBApiResponse>(
-            future: futureAlbum,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
+          child: Column(  
+            children: [
+              const SizedBox(
+                height: 250,
+              ),
+              Container(
+                width: 400,
+                height: 400,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 150, 200, 150),
+                  border: Border.all(
+                    color: Color.fromARGB(255, 255, 255, 255)
+                  ),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: Column(
                   children: [
                     const SizedBox(
-                      height: 250,
-                    ),
-                    Container(
-                      width: 400,
-                      height: 400,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 150, 200, 150),
-                        border: Border.all(
-                          color: Color.fromARGB(255, 255, 255, 255)
-                        ),
-                        borderRadius: BorderRadius.circular(20)
+                      height: 40,
+                      width: 370,
+                      child: Text(
+                        textAlign: TextAlign.left,                //auf jeden Fall schöner machen
+                        style: TextStyle(
+                          fontSize: 30, 
+                        ),'S Eichwalde'
                       ),
-
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 50,
-                            width: 370,
-                            child: Text(
-                              textAlign: TextAlign.left,                //auf jeden Fall schöner machen
-                              style: TextStyle(
-                                fontSize: 30,
-                              ),'S Eichwalde'),
-                          ),
-
-                          SizedBox(
-                            height: 348,
-                            child: ListView.builder(
-                              itemCount: snapshot.data!.departures.length,
-                              itemBuilder: (context, index) {
-                              final departure = snapshot.data!.departures[index];
-                              return Center(
-                                child: Column(
-                                  children:[
-                                    Container(
-                                      width: 380,
-                                      height: 75,
-                                        decoration: BoxDecoration(
-                                          color: const Color.fromARGB(255, 150, 175, 150),
-                                          border: Border.all(
-                                            color: const Color.fromARGB(255, 255, 255, 255)
-                                          ),
-                                          borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        padding: const EdgeInsets.all(5),
-                                        child: ListTile(
-                                            tileColor: const Color.fromARGB(50, 50, 50, 50),
-                                            
-                                            title: Text(departure.destination),
-                                            subtitle: Text('When: ${departure.when}\nDelay: ${departure.delay} mins',
-                                            ),
-                                            trailing: Text(departure.platform ?? 'N/A'),
-                                          ),
-                                      ),
-                                    
-                                ],
-                                ),
-                              );
-                              },
+                    ),
+                    SizedBox(
+                      height: 330,
+                      child: ListView.builder(
+                        itemCount: departures.length,
+                        itemBuilder: (context, index) {
+                        final departure = departures[index];
+                          return Center(
+                            child: Column(
+                              children:[
+                                SizedBox(
+                                  width: 380,
+                                  height: 80,
+                                  //decoration: BoxDecoration(
+                                  //  color: const Color.fromARGB(255, 150, 175, 150),
+                                  //  border: Border.all(
+                                  //    color: const Color.fromARGB(255, 255, 255, 255)
+                                  //),
+                                  //  borderRadius: BorderRadius.circular(10)
+                                  //),
+                                  //padding: const EdgeInsets.all(5),
+                                  child: Card(
+                                    child: ListTile(
+                                      leading: Icon(Icons.bus_alert),
+                                      title: Text(departure.destination),
+                                      //hier rechnungen wegen min machen
+                                      trailing: Text(departure.formattedTime), 
+                                      //subtitle: Text('When: ${departure.when}\nDelay: ${departure.delay} mins',),
+                                      //trailing: Text(departure.platform ?? 'N/A'),
+                                    ),
+                                  ),
+                                ),  
+                              ],
                             ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ),
                   ],
-                );
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-              // By default, show a loading spinner.
-              return const CircularProgressIndicator();
-            },
-          ),
+                ),
+              ),
+            ],
+          )
         ),
       );
   }
@@ -408,33 +407,3 @@ class RandomBox extends StatelessWidget {
     );
   }
 }
-
-
-
-
-// class Verkehrspage extends StatelessWidget {
-//   Widget build(BuildContext context) {
-//     var appState = context.watch<MyAppState>();
-
-//     if (appState.favorites.isEmpty) {
-//       return Center(
-//         child: Text('No favorites yet.'),
-//       );
-//     }
-
-//   return ListView(
-//   children: [
-//         Padding(
-//           padding: const EdgeInsets.all(20),
-//           child: Text('You have '
-//               '${appState.favorites.length} favorites:'),
-//         ),
-//         for (var pair in appState.favorites)
-//           ListTile(
-//             leading: Icon(Icons.favorite),
-//             title: Text(pair.asLowerCase),
-//           ),
-//       ],
-//     );
-//   }
-// }
