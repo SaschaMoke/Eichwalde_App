@@ -4,42 +4,55 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-Future<VBBApiResponse> fetchAlbum() async {
-  final response = await http.get(Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&remarks=false'));
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response, then parse the JSON.
-    return VBBApiResponse.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-  } else {
-    // If the server did not return a 200 OK response, then throw an exception.
-    throw Exception('No data available');
-  }
-}
+import 'package:intl/intl.dart';
 
 class Departure {
   final String destination;
   final String when;
   final int delay;
   final String? platform;
+  final String line;
+  final String product;
+  //final bool? cancelled;
 
   Departure({
     required this.destination,
-    required this.when,
-    required this.delay,
+    this.when = 'Fahrt fällt aus',
+    this.delay = 0,
     this.platform,
+    this.line = 'Unbekannt',
+    this.product = 'Unbekannt',
+    //this.cancelled,
   });
   
   factory Departure.fromJson(Map<String, dynamic> json) {
     return Departure(
       destination: json['destination']['name'],
-      when: json['when'],
-      delay: json['delay'],
+      when: json['when'] ?? 'Fahrt fällt aus',
+      delay: json['delay'] ?? 0,
       platform: json['platform'],
+      line: json['line']['name'],
+      product: json['line']['product'],
+      //cancelled: json['cancelled'],
     );
   }
+  String get formattedHour {
+    try {
+      final dateTime = DateTime.parse(when).toLocal();
+      return DateFormat('HH').format(dateTime); // Nur Stunden
+    } catch (e) {
+      return "0"; 
+    }
+  }
+  String get formattedMin {
+    try {
+      final dateTime = DateTime.parse(when).toLocal();
+      return DateFormat('mm').format(dateTime); // Nur Minuten
+    } catch (e) {
+      return "0"; 
+    }
+  }
 }
-
 class VBBApiResponse {
   final List departures;
   final int lastUpdate;
@@ -54,18 +67,6 @@ class VBBApiResponse {
       departures: List.from(json['departures'].map((x) => Departure.fromJson(x)),),
       lastUpdate: json['realtimeDataUpdatedAt'],
     );
-  
-    // return switch (json) {
-    //   {
-    //     "departures": List departures,       // 'name in tabelle', was ich brauche pro ding
-    //     'realtimeDataUpdatedAt': int lastUpdate,       
-    //   } =>
-    //     VBBApiResponse(
-    //       departures: departures,           // wie es im album heißen soll
-    //       lastUpdate: lastUpdate,
-    //     ),
-    //   _ => throw const FormatException('Failed to fetch data.'),
-    // };
   }
 }
 
@@ -134,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
       page = GewerbePage();
       break;
     case 3:
-      page = APITestPage();
+      page = BelaPage();
       break;
     default:
       throw UnimplementedError('no widget for $selectedIndex');
@@ -192,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
               NavigationDestination(
                 selectedIcon: Icon(Icons.route),
                 icon: Icon(Icons.route_outlined),
-                label: 'apitestgedöns',
+                label: 'Bela',
               ),
             ],
             ),
@@ -218,133 +219,249 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class APITestPage extends StatefulWidget {
+class Verkehrspage extends StatefulWidget {
   @override
-  State<APITestPage> createState() => _APITestPageState();
+  State<Verkehrspage> createState() => _VerkehrspageState();
 }
 
-class _APITestPageState extends State<APITestPage> {
-    late Future<VBBApiResponse> futureAlbum;
+class _VerkehrspageState extends State<Verkehrspage> {
+    List departures = [];
+    Timer? timer;
+    //bool expanded = false;
+    int? expandedIndex;
+    int? selectedindex;
 
  @override
   void initState() {
     super.initState();
-    futureAlbum = fetchAlbum();   //regelmäßig update
+    fetchAndUpdateData(); 
+    timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
+  }
+  @override
+    void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  //list sortieren nach zeit
+  Future<void> fetchAndUpdateData() async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&remarks=false&duration=60'),
+      );
+
+      if (response.statusCode == 200) {
+        final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
+        setState(() {
+          departures = apiResponse.departures;
+        });
+      } else {
+        throw Exception('Failed to load data');        //evtl anzeigen lassen 
+      }
+    } catch (error) {
+      print('Error fetching data: $error');             //evtl anzeigen lassen
+    }
+  }
+
+  void expand(int index) {
+    setState(() {
+      //expanded = !expanded;
+      expandedIndex = (expandedIndex == index) ? null : index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    var currentHour = int.parse(DateFormat('HH').format(now));
+    var currentMin = int.parse(DateFormat('mm').format(now));
+
     return Scaffold(
         body: Center(
-          child: FutureBuilder<VBBApiResponse>(
-            future: futureAlbum,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
+          child: Column(  
+            children: [
+              const SizedBox(
+                height: 250,
+              ),
+              Container(
+                width: 400,
+                height: 400,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 150, 200, 150),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 255, 255, 255)
+                  ),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: Column(
                   children: [
                     const SizedBox(
-                      height: 250,
-                    ),
-                    Container(
-                      width: 400,
-                      height: 400,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 150, 200, 150),
-                        border: Border.all(
-                          color: Color.fromARGB(255, 255, 255, 255)
+                      height: 40,
+                      width: 370,
+                      child: Text(
+                        textAlign: TextAlign.left,                //auf jeden Fall schöner machen
+                        style: TextStyle(
+                          fontSize: 30, 
                         ),
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 50,
-                            width: 370,
-                            child: Text(
-                              textAlign: TextAlign.left,                //auf jeden Fall schöner machen
-                              style: TextStyle(
-                                fontSize: 30,
-                              ),'S Eichwalde'),
-                          ),
-
-                          SizedBox(
-                            height: 348,
-                            child: ListView.builder(
-                              itemCount: snapshot.data!.departures.length,
-                              itemBuilder: (context, index) {
-                              final departure = snapshot.data!.departures[index];
-                              return Center(
-                                child: Column(
-                                  children:[
-                                    Container(
-                                      width: 380,
-                                      height: 75,
-                                        decoration: BoxDecoration(
-                                          color: const Color.fromARGB(255, 150, 175, 150),
-                                          border: Border.all(
-                                            color: const Color.fromARGB(255, 255, 255, 255)
-                                          ),
-                                          borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        padding: const EdgeInsets.all(5),
-                                        child: ListTile(
-                                            tileColor: const Color.fromARGB(50, 50, 50, 50),
-                                            
-                                            title: Text(departure.destination),
-                                            subtitle: Text('When: ${departure.when}\nDelay: ${departure.delay} mins',
-                                            ),
-                                            trailing: Text(departure.platform ?? 'N/A'),
-                                          ),
-                                      ),
-                                    
-                                ],
-                                ),
-                              );
-                              },
-                            ),
-                          ),
-                        ],
+                        'S Eichwalde'
                       ),
                     ),
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-              // By default, show a loading spinner.
-              return const CircularProgressIndicator();
-            },
-          ),
-        ),
-      );
-  }
-}
+                    SizedBox(
+                      height: 330,
+                      child: ListView.builder(
+                        itemCount: departures.length,
+                        itemBuilder: (context, index) {
+                        final departure = departures[index];
+                        final expanded = expandedIndex == index;
+                        
+                        Color timecolor = const Color.fromARGB(255, 0, 0, 0);
+                        var delay = (departure.delay)/60;
+                        if (delay > 0 && delay < 5)  {
+                          timecolor = const Color.fromARGB(255, 255, 175, 0);
+                        } else if (delay > 5) {
+                          timecolor = const Color.fromARGB(255, 255, 0, 0);
+                        }
+                        else {
+                          timecolor = const Color.fromARGB(255, 0, 0, 0);
+                        }
+
+                        int mincount;
+                        String deptime;
+                        var formattedHour = int.parse(departure.formattedHour);
+                        var formattedMin = int.parse(departure.formattedMin);
+                        if (formattedHour == currentHour) {
+                          mincount = (formattedMin-currentMin);
+                        } else {
+                          mincount = (formattedMin+(60-currentMin));
+                        }
+                        if (mincount == 0) {
+                          if (delay > 0) {
+                            deptime = 'jetzt (+ ${delay.round()})';
+                          } else {
+                            deptime = 'jetzt';
+                          }
+                        } else {
+                          if (delay > 0) {
+                            deptime = 'in $mincount min (+ ${delay.round()})';
+                          } else {
+                            deptime = 'in $mincount min';
+                          }
+                        }
+
+                        TextStyle deststyle;
+                        if (departure.when == 'Fahrt fällt aus') {
+                          deststyle = const TextStyle(
+                            fontSize: 17,
+                            color: Color.fromARGB(255, 255, 0, 0),
+                            decoration: TextDecoration.lineThrough,
+                          );
+                          deptime = 'Fahrt fällt aus';
+                        } else {
+                          deststyle = const TextStyle(
+                            fontSize: 17,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            decoration: TextDecoration.none,
+                          );
+                        }
+
+                        AssetImage lineImage = const AssetImage('Assets/Bus.png');
+                        SizedBox linelogo;
+                        if (departure.product == 'suburban') {
+                          if (departure.line == 'S46') {
+                            lineImage = const AssetImage('Assets/S46.png');
+                          } else if (departure.line == 'S8') {
+                            lineImage = const AssetImage('Assets/S8.png');
+                          }
+                          linelogo = SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: Image(image: lineImage)
+                          );
+                        } else {
+                          linelogo = SizedBox(
+                            height: 60,
+                            width: 40,
+                            child: 
+                              Column(
+                                children: [
+                                  Image(
+                                    image: lineImage,
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                  const SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    departure.line,
+                                  ),
+                                ],
+                              ),
+                          );
+                        }
+
+                        double tileheight;
+                        IconData arrow;
+                        int linecount;
+                        if (expanded) {
+                          tileheight = 160;
+                          arrow = Icons.keyboard_arrow_up_rounded;
+                          linecount = 2;
+                        } else {
+                          tileheight = 80;
+                          arrow = Icons.keyboard_arrow_down_rounded;
+                          linecount = 1;
+                        }
 
 
-class Verkehrspage extends StatelessWidget {
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    if (appState.favorites.isEmpty) {
-      return Center(
-        child: Text('No favorites yet.'),
-      );
-    }
-
-  return ListView(
-  children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text('You have '
-              '${appState.favorites.length} favorites:'),
-        ),
-        for (var pair in appState.favorites)
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
-          ),
-      ],
+                        return Center(
+                          child: Column(
+                            children:[
+                              SizedBox(
+                                width: 380,
+                                height: tileheight,
+                                child: Card(
+                                  child: ListTile(
+                                    onTap: () => expand(index),
+                                    leading: SizedBox(
+                                      height: 60,
+                                      width: 40,
+                                      child: linelogo,
+                                    ),
+                                      title: Text(
+                                        style: deststyle,
+                                        maxLines: linecount,
+                                        departure.destination),
+                                    subtitle: Text(
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: timecolor,
+                                      ),
+                                      deptime
+                                    ), 
+                                    trailing: Icon(
+                                      size: 25,
+                                      arrow
+                                    ),
+                                  ),
+                                ),
+                              ),  
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )
+      ),
     );
   }
 }
@@ -399,24 +516,32 @@ class GewerbePage extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title:Text(
-            'Gewerbe',
-            style: TextStyle(
+        title:Text(
+          'Gewerbe',
+          style: TextStyle(
             color: Colors.lightGreen[700],
             fontSize:40,
             fontWeight: FontWeight.w500,
             letterSpacing:4.0,
-              ),
           ),
-          centerTitle: true,
+        ),
+        centerTitle: true,
       ),
-      body:Center(
+      body:const Center(
         child: Text('Komma') ,
       )
     );
   }
 }
 
+class BelaPage extends StatelessWidget{
+@override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+
+    );
+  }
+}
 
 class RandomBox extends StatelessWidget {
   const RandomBox({
