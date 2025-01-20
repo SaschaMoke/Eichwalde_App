@@ -513,8 +513,22 @@ class Homepage extends StatelessWidget {
 class GewerbePage extends StatelessWidget{
 @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-
+    return Scaffold(
+      appBar: AppBar(
+        title:Text(
+          'Gewerbe',
+          style: TextStyle(
+            color: Colors.lightGreen[700],
+            fontSize:40,
+            fontWeight: FontWeight.w500,
+            letterSpacing:4.0,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body:const Center(
+        child: Text('Komma') ,
+      )
     );
   }
 }
