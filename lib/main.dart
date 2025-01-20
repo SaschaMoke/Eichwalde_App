@@ -41,7 +41,7 @@ class Departure {
       final dateTime = DateTime.parse(when).toLocal();
       return DateFormat('HH').format(dateTime); // Nur Stunden
     } catch (e) {
-      return "N/A"; 
+      return "0"; 
     }
   }
   String get formattedMin {
@@ -49,7 +49,7 @@ class Departure {
       final dateTime = DateTime.parse(when).toLocal();
       return DateFormat('mm').format(dateTime); // Nur Minuten
     } catch (e) {
-      return "N/A"; 
+      return "0"; 
     }
   }
 }
@@ -227,6 +227,9 @@ class Verkehrspage extends StatefulWidget {
 class _VerkehrspageState extends State<Verkehrspage> {
     List departures = [];
     Timer? timer;
+    //bool expanded = false;
+    int? expandedIndex;
+    int? selectedindex;
 
  @override
   void initState() {
@@ -240,6 +243,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
     super.dispose();
   }
 
+  //list sortieren nach zeit
   Future<void> fetchAndUpdateData() async {
     try {
       final response = await http.get(
@@ -257,6 +261,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
     } catch (error) {
       print('Error fetching data: $error');             //evtl anzeigen lassen
     }
+  }
+
+  void expand(int index) {
+    setState(() {
+      //expanded = !expanded;
+      expandedIndex = (expandedIndex == index) ? null : index;
+    });
   }
 
   @override
@@ -301,6 +312,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         itemCount: departures.length,
                         itemBuilder: (context, index) {
                         final departure = departures[index];
+                        final expanded = expandedIndex == index;
                         
                         Color timecolor = const Color.fromARGB(255, 0, 0, 0);
                         var delay = (departure.delay)/60;
@@ -343,8 +355,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             color: Color.fromARGB(255, 255, 0, 0),
                             decoration: TextDecoration.lineThrough,
                           );
+                          deptime = 'Fahrt fällt aus';
                         } else {
-                            deststyle = const TextStyle(
+                          deststyle = const TextStyle(
                             fontSize: 17,
                             color: Color.fromARGB(255, 0, 0, 0),
                             decoration: TextDecoration.none,
@@ -352,32 +365,76 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         }
 
                         AssetImage lineImage = const AssetImage('Assets/Bus.png');
+                        SizedBox linelogo;
                         if (departure.product == 'suburban') {
                           if (departure.line == 'S46') {
                             lineImage = const AssetImage('Assets/S46.png');
                           } else if (departure.line == 'S8') {
                             lineImage = const AssetImage('Assets/S8.png');
                           }
+                          linelogo = SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: Image(image: lineImage)
+                          );
                         } else {
-                          //bus logo, linie schreiben
+                          linelogo = SizedBox(
+                            height: 60,
+                            width: 40,
+                            child: 
+                              Column(
+                                children: [
+                                  Image(
+                                    image: lineImage,
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                  const SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    departure.line,
+                                  ),
+                                ],
+                              ),
+                          );
                         }
+
+                        double tileheight;
+                        IconData arrow;
+                        int linecount;
+                        if (expanded) {
+                          tileheight = 160;
+                          arrow = Icons.keyboard_arrow_up_rounded;
+                          linecount = 2;
+                        } else {
+                          tileheight = 80;
+                          arrow = Icons.keyboard_arrow_down_rounded;
+                          linecount = 1;
+                        }
+
 
                         return Center(
                           child: Column(
                             children:[
                               SizedBox(
                                 width: 380,
-                                height: 80,
+                                height: tileheight,
                                 child: Card(
                                   child: ListTile(
-                                    leading: Image(
-                                      image: lineImage,
-                                        height: 40,
-                                        width: 40,
-                                      ),
+                                    onTap: () => expand(index),
+                                    leading: SizedBox(
+                                      height: 60,
+                                      width: 40,
+                                      child: linelogo,
+                                    ),
                                       title: Text(
                                         style: deststyle,
-                                        maxLines: 1,
+                                        maxLines: linecount,
                                         departure.destination),
                                     subtitle: Text(
                                       style: TextStyle(
@@ -386,9 +443,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                       ),
                                       deptime
                                     ), 
-                                    trailing: const Icon(
+                                    trailing: Icon(
                                       size: 25,
-                                      Icons.keyboard_arrow_down_rounded
+                                      arrow
                                     ),
                                   ),
                                 ),
