@@ -317,7 +317,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         Color timecolor = const Color.fromARGB(255, 0, 0, 0);
                         var delay = (departure.delay)/60;
                         if (delay > 0 && delay < 5)  {
-                          timecolor = const Color.fromARGB(255, 255, 175, 0);
+                          timecolor = const Color.fromARGB(255, 255, 135, 0);
                         } else if (delay > 5) {
                           timecolor = const Color.fromARGB(255, 255, 0, 0);
                         }
@@ -407,20 +407,45 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         double tileheight;
                         IconData arrow;
                         int linecount;
+                        var subtitlecol;
                         if (expanded) {
                           tileheight = 160;
                           arrow = Icons.keyboard_arrow_up_rounded;
                           linecount = 2;
+                          subtitlecol = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: timecolor,
+                                ),
+                                deptime
+                              ), 
+                              Text(
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: timecolor,
+                                ),
+                                'Hallo'
+                              ), 
+                            ],
+                          );
                         } else {
                           tileheight = 80;
                           arrow = Icons.keyboard_arrow_down_rounded;
                           linecount = 1;
+                          subtitlecol = Text(
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: timecolor,
+                                      ),
+                                      deptime
+                          );
                         }
-
-
                         return Center(
                           child: Column(
-                            children:[
+                            children:[                              
                               SizedBox(
                                 width: 380,
                                 height: tileheight,
@@ -432,17 +457,19 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                       width: 40,
                                       child: linelogo,
                                     ),
-                                      title: Text(
-                                        style: deststyle,
-                                        maxLines: linecount,
-                                        departure.destination),
-                                    subtitle: Text(
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: timecolor,
-                                      ),
-                                      deptime
-                                    ), 
+                                    title: Text(
+                                      style: deststyle,
+                                      maxLines: linecount,
+                                      departure.destination
+                                    ),
+                                    subtitle: subtitlecol,
+                                    // subtitle: Text(
+                                    //   style: TextStyle(
+                                    //     fontSize: 15,
+                                    //     color: timecolor,
+                                    //   ),
+                                    //   deptime
+                                    // ), 
                                     trailing: Icon(
                                       size: 25,
                                       arrow
