@@ -537,10 +537,22 @@ class Homepage extends StatelessWidget {
   }
 }
 
-class GewerbePage extends StatelessWidget{
-@override
 
-  Widget build(BuildContext context) {
+  
+
+class GewerbePage extends StatefulWidget {
+
+  @override
+  State<GewerbePage> createState() => _GewerbePageState();
+}
+
+class _GewerbePageState extends State<GewerbePage> {
+  final item1 = 1;
+  final item2 = 5;
+  final item3 = 7;
+
+  @override
+   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title:Text(
@@ -554,12 +566,25 @@ class GewerbePage extends StatelessWidget{
         ),
         centerTitle: true,
       ),
-      body:const Center(
-        child: Text('Komma') ,
-      )
+      body:ListView.builder(
+        padding: const EdgeInsets.all(10.0),
+        itemCount: 3,
+        itemBuilder: (BuildContext context, int index){
+          return Container(
+            height: 100,
+            color: Colors.lightGreen[600],
+            child: Text('Hallo'),
+          );
+        },
+        
+          
+        )   
     );
   }
 }
+  
+
+
 
 class BelaPage extends StatelessWidget{
 @override
