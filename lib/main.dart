@@ -71,7 +71,10 @@ class VBBApiResponse {
 }
 
 void main() {
-  runApp(const MyApp());
+  runApp( 
+    MyApp(
+  ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -550,18 +553,16 @@ class GewerbePage extends StatefulWidget {
 }
 
 class _GewerbePageState extends State<GewerbePage> {
-  final item1 = 1;
-  final item2 = 5;
-  final item3 = 7;
 
-  @override
+@override
+
    Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title:Text(
           'Gewerbe',
           style: TextStyle(
-            color: Colors.lightGreen[700],
+            color: Color.fromRGBO(150, 200, 150, 1),
             fontSize:40,
             fontWeight: FontWeight.w500,
             letterSpacing:4.0,
@@ -569,19 +570,21 @@ class _GewerbePageState extends State<GewerbePage> {
         ),
         centerTitle: true,
       ),
-      body:ListView.builder(
-        padding: const EdgeInsets.all(10.0),
-        itemCount: 3,
-        itemBuilder: (BuildContext context, int index){
-          return Container(
-            height: 100,
-            color: Colors.lightGreen[600],
-            child: Text('Hallo'),
-          );
-        },
-        
-          
-        )   
+      body: SizedBox(
+        height: 600,
+        child: ListView.builder(
+          physics: ClampingScrollPhysics()  ,
+          itemCount: 30,
+          itemBuilder: (BuildContext context, int index){
+            return ListTile(
+              title: Card(
+                color: Color.fromRGBO(136, 206, 136, 1),
+                child: Text('Item $index'),
+                ),
+              );
+          },         
+          ),
+      ),  
     );
   }
 }
