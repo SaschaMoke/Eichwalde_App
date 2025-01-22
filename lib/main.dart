@@ -422,12 +422,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                 ),
                                 deptime
                               ), 
+                              const SizedBox(
+                                height: 12,
+                              ),
                               Text(
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
-                                  color: timecolor,
+                                  color: Color.fromARGB(255, 0, 0, 0),
                                 ),
-                                'Hallo'
+                                'Gleis: ${departure.platform}'
                               ), 
                             ],
                           );
