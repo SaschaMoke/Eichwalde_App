@@ -55,7 +55,7 @@ class Departure {
 }
 class VBBApiResponse {
   final List departures;
-  final int lastUpdate;
+  final DateTime lastUpdate;
 
   const VBBApiResponse({
     required this.departures,
@@ -65,16 +65,13 @@ class VBBApiResponse {
   factory VBBApiResponse.fromJson(Map<String, dynamic> json) {
     return VBBApiResponse(
       departures: List.from(json['departures'].map((x) => Departure.fromJson(x)),),
-      lastUpdate: json['realtimeDataUpdatedAt'],
+      lastUpdate: DateTime.fromMillisecondsSinceEpoch(json['realtimeDataUpdatedAt']),
     );
   }
 }
 
 void main() {
-  runApp( 
-    MyApp(
-  ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -229,8 +226,8 @@ class Verkehrspage extends StatefulWidget {
 
 class _VerkehrspageState extends State<Verkehrspage> {
     List departures = [];
+    String lastUpdate = '';
     Timer? timer;
-    //bool expanded = false;
     int? expandedIndex;
     int? selectedindex;
 
@@ -245,8 +242,10 @@ class _VerkehrspageState extends State<Verkehrspage> {
     timer?.cancel();
     super.dispose();
   }
-
+  //evtl kein ausklappen
   //list sortieren nach zeit
+  //benachrichtigung (Wecker)
+  //appicon
   Future<void> fetchAndUpdateData() async {
     try {
       final response = await http.get(
@@ -257,6 +256,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
         final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
         setState(() {
           departures = apiResponse.departures;
+          lastUpdate = apiResponse.lastUpdate.toString();
         });
       } else {
         throw Exception('Failed to load data');        //evtl anzeigen lassen 
@@ -268,7 +268,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
   void expand(int index) {
     setState(() {
-      //expanded = !expanded;
       expandedIndex = (expandedIndex == index) ? null : index;
     });
   }
@@ -451,7 +450,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         }
                         return Center(
                           child: Column(
-                            children:[                              
+                            children:[
                               SizedBox(
                                 width: 380,
                                 height: tileheight,
@@ -463,9 +462,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                       width: 40,
                                       child: linelogo,
                                     ),
-                                    title: Text(
-                                      style: deststyle,
-                                      maxLines: linecount,
+                                      title: Text(
+                                        style: deststyle,
+                                        maxLines: linecount,
                                       departure.destination
                                     ),
                                     subtitle: subtitlecol,
@@ -489,6 +488,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       },
                     ),
                   ),
+                  Text(   //last update text
+                    
+                    'Zuletzt aktualisiert: $lastUpdate')
                 ],
               ),
             ),
@@ -543,9 +545,6 @@ class Homepage extends StatelessWidget {
   }
 }
 
-
-  
-
 class GewerbePage extends StatefulWidget {
 
   @override
@@ -554,9 +553,9 @@ class GewerbePage extends StatefulWidget {
 
 class _GewerbePageState extends State<GewerbePage> {
 
-@override
+  @override
 
-   Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title:Text(
@@ -589,9 +588,6 @@ class _GewerbePageState extends State<GewerbePage> {
   }
 }
   
-
-
-
 class BelaPage extends StatelessWidget{
 @override
   Widget build(BuildContext context) {
