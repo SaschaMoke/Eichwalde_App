@@ -575,18 +575,23 @@ class _GewerbePageState extends State<GewerbePage> {
           physics: ClampingScrollPhysics()  ,
           itemCount: 30,
           itemBuilder: (BuildContext context, int index){
-            return ListTile(
-              title: Card(
-                color: Color.fromRGBO(136, 206, 136, 1),
-                child: Text('Item $index'),
-                ),
-              );
+            return getItem(index);
           },         
           ),
       ),  
     );
   }
 }
+
+ Widget getItem(int index) {
+  print('getItem called $index');
+  return Card(
+      
+     color:Color.fromRGBO(136, 206, 136, 1),
+     child: Text('Item $index'),
+  );
+ }
+
   
 class BelaPage extends StatelessWidget{
 @override
