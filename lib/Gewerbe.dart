@@ -13,5 +13,15 @@ class Gewerbe{
 }
 
 List gewerbes = [
-  Gewerbe('KOMMA - Eichwalder Buchhandlung','Einzelhandel','Bahnhofstraße 87',0306758511),
+  Gewerbe('KOMMA - Eichwalder Buchhandlung','Einzelhandel','Bahnhofstraße 87',49306758511),
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',493089756808),
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',03089756808),
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',03089756808),
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',03089756808), 
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',03089756808),
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',03089756808),
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',03089756808),
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',03089756808),
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',03089756808),
+  Gewerbe('Mario - Der Eismacher in Eichwalde','Cafe','Bahnhofstraße 89a',03089756808),
 ];

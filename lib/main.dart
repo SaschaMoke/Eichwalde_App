@@ -1,3 +1,4 @@
+import 'package:eichwalde_app/Gewerbe.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -570,27 +571,25 @@ class _GewerbePageState extends State<GewerbePage> {
         centerTitle: true,
       ),
       body: SizedBox(
-        height: 600,
         child: ListView.builder(
-          physics: ClampingScrollPhysics()  ,
-          itemCount: 30,
+          physics: ClampingScrollPhysics(),
+          itemCount: gewerbes.length,
           itemBuilder: (BuildContext context, int index){
-            return getItem(index);
+            return ListTile(
+              title: Text(gewerbes[index].Name),
+              subtitle: Text(gewerbes[index].Gewerbeart),
+              trailing: Card(
+                child: Text('Tel.: +' + gewerbes[index].Tel.toString() + '\nAdr.:' + gewerbes[index].Adresse),
+
+              )
+
+            );
           },         
           ),
       ),  
     );
   }
 }
-
- Widget getItem(int index) {
-  print('getItem called $index');
-  return Card(
-      
-     color:Color.fromRGBO(136, 206, 136, 1),
-     child: Text('Item $index'),
-  );
- }
 
   
 class BelaPage extends StatelessWidget{
