@@ -1,4 +1,6 @@
 import 'package:eichwalde_app/Gewerbe.dart';
+import 'package:eichwalde_app/notification_service.dart';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -72,6 +74,11 @@ class VBBApiResponse {
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //init notifications
+  NotificationService().initNotification();
+  
   runApp(const MyApp());
 }
 
@@ -199,20 +206,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
             ),
           ),
-        body:Container(
-                  //color: Theme.of(context).colorScheme.primaryContainer,
-                
-                  /* decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment(0.5, 0.8),
-                      end: Alignment(0.5, 1),
-                      colors: <Color>[
-                      Color.fromARGB(255, 230, 255, 230),
-                      Color.fromARGB(255, 150, 200, 150),
-                      ],
-                    ),
-                  ), */
-                  child: page,
+          body:Container(
+            child: page,
           ),
         );
       }
@@ -520,8 +515,9 @@ class Homepage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //Text('A random idea:'),
+            
             RandomBox(pair: pair),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -529,14 +525,14 @@ class Homepage extends StatelessWidget {
                   appState.toggleFavorite();                             //Aktionen
                 }, 
                 icon: Icon(LikeIcon),
-                label: Text('Like')),
-                SizedBox(width: 10),
+                label: const Text('Like')),
+                const SizedBox(width: 10),
                 
                 
                 ElevatedButton(onPressed: () {
                   appState.GetNext();                             //Aktionen
                 }, 
-                child: Text('Next')),
+                child: const Text('Next')),
                
               ],
             )                              //Design
@@ -591,12 +587,21 @@ class _GewerbePageState extends State<GewerbePage> {
   }
 }
 
-  
 class BelaPage extends StatelessWidget{
 @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            NotificationService().showNotification(
+              title: "Mashalla",
+              body: "der Scriptkönig",
+            );
+          }, 
+          child: const Text('Send Notification')
+        ),
+      ),
     );
   }
 }
