@@ -13,7 +13,7 @@ class NotificationService {
     if (_isInitialized) return;
 
     const initSettingsAndroid = 
-      AndroidInitializationSettings('Assets/wappen_Eichwalde.png');
+      AndroidInitializationSettings('@drawable/wappen_eichwalde_notifi');
 
     const initSettingsIOS = 
       DarwinInitializationSettings(
