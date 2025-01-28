@@ -490,6 +490,17 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 ],
               ),
             ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  NotificationService().showNotification(
+                    title: "Mashalla",
+                    body: "der Scriptkönig",
+                  );
+                }, 
+                child: const Text('Send Notification')
+              ),
+            ),
           ],
         )
       ),
@@ -591,17 +602,7 @@ class BelaPage extends StatelessWidget{
 @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            NotificationService().showNotification(
-              title: "Mashalla",
-              body: "der Scriptkönig",
-            );
-          }, 
-          child: const Text('Send Notification')
-        ),
-      ),
+
     );
   }
 }

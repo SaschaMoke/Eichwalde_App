@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:eichwalde_app/Assets/wappen_Eichwalde.png';
 
 class NotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -12,7 +13,7 @@ class NotificationService {
     if (_isInitialized) return;
 
     const initSettingsAndroid = 
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('Assets/wappen_Eichwalde.png');
 
     const initSettingsIOS = 
       DarwinInitializationSettings(
