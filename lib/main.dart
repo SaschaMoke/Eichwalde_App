@@ -577,24 +577,22 @@ class _GewerbePageState extends State<GewerbePage> {
         ),
         centerTitle: true,
       ),
-      body: SizedBox(
-        child: ListView.builder(
-          physics: ClampingScrollPhysics(),
-          itemCount: gewerbes.length,
-          itemBuilder: (BuildContext context, int index){
-            return ListTile(
+      body: ListView.custom(childrenDelegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+            return Card(
+              child: ListTile(
               title: Text(gewerbes[index].Name),
-              subtitle: Text(gewerbes[index].Gewerbeart),
-              trailing: Card(
-                child: Text('Tel.: +' + gewerbes[index].Tel.toString() + '\nAdr.:' + gewerbes[index].Adresse),
+              subtitle: Text('Tel.: +' + gewerbes[index].Tel.toString() + '\nAdr.:' + gewerbes[index].Adresse),
+              trailing: Text(gewerbes[index].Gewerbeart),
+              
 
-              )
-
+              ),
             );
-          },         
+            },
+            childCount: gewerbes.length, 
           ),
-      ),  
-    );
+      ),
+      ); 
   }
 }
 
