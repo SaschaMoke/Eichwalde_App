@@ -566,12 +566,13 @@ class _GewerbePageState extends State<GewerbePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(150, 200, 150, 1),
         title:Text(
           'Gewerbe',
           style: TextStyle(
-            color: Color.fromRGBO(150, 200, 150, 1),
+            color: Color.fromRGBO(222, 236, 209, 1),
             fontSize:40,
-            fontWeight: FontWeight.w500,
+            //fontWeight: FontWeight.w500,
             letterSpacing:4.0,
           ),
         ),
@@ -580,6 +581,9 @@ class _GewerbePageState extends State<GewerbePage> {
       body: ListView.custom(childrenDelegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
             return Card(
+              borderOnForeground: true,
+              elevation: 5,
+              shadowColor: Color.fromRGBO(150, 200, 150, 1),
               child: ListTile(
               title: Text(gewerbes[index].Name),
               subtitle: Text('Tel.: +' + gewerbes[index].Tel.toString() + '\nAdr.:' + gewerbes[index].Adresse),
