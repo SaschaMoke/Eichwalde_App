@@ -494,8 +494,11 @@ class _VerkehrspageState extends State<Verkehrspage> {
               child: ElevatedButton(
                 onPressed: () {
                   NotificationService().showNotification(
-                    title: "Mashalla",
-                    body: "der Scriptkönig",
+                    title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
+                    body: 
+'''${departures[0].line}  ${departures[0].destination}  Zeit                    
+${departures[1].line}  ${departures[1].destination}  Zeit
+${departures[2].line}  ${departures[2].destination}  Zeit''',
                   );
                 }, 
                 child: const Text('Send Notification')
