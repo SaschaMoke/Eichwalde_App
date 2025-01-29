@@ -493,12 +493,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                  
+
                   NotificationService().showNotification(
                     title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
                     body: 
-'''${departures[0].line}  ${departures[0].destination}  Zeit                    
-${departures[1].line}  ${departures[1].destination}  Zeit
-${departures[2].line}  ${departures[2].destination}  Zeit''',
+'''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
+${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
+${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
                   );
                 }, 
                 child: const Text('Send Notification')
