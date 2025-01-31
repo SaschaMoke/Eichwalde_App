@@ -590,6 +590,9 @@ class _GewerbePageState extends State<GewerbePage> {
               elevation: 5,
               shadowColor: Color.fromRGBO(150, 200, 150, 1),
               child: ListTile(
+              leading: Image(
+                image: AssetImage(gewerbes[index].image),
+                ),
               title: Text(gewerbes[index].Name),
               subtitle: Text('Tel.: +' + gewerbes[index].Tel.toString() + '\nAdr.:' + gewerbes[index].Adresse),
               trailing: Text(gewerbes[index].Gewerbeart),
