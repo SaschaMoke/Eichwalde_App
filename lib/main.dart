@@ -1,4 +1,4 @@
-import 'package:eichwalde_app/Gewerbe.dart';
+import 'package:eichwalde_app/gewerbe.dart';
 import 'package:eichwalde_app/notification_service.dart';
 
 import 'package:english_words/english_words.dart';
@@ -240,6 +240,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   }
   //evtl kein ausklappen
   //list sortieren nach zeit
+  //fahrt fällt aus schöner machen!
   //benachrichtigung (Wecker)
   //appicon
   Future<void> fetchAndUpdateData() async {
@@ -405,44 +406,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         double tileheight;
                         IconData arrow;
                         int linecount;
-                        var subtitlecol;
                         if (expanded) {
                           tileheight = 160;
                           arrow = Icons.keyboard_arrow_up_rounded;
                           linecount = 2;
-                          subtitlecol = Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: timecolor,
-                                ),
-                                deptime
-                              ), 
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Text(
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                ),
-                                'Gleis: ${departure.platform}'
-                              ), 
-                            ],
-                          );
                         } else {
                           tileheight = 80;
                           arrow = Icons.keyboard_arrow_down_rounded;
                           linecount = 1;
-                          subtitlecol = Text(
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: timecolor,
-                                      ),
-                                      deptime
-                          );
                         }
                         return Center(
                           child: Column(
@@ -463,14 +434,25 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                         maxLines: linecount,
                                       departure.destination
                                     ),
-                                    subtitle: subtitlecol,
-                                    // subtitle: Text(
-                                    //   style: TextStyle(
-                                    //     fontSize: 15,
-                                    //     color: timecolor,
-                                    //   ),
-                                    //   deptime
-                                    // ), 
+                                    subtitle: Row(
+                                      children: [
+                                        Text(
+                                           style: TextStyle(
+                                             fontSize: 15,
+                                             color: timecolor,
+                                           ),
+                                           deptime
+                                        ),
+                                        SizedBox(width: 25),
+                                        Text(
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Color.fromARGB(255, 0, 0, 0),
+                                          ),
+                                          'Gleis: ${departure.platform}'
+                                        ),
+                                      ],
+                                    ), 
                                     trailing: Icon(
                                       size: 25,
                                       arrow
@@ -493,7 +475,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  
+                  fetchAndUpdateData();
 
                   NotificationService().showNotification(
                     title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
@@ -593,9 +575,9 @@ class _GewerbePageState extends State<GewerbePage> {
               leading: Image(
                 image: AssetImage(gewerbes[index].image),
                 ),
-              title: Text(gewerbes[index].Name),
-              subtitle: Text('Tel.: +' + gewerbes[index].Tel.toString() + '\nAdr.:' + gewerbes[index].Adresse),
-              trailing: Text(gewerbes[index].Gewerbeart),
+              title: Text(gewerbes[index].name),
+              subtitle: Text('Tel.: +' + gewerbes[index].tel.toString() + '\nAdr.:' + gewerbes[index].adresse),
+              trailing: Text(gewerbes[index].gewerbeart),
               
 
               ),
@@ -603,7 +585,77 @@ class _GewerbePageState extends State<GewerbePage> {
             },
             childCount: gewerbes.length, 
           ),
-      ),
+      ), 
+       
+       
+       //grobes Layout, wie ich das am Donnerstag versucht habe zu erklären. Wäre halt die Frage, wie man
+       //auch die rechte Spalte mit reinbekommt. 
+       //So könnte man zum ausklappen dann halt die ganze Seitenbreite für ein Gewerbe nehmen, wenn man es ausklappt
+       
+       /* ListView.builder(
+          itemCount: gewerbes.length,
+          itemBuilder: (context, index) {
+            return Column(
+              
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      width: 200,
+                      height: 250,
+                      child: Card(
+                        color: Color.fromARGB(255, 150, 200, 150),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              width: 180,
+                              height: 150,
+                              child: Image(
+                                image: AssetImage(gewerbes[index].image)
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              //textAlign: TextAlign.start,
+                              gewerbes[index].name,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      width: 200,
+                      height: 250,
+                      child: Card(
+                        color: Color.fromARGB(255, 150, 200, 150),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }
+        )*/
+
+
+
       ); 
   }
 }
