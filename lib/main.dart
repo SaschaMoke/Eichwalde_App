@@ -1,5 +1,6 @@
 import 'package:eichwalde_app/gewerbe.dart';
 import 'package:eichwalde_app/notification_service.dart';
+import 'package:eichwalde_app/vbb_api.dart';
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
@@ -8,70 +9,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
-class Departure {
-  final String destination;
-  final String when;
-  final int delay;
-  final String? platform;
-  final String line;
-  final String product;
-  //final bool? cancelled;
-
-  Departure({
-    required this.destination,
-    this.when = 'Fahrt fällt aus',
-    this.delay = 0,
-    this.platform,
-    this.line = 'Unbekannt',
-    this.product = 'Unbekannt',
-    //this.cancelled,
-  });
-  
-  factory Departure.fromJson(Map<String, dynamic> json) {
-    return Departure(
-      destination: json['destination']['name'],
-      when: json['when'] ?? 'Fahrt fällt aus',
-      delay: json['delay'] ?? 0,
-      platform: json['platform'],
-      line: json['line']['name'],
-      product: json['line']['product'],
-      //cancelled: json['cancelled'],
-    );
-  }
-  String get formattedHour {
-    try {
-      final dateTime = DateTime.parse(when).toLocal();
-      return DateFormat('HH').format(dateTime); // Nur Stunden
-    } catch (e) {
-      return "0"; 
-    }
-  }
-  String get formattedMin {
-    try {
-      final dateTime = DateTime.parse(when).toLocal();
-      return DateFormat('mm').format(dateTime); // Nur Minuten
-    } catch (e) {
-      return "0"; 
-    }
-  }
-}
-class VBBApiResponse {
-  final List departures;
-  final DateTime lastUpdate;
-
-  const VBBApiResponse({
-    required this.departures,
-    required this.lastUpdate,
-  });
-
-  factory VBBApiResponse.fromJson(Map<String, dynamic> json) {
-    return VBBApiResponse(
-      departures: List.from(json['departures'].map((x) => Departure.fromJson(x)),),
-      lastUpdate: DateTime.fromMillisecondsSinceEpoch(json['realtimeDataUpdatedAt']),
-    );
-  }
-}
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -239,8 +176,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
     super.dispose();
   }
   //evtl kein ausklappen
-  //list sortieren nach zeit
-  //fahrt fällt aus schöner machen!
+  //list sortieren nach zeit (evtl. geschafft)
+  //fahrt fällt aus schöner machen! (evtl. auch fertig)
   //benachrichtigung (Wecker)
   //appicon
   Future<void> fetchAndUpdateData() async {
@@ -251,6 +188,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
       if (response.statusCode == 200) {
         final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
+        departures.sort((a, b) => a.when.compareTo(b.when));
         setState(() {
           departures = apiResponse.departures;
           lastUpdate = apiResponse.lastUpdate.toString();
@@ -353,8 +291,10 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             fontSize: 17,
                             color: Color.fromARGB(255, 255, 0, 0),
                             decoration: TextDecoration.lineThrough,
+                            decorationColor: Color.fromARGB(255, 255, 0, 0),
                           );
                           deptime = 'Fahrt fällt aus';
+                          timecolor = const Color.fromARGB(255, 255, 0, 0);
                         } else {
                           deststyle = const TextStyle(
                             fontSize: 17,
@@ -467,7 +407,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ),
                   ),
                   Text(   //last update text
-                    
                     'Zuletzt aktualisiert: $lastUpdate')
                 ],
               ),
@@ -488,6 +427,29 @@ ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substr
                 child: const Text('Send Notification')
               ),
             ),
+
+            //scheduled Notification
+            //id muss fortlaufend gespeichert werden (entspricht anzahl an timern)
+            //zudem müssen die timer gespeichert bleiben
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  fetchAndUpdateData();
+
+                  NotificationService().scheduleNotification(
+                    title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
+                    body: 
+'''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
+${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
+${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
+                    hour: 10,
+                    minute: 11,
+                  );
+                }, 
+                child: const Text('Send Notification')
+              ),
+            ),
+
           ],
         )
       ),

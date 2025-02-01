@@ -1,5 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-//import 'package:eichwalde_app/Assets/wappen_Eichwalde.png';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 class NotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -11,6 +13,10 @@ class NotificationService {
 
   Future<void> initNotification() async {
     if (_isInitialized) return;
+
+    tz.initializeTimeZones();
+    final String currentTimezone = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(currentTimezone));
 
     const initSettingsAndroid = 
       AndroidInitializationSettings('@drawable/wappen_eichwalde_notifi');
@@ -57,5 +63,43 @@ class NotificationService {
       body, 
       notificationDetails(),
     );
+  }
+
+  //Scheduled Notification
+
+  Future<void> scheduleNotification({
+    int id = 1,
+    required String title,
+    required String body,
+    required int hour, //(0-23)
+    required int minute, //(0-59)
+  }) async {
+    final now = tz.TZDateTime.now(tz.local);
+    var scheduledDate = tz.TZDateTime(
+      tz.local, 
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute
+    );
+
+    await notificationsPlugin.zonedSchedule(
+      id, 
+      title, 
+      body, 
+      scheduledDate, 
+      notificationDetails(), 
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      //Daily repeat (togglebar machen)
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+
+    //notificationsPlugin.cancel(id)  <- toggle ding
+
+    Future<void> cancelAllNotifications() async {
+      await notificationsPlugin.cancelAll();
+    }
   }
 }
