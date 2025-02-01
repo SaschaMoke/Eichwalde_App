@@ -2,7 +2,8 @@ import 'package:intl/intl.dart';
 
 class Departure {
   final String destination;
-  final String when;
+  final String? when;
+  final String plannedWhen;
   final int delay;
   final String? platform;
   final String line;
@@ -11,7 +12,8 @@ class Departure {
 
   Departure({
     required this.destination,
-    this.when = 'Fahrt fällt aus',
+    this.when,
+    this.plannedWhen = '',
     this.delay = 0,
     this.platform,
     this.line = 'Unbekannt',
@@ -23,6 +25,7 @@ class Departure {
     return Departure(
       destination: json['destination']['name'],
       when: json['when'] ?? 'Fahrt fällt aus',
+      plannedWhen: json['plannedWhen'],
       delay: json['delay'] ?? 0,
       platform: json['platform'],
       line: json['line']['name'],
@@ -32,7 +35,7 @@ class Departure {
   }
   String get formattedHour {
     try {
-      final dateTime = DateTime.parse(when).toLocal();
+      final dateTime = DateTime.parse(when ?? plannedWhen).toLocal();
       return DateFormat('HH').format(dateTime); // Nur Stunden
     } catch (e) {
       return "0"; 
@@ -40,7 +43,7 @@ class Departure {
   }
   String get formattedMin {
     try {
-      final dateTime = DateTime.parse(when).toLocal();
+      final dateTime = DateTime.parse(when ?? plannedWhen).toLocal();
       return DateFormat('mm').format(dateTime); // Nur Minuten
     } catch (e) {
       return "0"; 

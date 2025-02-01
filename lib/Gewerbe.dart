@@ -18,7 +18,7 @@ List gewerbes = [
   Gewerbe('Antiquariat Bahnhofstraße','Einzelhandel','Bahnhofstraße 6',493067803684,'Assets/wappen_Eichwalde.png'),
   Gewerbe('Apfel trifft Zwiebel','Feinkost','Chopinstraße 42',493051653151,'Assets/image2.png'),
   Gewerbe('Autowerkstatt starke mobile','Autowerkstatt','August-Bebel-Allee 48',493067825315,'Assets/image3.png'), 
-  Gewerbe('Bäckerei Peter Schneider','Bäckerei','Uhlandallee 55& Bahnhofstraße 88',49337572789,'Assets/Wappen_Eichwalde.png'),
+  Gewerbe('Bäckerei Peter Schneider','Bäckerei','Uhlandallee 55& Bahnhofstraße 88',49337572789,'Assets/wappen_Eichwalde.png'),
   Gewerbe('BLM Geotest','Auftragnehmer','Schmöckwitzer Straße 90',493063905723,'Assets/image4.png'),
   Gewerbe('Bridge Die Werbeagentur','PR-Agentur','Stadionstraße 5',493054807287,'Assets/wappen_Eichwalde.png'),
   Gewerbe('Café Josef','Cafe','Bahnhofstraße 10',4930516533820,'Assets/wappen_Eichwalde.png'),

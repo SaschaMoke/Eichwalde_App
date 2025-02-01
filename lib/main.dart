@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -158,11 +159,14 @@ class Verkehrspage extends StatefulWidget {
 }
 
 class _VerkehrspageState extends State<Verkehrspage> {
-    List departures = [];
-    String lastUpdate = '';
-    Timer? timer;
-    int? expandedIndex;
-    int? selectedindex;
+  List departures = [];
+  String lastUpdate = '';
+  Timer? timer;
+  int? expandedIndex;
+  int? selectedindex;
+
+  int currentPickedHour = 0;
+  int currentPickedMinute = 0;
 
  @override
   void initState() {
@@ -176,8 +180,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
     super.dispose();
   }
   //evtl kein ausklappen
-  //list sortieren nach zeit (evtl. geschafft)
-  //fahrt fällt aus schöner machen! (evtl. auch fertig)
+  //list sortieren nach zeit (sollte funktionieren, muss noch geprüft werden)
+  //fahrt fällt aus schöner machen! (-//-)
   //benachrichtigung (Wecker)
   //appicon
   Future<void> fetchAndUpdateData() async {
@@ -188,7 +192,11 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
       if (response.statusCode == 200) {
         final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
-        departures.sort((a, b) => a.when.compareTo(b.when));
+        departures.sort((a, b) {
+          final aTime = a.when ?? a.plannedWhen;
+          final bTime = b.when ?? b.plannedWhen;
+          return aTime.compareTo(bTime);
+        });
         setState(() {
           departures = apiResponse.departures;
           lastUpdate = apiResponse.lastUpdate.toString();
@@ -411,45 +419,74 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 ],
               ),
             ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  fetchAndUpdateData();
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    fetchAndUpdateData();
 
-                  NotificationService().showNotification(
-                    title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
-                    body: 
+                    NotificationService().showNotification(
+                      title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
+                      body: 
 '''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
 ${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
 ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
-                  );
-                }, 
-                child: const Text('Send Notification')
-              ),
-            ),
+                    );
+                  }, 
+                  child: const Text('Send Notification')
+                ),
 
             //scheduled Notification
             //id muss fortlaufend gespeichert werden (entspricht anzahl an timern)
             //zudem müssen die timer gespeichert bleiben
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  fetchAndUpdateData();
+                ElevatedButton(
+                  onPressed: () {
+                    fetchAndUpdateData();
 
-                  NotificationService().scheduleNotification(
-                    title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
-                    body: 
+                    NotificationService().scheduleNotification(
+                      title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
+                      body: 
 '''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
 ${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
 ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
-                    hour: 10,
-                    minute: 11,
-                  );
-                }, 
-                child: const Text('Send Notification')
+                      hour: currentPickedHour,
+                      minute: currentPickedMinute,
+                    );
+                  }, 
+                  child: const Text('Schedule Notification')
+                ),
+              ],
+            ),
+            Container(
+              width: 400,
+              height: 110,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 150, 200, 150),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 255, 255, 255)
+                ),
+                borderRadius: BorderRadius.circular(20)
+              ),
+              child: Row(
+                children: [
+                  NumberPicker(
+                    infiniteLoop: true,
+                    minValue: 0, 
+                    maxValue: 23, 
+                    value: currentPickedHour, //aktuelle Zeit?
+                    onChanged: (value) => setState(() => currentPickedHour = value)
+                  ),
+                  NumberPicker(
+                    infiniteLoop: true,
+                    minValue: 0, 
+                    maxValue: 59, 
+                    value: currentPickedMinute, //aktuelle Zeit?
+                    onChanged: (value) => setState(() => currentPickedMinute = value)
+                  ),
+                ],
               ),
             ),
-
           ],
         )
       ),
