@@ -527,50 +527,13 @@ class _GewerbePageState extends State<GewerbePage> {
         ),
         centerTitle: true,
       ),
-      body: ListView.custom(childrenDelegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-            return Card(
-              borderOnForeground: true,
-              elevation: 5,
-              shadowColor: Color.fromRGBO(150, 200, 150, 1),
-              child: ListTile(
-              leading: Image(
-                image: AssetImage(gewerbes[index].image),
-                ),
-              title: Text(gewerbes[index].name),
-              subtitle: Text('Tel.: +' + gewerbes[index].tel.toString() + '\nAdr.:' + gewerbes[index].adresse),
-              trailing: Text(gewerbes[index].gewerbeart),
-              
-
-              ),
-            );
-            },
-            childCount: gewerbes.length, 
-          ),
-      ), 
-       
-       
-       //grobes Layout, wie ich das am Donnerstag versucht habe zu erklären. Wäre halt die Frage, wie man
-       //auch die rechte Spalte mit reinbekommt. 
-       //So könnte man zum ausklappen dann halt die ganze Seitenbreite für ein Gewerbe nehmen, wenn man es ausklappt
-       
-       /* ListView.builder(
-          itemCount: gewerbes.length,
-          itemBuilder: (context, index) {
-            return Column(
-              
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
+      body: GridView.builder(
+        itemCount: gewerbes.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( crossAxisCount: 2),
+        itemBuilder: (context, index) {
+          return SizedBox(
                       width: 200,
-                      height: 250,
+                      height: 500,
                       child: Card(
                         color: Color.fromARGB(255, 150, 200, 150),
                         child: Column(
@@ -579,8 +542,8 @@ class _GewerbePageState extends State<GewerbePage> {
                               height: 10,
                             ),
                             SizedBox(
-                              width: 180,
-                              height: 150,
+                              width: 150,
+                              height: 120,
                               child: Image(
                                 image: AssetImage(gewerbes[index].image)
                               ),
@@ -588,39 +551,29 @@ class _GewerbePageState extends State<GewerbePage> {
                             SizedBox(
                               height: 5,
                             ),
-                            Text(
+                            SizedBox( 
+                              width: 160,
+                              child: Text(
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
+                                color: Color.fromRGBO(232, 240, 225, 1)
                               ),
-                              //textAlign: TextAlign.start,
+                              textAlign: TextAlign.center,
                               gewerbes[index].name,
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
-                      width: 200,
-                      height: 250,
-                      child: Card(
-                        color: Color.fromARGB(255, 150, 200, 150),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }
-        )*/
+                    );
+              
 
+            },
+           ),
+          );
+        }
 
-
-      ); 
   }
-}
 
 class BelaPage extends StatelessWidget{
 @override

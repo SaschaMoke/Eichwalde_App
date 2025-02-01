@@ -45,6 +45,8 @@ flutter:
     - Assets/S8.png
     - Assets/wappen_Eichwalde.png
     - Assets/image2.png
+    - Assets/image3.png
+    - Assets/image4.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
