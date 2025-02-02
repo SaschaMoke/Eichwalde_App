@@ -10,15 +10,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   //init notifications
   NotificationService().initNotification();
-  
+  initializeDateFormatting('de_DE', null);  // Deutsch aktivieren
   runApp(const MyApp());
 }
 
@@ -201,14 +201,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
       if (response.statusCode == 200) {
         final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
+        setState(() {
+          departures = apiResponse.departures;
+          lastUpdate = apiResponse.lastUpdate.toString();
+        });
         departures.sort((a, b) {
           final aTime = a.when ?? a.plannedWhen;
           final bTime = b.when ?? b.plannedWhen;
           return aTime.compareTo(bTime);
-        });
-        setState(() {
-          departures = apiResponse.departures;
-          lastUpdate = apiResponse.lastUpdate.toString();
         });
       } else {
         throw Exception('Failed to load data');        //evtl anzeigen lassen 
@@ -697,8 +697,6 @@ class _GewerbePageState extends State<GewerbePage> {
 
   }
 
-
-
 class Terminepage extends StatefulWidget {
   @override
   _TerminepageState createState() => _TerminepageState();
@@ -738,6 +736,7 @@ class _TerminepageState extends State<Terminepage> {
       body: Column(
         children: [
           TableCalendar(
+            locale: 'de_DE',
             focusedDay: _focusedDay,
             firstDay: DateTime.utc(2000, 1, 1),
             lastDay: DateTime.utc(2100, 12, 31),
@@ -799,7 +798,6 @@ class _TerminepageState extends State<Terminepage> {
     );
   }
 }
-
 
 class RandomBox extends StatelessWidget {
   const RandomBox({
