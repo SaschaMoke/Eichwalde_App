@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +22,11 @@ void main() {
   NotificationService().initNotification();
   
   runApp(const MyApp());
+  
+  WidgetsFlutterBinding.ensureInitialized();
+  initializeDateFormatting('de_DE', null);  // Deutsch aktivieren
+  runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -738,6 +745,7 @@ class _TerminepageState extends State<Terminepage> {
       body: Column(
         children: [
           TableCalendar(
+             locale: 'de_DE',
             focusedDay: _focusedDay,
             firstDay: DateTime.utc(2000, 1, 1),
             lastDay: DateTime.utc(2100, 12, 31),
