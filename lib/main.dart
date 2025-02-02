@@ -10,6 +10,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
       page = GewerbePage();
       break;
     case 3:
-      page = BelaPage();
+      page = Terminepage();
       break;
     default:
       throw UnimplementedError('no widget for $selectedIndex');
@@ -137,9 +139,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: 'Gewerbe',
               ),
               NavigationDestination(
-                selectedIcon: Icon(Icons.route),
-                icon: Icon(Icons.route_outlined),
-                label: 'Bela',
+                selectedIcon: Icon(Icons.calendar_month),
+                icon: Icon(Icons.calendar_month_outlined),
+                label: 'Termine',
               ),
             ],
             ),
@@ -695,26 +697,109 @@ class _GewerbePageState extends State<GewerbePage> {
 
   }
 
-class BelaPage extends StatelessWidget{
-@override
+
+
+class Terminepage extends StatefulWidget {
+  @override
+  _TerminepageState createState() => _TerminepageState();
+}
+
+class _TerminepageState extends State<Terminepage> {
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
+  Map<DateTime, List<String>> _events = {};
+
+  void _addEvent(String event) {
+    setState(() {
+      if (_events[_selectedDay] != null) {
+        _events[_selectedDay]!.add(event);
+      } else {
+        _events[_selectedDay] = [event];
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
- appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Color.fromRGBO(150, 200, 150, 1),
-        title:Text(
-          'Amtstermine',
+        title: Text(
+          'Termine',
           style: TextStyle(
             color: Color.fromRGBO(222, 236, 209, 1),
-            fontSize:40,
-            //fontWeight: FontWeight.w500,
-            letterSpacing:4.0,
+            fontSize: 40,
+            letterSpacing: 4.0,
           ),
         ),
         centerTitle: true,
       ),
+      body: Column(
+        children: [
+          TableCalendar(
+            focusedDay: _focusedDay,
+            firstDay: DateTime.utc(2000, 1, 1),
+            lastDay: DateTime.utc(2100, 12, 31),
+            calendarFormat: _calendarFormat,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+            },
+            onFormatChanged: (format) {
+              setState(() {
+                _calendarFormat = format;
+              });
+            },
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _events[_selectedDay]?.length ?? 0,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_events[_selectedDay]![index]),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              TextEditingController _eventController = TextEditingController();
+              return AlertDialog(
+                title: Text("Termin hinzufügen"),
+                content: TextField(
+                  controller: _eventController,
+                  decoration: InputDecoration(hintText: "Terminbeschreibung"),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      if (_eventController.text.isNotEmpty) {
+                        _addEvent(_eventController.text);
+                      }
+                      Navigator.pop(context);
+                    },
+                    child: Text("Hinzufügen"),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }
+
 
 class RandomBox extends StatelessWidget {
   const RandomBox({
