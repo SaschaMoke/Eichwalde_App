@@ -699,7 +699,19 @@ class BelaPage extends StatelessWidget{
 @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+ appBar: AppBar(
+        backgroundColor: Color.fromRGBO(150, 200, 150, 1),
+        title:Text(
+          'Amtstermine',
+          style: TextStyle(
+            color: Color.fromRGBO(222, 236, 209, 1),
+            fontSize:40,
+            //fontWeight: FontWeight.w500,
+            letterSpacing:4.0,
+          ),
+        ),
+        centerTitle: true,
+      ),
     );
   }
 }
