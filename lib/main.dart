@@ -154,10 +154,16 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Verkehrspage extends StatefulWidget {
+  const Verkehrspage({super.key});
+
   @override
   State<Verkehrspage> createState() => _VerkehrspageState();
 }
-
+  //evtl kein ausklappen
+  //list sortieren nach zeit (sollte funktionieren, muss noch geprüft werden)
+  //fahrt fällt aus schöner machen! (-//-)
+  //benachrichtigung (Wecker)
+  //appicon
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
   String lastUpdate = '';
@@ -168,22 +174,23 @@ class _VerkehrspageState extends State<Verkehrspage> {
   int currentPickedHour = 0;
   int currentPickedMinute = 0;
 
- @override
+  @override
   void initState() {
     super.initState();
     fetchAndUpdateData(); 
     timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
   }
   @override
-    void dispose() {
+  void dispose() {
     timer?.cancel();
     super.dispose();
   }
-  //evtl kein ausklappen
-  //list sortieren nach zeit (sollte funktionieren, muss noch geprüft werden)
-  //fahrt fällt aus schöner machen! (-//-)
-  //benachrichtigung (Wecker)
-  //appicon
+
+  void removeScheduleOverlay() {
+    overlayEntry.remove();
+    overlayEntry.dispose();
+  }
+
   Future<void> fetchAndUpdateData() async {
     try {
       final response = await http.get(
@@ -484,6 +491,9 @@ ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substr
                     value: currentPickedMinute, //aktuelle Zeit?
                     onChanged: (value) => setState(() => currentPickedMinute = value)
                   ),
+                  ElevatedButton(
+                    onPressed: () => Overlay.of(context).insert(overlayEntry),
+                    child: const Text('Overlay test'))
                 ],
               ),
             ),
@@ -493,6 +503,79 @@ ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substr
     );
   }
 }
+
+OverlayEntry overlayEntry = OverlayEntry(
+  builder: (BuildContext context) {
+    int pickedHour = 0;
+    int pickedMinute = 0;
+    return Container(
+      color: Color.fromARGB(100, 75, 75, 75),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 250,
+          ),
+          SizedBox(
+            width: 400,
+            height: 400,
+            child: Container(
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 150, 200, 150),
+                  borderRadius: BorderRadius.circular(20)
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 80,
+                    child: Row(
+                      children: [
+                        NumberPicker(
+                          infiniteLoop: true,
+                          minValue: 0, 
+                          maxValue: 23, 
+                          value: pickedHour, //aktuelle Zeit?
+                          onChanged: (value) => _VerkehrspageState().currentPickedHour = value
+                        ),
+                        NumberPicker(
+                          infiniteLoop: true,
+                          minValue: 0, 
+                          maxValue: 59, 
+                          value: pickedMinute, //aktuelle Zeit?
+                          onChanged: (value) => _VerkehrspageState().currentPickedMinute = value
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            overlayEntry.remove();
+                          }, 
+                          child: Text('Cancel')
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            //schedulen
+        
+                            overlayEntry.remove();
+                          } , 
+                          child: Text('Confirm')
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  },
+);
 
 class Homepage extends StatelessWidget {
   @override

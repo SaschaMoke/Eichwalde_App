@@ -5,10 +5,9 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 
 class NotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
-
   bool _isInitialized = false;
-
   bool get isInitialized => _isInitialized;
+  
   //Initialize
 
   Future<void> initNotification() async {
@@ -55,18 +54,23 @@ class NotificationService {
   Future<void> showNotification({
     int id = 0,
     String? title,
-    String? body,
+    String? body, 
+
   }) async {
     return notificationsPlugin.show(
       id, 
       title, 
-      body, 
+      body //= //<= hier irgendwie aktuelle daten
+//'''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
+//${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
+//${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}'''
+      ,
+
       notificationDetails(),
     );
   }
 
   //Scheduled Notification
-
   Future<void> scheduleNotification({
     int id = 1,
     required String title,
@@ -87,7 +91,7 @@ class NotificationService {
     await notificationsPlugin.zonedSchedule(
       id, 
       title, 
-      body, 
+      body = 'Hi', //<= hier irgendwie aktuelle daten
       scheduledDate, 
       notificationDetails(), 
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
@@ -97,7 +101,6 @@ class NotificationService {
     );
 
     //notificationsPlugin.cancel(id)  <- toggle ding
-
     Future<void> cancelAllNotifications() async {
       await notificationsPlugin.cancelAll();
     }
