@@ -2,6 +2,66 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+List notidepartures = [];
+class Departure {
+  final String destination;
+  final String? when;
+  final String plannedWhen;
+  final String line;
+
+  Departure({
+    required this.destination,
+    this.when,
+    this.plannedWhen = '',
+    this.line = 'Unbekannt',
+  });
+  
+  factory Departure.fromJson(Map<String, dynamic> json) {
+    return Departure(
+      destination: json['destination']['name'],
+      when: json['when'] ?? 'Fahrt fällt aus',
+      plannedWhen: json['plannedWhen'],
+      line: json['line']['name'],
+    );
+  }
+}
+class NotificationVBBApi {
+  final List departures;
+  const NotificationVBBApi({
+    required this.departures,
+  });
+  factory NotificationVBBApi.fromJson(Map<String, dynamic> json) {
+    return NotificationVBBApi(
+      departures: List.from(json['departures'].map((x) => Departure.fromJson(x)),),
+    );
+  }
+}
+
+Future<void> getAPIData() async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&remarks=false&duration=60'),
+      );
+
+      if (response.statusCode == 200) {
+        final apiResponse = NotificationVBBApi.fromJson(jsonDecode(response.body));
+        notidepartures = apiResponse.departures;
+        notidepartures.sort((a, b) {
+          final aTime = a.when ?? a.plannedWhen;
+          final bTime = b.when ?? b.plannedWhen;
+          return aTime.compareTo(bTime);
+        });
+      } else {
+        throw Exception('Failed to load data');        //evtl anzeigen lassen 
+      }
+    } catch (error) {
+      print('Error fetching data: $error');             //evtl anzeigen lassen
+    }
+  }
+
 
 class NotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -32,7 +92,22 @@ class NotificationService {
       iOS: initSettingsIOS,
     );
 
-    await notificationsPlugin.initialize(initSettings);
+    await notificationsPlugin.initialize(
+      initSettings,
+      /*onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        if (response.payload == 'API_Call') {
+          await getAPIData(); // Holt den Inhalt
+          await NotificationService().showNotification(
+            id: response.id ?? 0,
+            title: 'Nächste Abfahrten in Eichwalde:', // dynamisch
+            body: 
+'''${notidepartures[0].line}  ${notidepartures[0].destination}  ${notidepartures[0].when.substring(11,16)}                    
+${notidepartures[1].line}  ${notidepartures[1].destination}  ${notidepartures[1].when.substring(11,16)}
+${notidepartures[2].line}  ${notidepartures[2].destination}  ${notidepartures[2].when.substring(11,16)}''',
+          );
+        }
+      },*/
+    );
     _isInitialized = true;
   }
 
@@ -57,14 +132,14 @@ class NotificationService {
     String? body, 
 
   }) async {
+    //getAPIData();
     return notificationsPlugin.show(
       id, 
       title, 
-      body //= //<= hier irgendwie aktuelle daten
-//'''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
-//${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
-//${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}'''
-      ,
+      body = //<= hier irgendwie aktuelle daten
+'''${notidepartures[0].line}  ${notidepartures[0].destination}  ${notidepartures[0].when.substring(11,16)}                    
+${notidepartures[1].line}  ${notidepartures[1].destination}  ${notidepartures[1].when.substring(11,16)}
+${notidepartures[2].line}  ${notidepartures[2].destination}  ${notidepartures[2].when.substring(11,16)}''',
 
       notificationDetails(),
     );
@@ -91,13 +166,14 @@ class NotificationService {
     await notificationsPlugin.zonedSchedule(
       id, 
       title, 
-      body = 'Hi', //<= hier irgendwie aktuelle daten
+      body /*= 'Aktualisiere Daten...'*/,
       scheduledDate, 
       notificationDetails(), 
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       //Daily repeat (togglebar machen)
       matchDateTimeComponents: DateTimeComponents.time,
+      payload: 'API_Call',
     );
 
     //notificationsPlugin.cancel(id)  <- toggle ding

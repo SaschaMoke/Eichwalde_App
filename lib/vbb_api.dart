@@ -59,7 +59,6 @@ class VBBApiResponse {
     required this.lastUpdate,
   });
 
-//numbers.sort((a, b) => a.length.compareTo(b.length));
   factory VBBApiResponse.fromJson(Map<String, dynamic> json) {
     return VBBApiResponse(
       departures: List.from(json['departures'].map((x) => Departure.fromJson(x)),),

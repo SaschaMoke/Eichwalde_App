@@ -708,13 +708,16 @@ class _TerminepageState extends State<Terminepage> {
   DateTime _focusedDay = DateTime.now();
   Map<DateTime, List<String>> _events = {};
 
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('de_DE', null);
+  }
+
   void _addEvent(String event) {
     setState(() {
-      if (_events[_selectedDay] != null) {
-        _events[_selectedDay]!.add(event);
-      } else {
-        _events[_selectedDay] = [event];
-      }
+      final normalizedDay = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+      _events.putIfAbsent(normalizedDay, () => []).add(event);
     });
   }
 
@@ -756,10 +759,10 @@ class _TerminepageState extends State<Terminepage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: _events[_selectedDay]?.length ?? 0,
+              itemCount: _events[DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day)]?.length ?? 0,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(_events[_selectedDay]![index]),
+                  title: Text(_events[DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day)]![index]),
                 );
               },
             ),
