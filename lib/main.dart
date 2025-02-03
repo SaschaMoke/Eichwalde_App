@@ -190,8 +190,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
   }
 
   void removeScheduleOverlay() {
-    overlayEntry.remove();
-    overlayEntry.dispose();
+    scheduleAlarmOverlay.remove();
+    scheduleAlarmOverlay.dispose();
   }
 
   Future<void> fetchAndUpdateData() async {
@@ -495,7 +495,7 @@ ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substr
                     onChanged: (value) => setState(() => currentPickedMinute = value)
                   ),
                   ElevatedButton(
-                    onPressed: () => Overlay.of(context).insert(overlayEntry),
+                    onPressed: () => Overlay.of(context).insert(scheduleAlarmOverlay),
                     child: const Text('Overlay test'))
                 ],
               ),
@@ -507,10 +507,11 @@ ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substr
   }
 }
 
-OverlayEntry overlayEntry = OverlayEntry(
+OverlayEntry scheduleAlarmOverlay = OverlayEntry(
   builder: (BuildContext context) {
-    int pickedHour = 0;
-    int pickedMinute = 0;
+    DateTime now = DateTime.now();
+    int pickedHour = int.parse(DateFormat('HH').format(now));
+    int pickedMinute = int.parse(DateFormat('mm').format(now));
     return Container(
       color: Color.fromARGB(100, 75, 75, 75),
       child: Column(
@@ -528,18 +529,23 @@ OverlayEntry overlayEntry = OverlayEntry(
               ),
               child: Column(
                 children: [
+                  SizedBox(height: 75),
                   SizedBox(
-                    height: 80,
+                    height: 150,
                     child: Row(
                       children: [
+                        SizedBox(width: 10),
                         NumberPicker(
+                          itemWidth: 185,
                           infiniteLoop: true,
                           minValue: 0, 
                           maxValue: 23, 
                           value: pickedHour, //aktuelle Zeit?
                           onChanged: (value) => _VerkehrspageState().currentPickedHour = value
                         ),
+                        SizedBox(width: 10),
                         NumberPicker(
+                          itemWidth: 185,
                           infiniteLoop: true,
                           minValue: 0, 
                           maxValue: 59, 
@@ -549,26 +555,25 @@ OverlayEntry overlayEntry = OverlayEntry(
                       ],
                     ),
                   ),
+                  SizedBox(height: 100),
                   SizedBox(
-                    height: 20,
+                    height: 50,
+                    width: 400,
                     child: Row(
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            overlayEntry.remove();
+                            scheduleAlarmOverlay.remove();
                           }, 
-                          child: Text('Cancel')
+                          child: Text('Abbrechen')
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            //schedulen
-                           // final testcron = Cron();
-                            //testcron.schedule(Schedule.parse('*****'), () async {
+                           
 
-                           // });
-                            overlayEntry.remove();
+                            scheduleAlarmOverlay.remove();
                           } , 
-                          child: Text('Confirm')
+                          child: Text('Bestätigen')
                         ),
                       ],
                     ),

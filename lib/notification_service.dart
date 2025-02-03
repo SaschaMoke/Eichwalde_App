@@ -2,6 +2,69 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+List notificationdepartures = [];
+class NotificationDeparture {
+  final String destination;
+  final String? when;
+  final String plannedWhen;
+  final String line;
+
+  NotificationDeparture({
+    required this.destination,
+    this.when,
+    this.plannedWhen = '',
+    this.line = 'Unbekannt',
+  });
+  
+  factory NotificationDeparture.fromJson(Map<String, dynamic> json) {
+    return NotificationDeparture(
+      destination: json['destination']['name'],
+      when: json['when'] ?? 'Fahrt fällt aus',
+      plannedWhen: json['plannedWhen'],
+      line: json['line']['name'],
+    );
+  }
+}
+class NotificationVBBApiResponse {
+  final List notidepartures;
+  const NotificationVBBApiResponse({
+    required this.notidepartures,
+  });
+
+  factory NotificationVBBApiResponse.fromJson(Map<String, dynamic> json) {
+    return NotificationVBBApiResponse(
+      notidepartures: List.from(json['departures'].map((x) => NotificationDeparture.fromJson(x)),),
+    );
+  }
+}
+Future<String> getAPIData() async {
+  try {
+    final response = await http.get(
+      Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&remarks=false&duration=60'),
+    );
+
+      if (response.statusCode == 200) {
+        final apiResponse = NotificationVBBApiResponse.fromJson(jsonDecode(response.body));
+          notificationdepartures = apiResponse.notidepartures;
+        notificationdepartures.sort((a, b) {
+          final aTime = a.when ?? a.plannedWhen;
+          final bTime = b.when ?? b.plannedWhen;
+          return aTime.compareTo(bTime);
+        });
+      } else {
+        throw Exception('Failed to load data');        //evtl anzeigen lassen 
+      }
+    } catch (error) {
+      print('Error fetching data: $error');             //evtl anzeigen lassen
+    }
+  return 
+'''${notificationdepartures[0].line}  ${notificationdepartures[0].destination}  ${notificationdepartures[0].when.substring(11,16)}                    
+${notificationdepartures[1].line}  ${notificationdepartures[1].destination}  ${notificationdepartures[1].when.substring(11,16)}
+${notificationdepartures[2].line}  ${notificationdepartures[2].destination}  ${notificationdepartures[2].when.substring(11,16)}''';
+}
 
 class NotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -86,14 +149,13 @@ class NotificationService {
     await notificationsPlugin.zonedSchedule(
       id, 
       title, 
-      body /*= 'Aktualisiere Daten...'*/,
+      body = await getAPIData(),
       scheduledDate, 
       notificationDetails(), 
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       //Daily repeat (togglebar machen)
       matchDateTimeComponents: DateTimeComponents.time,
-      payload: 'API_Call',
     );
 
     //notificationsPlugin.cancel(id)  <- toggle ding
