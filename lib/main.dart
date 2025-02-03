@@ -633,13 +633,77 @@ class Homepage extends StatelessWidget {
   }
 }
 
+
+
 class GewerbePage extends StatefulWidget {
 
   @override
   State<GewerbePage> createState() => _GewerbePageState();
 }
 
+
+
+
 class _GewerbePageState extends State<GewerbePage> {
+
+OverlayEntry? overlayEntry;
+
+
+
+void removeOverlay() {
+  overlayEntry?.remove();
+  overlayEntry = null;
+}
+
+void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
+  removeOverlay(); 
+  final screenSize = MediaQuery.of(context).size;
+  final overlayWidth = MediaQuery.of(context).size.width * 0.7;
+  final overlayHeight =  250.00; 
+  double dx = position.dx;
+  double dy = position.dy;
+
+  if (dx + overlayWidth > screenSize.width) {
+      dx = screenSize.width - overlayWidth - 10;
+    }
+  if (dy + overlayHeight > screenSize.height) {
+      dy = screenSize.height - overlayHeight - 10;
+    }
+
+  overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      left: MediaQuery.of(context).size.width * 0.1,  
+      top: MediaQuery.of(context).size.longestSide * 0.62, 
+      width: MediaQuery.of(context).size.width * 0.8, 
+      height: overlayHeight,
+      child: Material(
+        elevation: 4,
+        color: Color.fromARGB(255, 150, 200, 150),
+        borderRadius: BorderRadius.circular(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, 
+          children: [
+            ListTile(
+              title: Text(gewerbe.adresse, style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(gewerbe.gewerbeart),
+            ),
+            Divider(), 
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text('Telefon: +' + gewerbe.tel.toString()),
+            ),
+            TextButton(
+              onPressed: removeOverlay, 
+              child: Text("Schließen"),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  Overlay.of(context).insert(overlayEntry!);
+}
 
   @override
 
@@ -662,15 +726,18 @@ class _GewerbePageState extends State<GewerbePage> {
         itemCount: gewerbes.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
           crossAxisCount: 2,
-          mainAxisExtent: 250,
+          mainAxisExtent: 225,
           ),
         itemBuilder: (context, index) {
-          return SizedBox(
-                      width: 200,
-                      height: 1000,
-                      child: Card(
-                        color: Color.fromARGB(255, 150, 200, 150),
-                        child: Column(
+          return GestureDetector(
+            onTapDown: (details) {
+              showOverlay(context, gewerbes[index], details.globalPosition);
+            },
+            child:Container(
+                        padding: EdgeInsets.all(0.5),
+                        child:Card(
+                          color: Color.fromARGB(255, 150, 200, 150),
+                          child: Column(
                           children: [
                             SizedBox(
                               height: 10,
@@ -685,9 +752,8 @@ class _GewerbePageState extends State<GewerbePage> {
                             SizedBox(
                               height: 5,
                             ),
-                            SizedBox( 
-                              width: 160,
-                              child: Text(
+                            SizedBox(
+                              child:Text(
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromRGBO(232, 240, 225, 1)
@@ -696,18 +762,17 @@ class _GewerbePageState extends State<GewerbePage> {
                               gewerbes[index].name,
                               ),
                             ),
-                          ],
+                          ]
                         ),
                       ),
-                    );
-              
+                    ), 
+                  );       
 
-            },
+            }
            ),
-          );
+         );
         }
-
-  }
+}
 
 class Terminepage extends StatefulWidget {
   @override
