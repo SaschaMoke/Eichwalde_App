@@ -655,11 +655,14 @@ class _GewerbePageState extends State<GewerbePage> {
       ),
       body: GridView.builder(
         itemCount: gewerbes.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( crossAxisCount: 2),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
+          crossAxisCount: 2,
+          mainAxisExtent: 250,
+          ),
         itemBuilder: (context, index) {
           return SizedBox(
                       width: 200,
-                      height: 500,
+                      height: 1000,
                       child: Card(
                         color: Color.fromARGB(255, 150, 200, 150),
                         child: Column(
