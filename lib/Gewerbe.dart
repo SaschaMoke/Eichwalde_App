@@ -25,7 +25,7 @@ List gewerbes = [
   Gewerbe('Dachkonzept Ihle Zimmerei- und Dachdeckerhandwerk','Zimmermann','Waldstraße 207',493081829486,'Assets/image8.png'),
   Gewerbe('Das Rabenmütterchen - Keramikwerkstatt','Töpferei','Am Graben 5',49306756767,'Assets/image9.png'),
   Gewerbe('DJ und Veranstaltungsservice','Partyservice','-',4917620703289,'Assets/image10.png'),
-  Gewerbe('Dr. Jochen Keutel Unternehmensberatung','Beratung','Schillerstraße 33',491714076418,'Assets/wappen_eichwalde.png'),
+  Gewerbe('Dr. Jochen Keutel Unternehmensberatung','Beratung','Schillerstraße 33',491714076418,'Assets/wappen_Eichwalde.png'),
   Gewerbe('EDEKA Eichwalde','Einzelhandel','Bahnhofstraße 81',0,'Assets/image11.png'),
   Gewerbe('Eichenapotheke Eichwalde','Medizinische Versorgung','Bahnhofstraße 4',49306750960,'Asstes/image12.png'),
   Gewerbe('KOMMA - Eichwalder Buchhandlung','Buchhandlung','Bahnhofstraße 87',49306758511,'Assets/wappen_Eichwalde.png'),
