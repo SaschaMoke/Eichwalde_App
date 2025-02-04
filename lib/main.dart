@@ -633,16 +633,11 @@ class Homepage extends StatelessWidget {
   }
 }
 
-
-
 class GewerbePage extends StatefulWidget {
 
   @override
   State<GewerbePage> createState() => _GewerbePageState();
 }
-
-
-
 
 class _GewerbePageState extends State<GewerbePage> {
 

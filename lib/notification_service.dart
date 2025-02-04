@@ -70,6 +70,11 @@ class NotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
+ 
+ // @pragma('vm: entry-point')
+ // void notificationTapBackground(NotificationResponse notificationResponse) {
+ //   showNotification();
+ // }
   
   //Initialize
   Future<void> initNotification() async {
@@ -94,7 +99,10 @@ class NotificationService {
       iOS: initSettingsIOS,
     );
 
-    await notificationsPlugin.initialize(initSettings);
+    await notificationsPlugin.initialize(
+      initSettings,
+      //onDidReceiveBackgroundNotificationResponse:notificationTapBackground,
+    );
     _isInitialized = true;
   }
 
@@ -123,7 +131,7 @@ class NotificationService {
     return notificationsPlugin.show(
       id, 
       title, 
-      body,
+      body = 'Hallo',
       notificationDetails(),
     );
   }
@@ -149,13 +157,14 @@ class NotificationService {
     await notificationsPlugin.zonedSchedule(
       id, 
       title, 
-      body = await getAPIData(),
+      body = 'Hi',//await getAPIData(),
       scheduledDate, 
       notificationDetails(), 
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       //Daily repeat (togglebar machen)
       matchDateTimeComponents: DateTimeComponents.time,
+      //payload: 'Hallo',
     );
 
     //notificationsPlugin.cancel(id)  <- toggle ding
@@ -163,4 +172,6 @@ class NotificationService {
       await notificationsPlugin.cancelAll();
     }
   }
+
 }
+
