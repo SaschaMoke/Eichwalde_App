@@ -654,7 +654,7 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
   removeOverlay(); 
   final screenSize = MediaQuery.of(context).size;
   final overlayWidth = MediaQuery.of(context).size.width * 0.7;
-  final overlayHeight =  250.00; 
+  final overlayHeight =  210.00; 
   double dx = position.dx;
   double dy = position.dy;
 
@@ -702,7 +702,92 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
 
   @override
 
+ /*List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
+
+  Widget bloc(double width, int index) {
+    bool isExpanded = expandableState[index];
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          expandableState[index] = !isExpanded;
+        });
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        margin: const EdgeInsets.all(10.0),
+        width: isExpanded ? width * 0.9 : width * 0.45,
+        height: isExpanded ? 300 : 200,
+        decoration: BoxDecoration(
+          color: Colors.green[300],
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              gewerbes[index].image,
+              width: isExpanded ? 120 : 80,
+              height: isExpanded ? 120 : 80,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              gewerbes[index].name,
+              style: TextStyle(
+                fontSize: isExpanded ? 20 : 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            if (isExpanded) ...[
+              const SizedBox(height: 10),
+              Text(
+                gewerbes[index].adresse,
+                style: TextStyle(color: Colors.white70),
+                textAlign: TextAlign.center,
+              ),
+            ]
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green[400],
+        title: Text(
+          'Gewerbe',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+            letterSpacing: 2.0,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: GridView.builder(
+        itemCount: gewerbes.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1.0, // Passt die Größe an
+        ),
+        itemBuilder: (context, index) {
+          return bloc(width, index);
+        },
+      ),
+    );
+  }
+} */
+
+ Widget build(BuildContext context) {
+ // List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(150, 200, 150, 1),
@@ -721,10 +806,14 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
         itemCount: gewerbes.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
           crossAxisCount: 2,
-          mainAxisExtent: 225,
+          mainAxisExtent: 250,
           ),
         itemBuilder: (context, index) {
           return GestureDetector(
+            /*onTap: () { setState(() {
+              expandableState[index] = true;
+            });*/
+          
             onTapDown: (details) {
               showOverlay(context, gewerbes[index], details.globalPosition);
             },
@@ -748,6 +837,7 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
                               height: 5,
                             ),
                             SizedBox(
+                            width: 160,
                               child:Text(
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -766,8 +856,10 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
             }
            ),
          );
-        }
+      }
 }
+
+
 
 class Terminepage extends StatefulWidget {
   @override

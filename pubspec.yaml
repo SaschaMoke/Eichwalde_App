@@ -59,6 +59,11 @@ flutter:
     - Assets/image10.png
     - Assets/image11.png
     - Assets/image12.png
+    - Assets/image13.png
+    - Assets/image14.png
+    - Assets/image15.png
+    - Assets/image16.png
+    - Assets/image17.png
     
   # To add assets to your application, add an assets section, like this:
   # assets:
