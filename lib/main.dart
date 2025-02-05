@@ -871,12 +871,13 @@ class _TerminepageState extends State<Terminepage> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   Map<DateTime, List<String>> _events = {};
-
-  @override
-  void initState() {
-    super.initState();
-    initializeDateFormatting('de_DE', null);
-  }
+  String _selectedService = "Einwohnermeldeamt";
+  List<String> _services = [
+    "Einwohnermeldeamt",
+    "Abholung Ausweis/Pass",
+    "Standesamt",
+    "Sachgebiet Bildung und Soziales"
+  ];
 
   void _addEvent(String event) {
     setState(() {
@@ -938,18 +939,38 @@ class _TerminepageState extends State<Terminepage> {
           showDialog(
             context: context,
             builder: (context) {
-              TextEditingController _eventController = TextEditingController();
+              TextEditingController _timeController = TextEditingController();
               return AlertDialog(
-                title: Text("Termin hinzufügen"),
-                content: TextField(
-                  controller: _eventController,
-                  decoration: InputDecoration(hintText: "Terminbeschreibung"),
+                title: Text("Termin buchen"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DropdownButtonFormField(
+                      value: _selectedService,
+                      items: _services.map((service) {
+                        return DropdownMenuItem(
+                          value: service,
+                          child: Text(service),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedService = value.toString();
+                        });
+                      },
+                      decoration: InputDecoration(labelText: "Dienstleistung"),
+                    ),
+                    TextField(
+                      controller: _timeController,
+                      decoration: InputDecoration(hintText: "Uhrzeit (z.B. 10:30)"),
+                    ),
+                  ],
                 ),
                 actions: [
                   TextButton(
                     onPressed: () {
-                      if (_eventController.text.isNotEmpty) {
-                        _addEvent(_eventController.text);
+                      if (_timeController.text.isNotEmpty) {
+                        _addEvent("$_selectedService um ${_timeController.text}");
                       }
                       Navigator.pop(context);
                     },
@@ -965,6 +986,7 @@ class _TerminepageState extends State<Terminepage> {
     );
   }
 }
+
 
 class RandomBox extends StatelessWidget {
   const RandomBox({
