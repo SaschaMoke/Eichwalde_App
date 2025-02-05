@@ -13,6 +13,9 @@ import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
+//import 'package:flutter_localizations/flutter_localizations.dart';
+
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -878,6 +881,7 @@ class _TerminepageState extends State<Terminepage> {
     "Standesamt",
     "Sachgebiet Bildung und Soziales"
   ];
+  TextEditingController _timeController = TextEditingController();
 
   void _addEvent(String event) {
     setState(() {
@@ -885,6 +889,30 @@ class _TerminepageState extends State<Terminepage> {
       _events.putIfAbsent(normalizedDay, () => []).add(event);
     });
   }
+
+  Future<void> _selectTime(BuildContext context) async {
+  TimeOfDay? picked = await showTimePicker(
+    context: context,
+    initialTime: TimeOfDay.now(),
+    helpText: 'Uhrzeit auswählen',
+    cancelText: 'Abbrechen',
+    confirmText: 'OK',
+    hourLabelText: 'Stunde',
+    minuteLabelText: 'Minute',
+  );
+
+  if (picked != null) {
+    final now = DateTime.now();
+    final selectedDateTime = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+    final formattedTime = DateFormat.Hm("de_DE").format(selectedDateTime);
+    
+    if (mounted) {
+      setState(() {
+        _timeController.text = formattedTime;
+      });
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -936,10 +964,10 @@ class _TerminepageState extends State<Terminepage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          _timeController.clear();
           showDialog(
             context: context,
             builder: (context) {
-              TextEditingController _timeController = TextEditingController();
               return AlertDialog(
                 title: Text("Termin buchen"),
                 content: Column(
@@ -962,7 +990,9 @@ class _TerminepageState extends State<Terminepage> {
                     ),
                     TextField(
                       controller: _timeController,
-                      decoration: InputDecoration(hintText: "Uhrzeit (z.B. 10:30)"),
+                      decoration: InputDecoration(hintText: "Uhrzeit auswählen"),
+                      readOnly: true,
+                      onTap: () => _selectTime(context),
                     ),
                   ],
                 ),
