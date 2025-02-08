@@ -170,6 +170,7 @@ class Verkehrspage extends StatefulWidget {
   //fahrt fällt aus schöner machen! (-//-)
   //benachrichtigung (Wecker)
   //appicon
+  //Stationswahl mit DropdownMenu
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
   String lastUpdate = '';
@@ -594,45 +595,36 @@ OverlayEntry scheduleAlarmOverlay = OverlayEntry(
 class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;                          //Zugriff nur auf current, da er nicht mehr braucht
 
-   IconData LikeIcon;
-    if (appState.favorites.contains(pair)) {
-      LikeIcon = Icons.favorite;
-    } else {
-      LikeIcon = Icons.favorite_border;
-    }
-
-    return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            //Text('A random idea:'),
-            
-            RandomBox(pair: pair),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton.icon(onPressed: () {
-                  appState.toggleFavorite();                             //Aktionen
-                }, 
-                icon: Icon(LikeIcon),
-                label: const Text('Like')),
-                const SizedBox(width: 10),
-                
-                
-                ElevatedButton(onPressed: () {
-                  appState.GetNext();                             //Aktionen
-                }, 
-                child: const Text('Next')),
-               
-              ],
-            )                              //Design
-          ],
-        ),
-      );
+  return Column(
+    children: [
+      const SizedBox(height: 50),
+      Row(
+        children: [
+          SizedBox(
+            width: 25,
+          ),
+          SizedBox(
+            height: 75,
+            width: 75,
+            child: Image(
+              image: AssetImage('Assets/wappen_Eichwalde.png')
+            ),
+          ),
+          SizedBox(
+            width: 5
+          ),
+          Text(
+            style: TextStyle(
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
+            ),
+            'Eichwalde'
+          ),
+        ],
+      ),                              //Design
+    ],
+  );
   }
 }
 
@@ -1012,33 +1004,6 @@ class _TerminepageState extends State<Terminepage> {
           );
         },
         child: Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-
-class RandomBox extends StatelessWidget {
-  const RandomBox({
-    super.key,
-    required this.pair,
-  });
-
-  final WordPair pair;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    final style = theme.textTheme.displayMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
-    );
-
-    return Card(
-      color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Text(pair.asLowerCase, style: style,),
       ),
     );
   }

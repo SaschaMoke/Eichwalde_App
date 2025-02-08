@@ -64,5 +64,5 @@ class VBBApiResponse {
       departures: List.from(json['departures'].map((x) => Departure.fromJson(x)),),
       lastUpdate: DateTime.fromMillisecondsSinceEpoch(json['realtimeDataUpdatedAt']),
     );
+    }
   }
-}
