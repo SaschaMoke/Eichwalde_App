@@ -639,6 +639,12 @@ class _GewerbePageState extends State<GewerbePage> {
 OverlayEntry? overlayEntry;
 
 
+OverlayEntry? _overlayEntry;
+
+void closeOverlay() {
+  _overlayEntry?.remove();
+  _overlayEntry = null;
+}
 
 void removeOverlay() {
   overlayEntry?.remove();
@@ -809,8 +815,11 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
               expandableState[index] = true;
             });*/
           
-            onTapDown: (details) {
+            onTapDown: (details) {if (_overlayEntry != null){
+              removeOverlay();
+              } else {
               showOverlay(context, gewerbes[index], details.globalPosition);
+            }
             },
             child:Container(
                         padding: EdgeInsets.all(0.5),
