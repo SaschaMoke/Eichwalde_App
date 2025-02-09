@@ -592,41 +592,75 @@ OverlayEntry scheduleAlarmOverlay = OverlayEntry(
   },
 );
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   @override
+
+
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+ int selectedIndex = 0;
+ 
   Widget build(BuildContext context) {
 
   return Column(
-    children: [
-      const SizedBox(height: 50),
+    children:[
+      const SizedBox(height: 30),
       Row(
         children: [
-          SizedBox(
+        SizedBox(
             width: 25,
           ),
-          SizedBox(
+        SizedBox(
             height: 75,
             width: 75,
             child: Image(
               image: AssetImage('Assets/wappen_Eichwalde.png')
             ),
           ),
-          SizedBox(
+         SizedBox(
             width: 5
           ),
-          Text(
+          SizedBox(
+            child: Text(
             style: TextStyle(
               fontSize: 50,
               fontWeight: FontWeight.bold,
             ),
             'Eichwalde'
           ),
-        ],
-      ),                              //Design
-    ],
+          ),
+        ]
+      ),//Design
+      ElevatedButton(onPressed: () { Navigator.push(context,
+      MaterialPageRoute(builder:(context)=> admincheckPage()),
+      );
+      },
+      child: Text('Admin'),
+      )
+    ]
   );
   }
 }
+
+class admincheckPage extends StatefulWidget {
+  const admincheckPage({super.key});
+
+  @override
+  State<admincheckPage> createState() => _admincheckPageState();
+}
+
+class _admincheckPageState extends State<admincheckPage> {
+  @override
+  Widget build(BuildContext context) { 
+  int Pin = 000;
+    return Scaffold(
+      body: Text('Hallo'),
+    );
+  }
+}
+
 
 class GewerbePage extends StatefulWidget {
 
@@ -703,88 +737,6 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
 
   @override
 
- /*List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
-
-  Widget bloc(double width, int index) {
-    bool isExpanded = expandableState[index];
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          expandableState[index] = !isExpanded;
-        });
-      },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        margin: const EdgeInsets.all(10.0),
-        width: isExpanded ? width * 0.9 : width * 0.45,
-        height: isExpanded ? 300 : 200,
-        decoration: BoxDecoration(
-          color: Colors.green[300],
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              gewerbes[index].image,
-              width: isExpanded ? 120 : 80,
-              height: isExpanded ? 120 : 80,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              gewerbes[index].name,
-              style: TextStyle(
-                fontSize: isExpanded ? 20 : 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            if (isExpanded) ...[
-              const SizedBox(height: 10),
-              Text(
-                gewerbes[index].adresse,
-                style: TextStyle(color: Colors.white70),
-                textAlign: TextAlign.center,
-              ),
-            ]
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[400],
-        title: Text(
-          'Gewerbe',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 30,
-            letterSpacing: 2.0,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: GridView.builder(
-        itemCount: gewerbes.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1.0, // Passt die Größe an
-        ),
-        itemBuilder: (context, index) {
-          return bloc(width, index);
-        },
-      ),
-    );
-  }
-} */
 
  Widget build(BuildContext context) {
  // List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
