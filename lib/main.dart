@@ -13,6 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 //import 'package:flutter_localizations/flutter_localizations.dart';
 
 
@@ -625,71 +627,107 @@ OverlayEntry scheduleAlarmOverlay = OverlayEntry(
   },
 );
 
+
+
 class Homepage extends StatefulWidget {
   @override
-
-
   State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
- int selectedIndex = 0;
- 
-  Widget build(BuildContext context) {
+  int selectedIndex = 0;
 
-  return Column(
-    children:[
-      const SizedBox(height: 30),
-      Row(
-        children: [
-        SizedBox(
-            width: 25,
-          ),
-        SizedBox(
-            height: 75,
-            width: 75,
-            child: Image(
-              image: AssetImage('Assets/wappen_Eichwalde.png')
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 30),
+        Row(
+          children: [
+            SizedBox(width: 25),
+            SizedBox(
+              height: 75,
+              width: 75,
+              child: Image(
+                image: AssetImage('Assets/wappen_Eichwalde.png'),
+              ),
             ),
-          ),
-         SizedBox(
-            width: 5
-          ),
-          SizedBox(
-            child: Text(
-            style: TextStyle(
-              fontSize: 50,
-              fontWeight: FontWeight.bold,
+            SizedBox(width: 5),
+            Text(
+              'Eichwalde',
+              style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            'Eichwalde'
-          ),
-          ),
-        ]
-      ),//Design
-      ElevatedButton(onPressed: () { Navigator.push(context,
-      MaterialPageRoute(builder:(context)=> admincheckPage()),
-      );
-      },
-      child: Text('Admin'),
-      )
-    ]
-  );
+          ],
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AdminCheckPage()),
+            );
+          },
+          child: Text('Admin'),
+        )
+      ],
+    );
   }
 }
 
-class admincheckPage extends StatefulWidget {
-  const admincheckPage({super.key});
+class AdminCheckPage extends StatefulWidget {
+  const AdminCheckPage({super.key});
 
   @override
-  State<admincheckPage> createState() => _admincheckPageState();
+  State<AdminCheckPage> createState() => _AdminCheckPageState();
 }
 
-class _admincheckPageState extends State<admincheckPage> {
+class _AdminCheckPageState extends State<AdminCheckPage> {
+  Map<DateTime, List<String>> _events = {};
+
   @override
-  Widget build(BuildContext context) { 
-  int Pin = 000;
+  void initState() {
+    super.initState();
+    _loadEvents();
+  }
+
+  Future<void> _loadEvents() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? eventsString = prefs.getString('events');
+    if (eventsString != null) {
+      Map<String, dynamic> decodedEvents = jsonDecode(eventsString);
+      setState(() {
+        _events = decodedEvents.map(
+          (key, value) => MapEntry(DateTime.parse(key), List<String>.from(value)),
+        );
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('Hallo'),
+      appBar: AppBar(title: Text("Admin Panel")),
+      body: _events.isEmpty
+          ? Center(child: Text("Keine Termine gefunden"))
+          : ListView(
+              children: _events.entries.map((entry) {
+                return Card(
+                  margin: EdgeInsets.all(8),
+                  child: ListTile(
+                    title: Text(
+                      "${entry.key.day}.${entry.key.month}.${entry.key.year}",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: entry.value.map((event) => Text(event)).toList(),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
     );
   }
 }
@@ -848,8 +886,6 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
       }
 }
 
-
-
 class Terminepage extends StatefulWidget {
   @override
   _TerminepageState createState() => _TerminepageState();
@@ -868,37 +904,62 @@ class _TerminepageState extends State<Terminepage> {
     "Sachgebiet Bildung und Soziales"
   ];
   TextEditingController _timeController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEvents();
+  }
 
   void _addEvent(String event) {
     setState(() {
       final normalizedDay = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
       _events.putIfAbsent(normalizedDay, () => []).add(event);
+      _saveEvents();
     });
   }
 
-  Future<void> _selectTime(BuildContext context) async {
-  TimeOfDay? picked = await showTimePicker(
-    context: context,
-    initialTime: TimeOfDay.now(),
-    helpText: 'Uhrzeit auswählen',
-    cancelText: 'Abbrechen',
-    confirmText: 'OK',
-    hourLabelText: 'Stunde',
-    minuteLabelText: 'Minute',
-  );
+  Future<void> _saveEvents() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, List<String>> stringEvents = _events.map((key, value) => MapEntry(key.toIso8601String(), value));
+    await prefs.setString('events', jsonEncode(stringEvents));
+  }
 
-  if (picked != null) {
-    final now = DateTime.now();
-    final selectedDateTime = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
-    final formattedTime = DateFormat.Hm("de_DE").format(selectedDateTime);
-    
-    if (mounted) {
+  Future<void> _loadEvents() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? eventsString = prefs.getString('events');
+    if (eventsString != null) {
+      Map<String, dynamic> decodedEvents = jsonDecode(eventsString);
       setState(() {
-        _timeController.text = formattedTime;
+        _events = decodedEvents.map((key, value) => MapEntry(DateTime.parse(key), List<String>.from(value)));
       });
     }
   }
-}
+
+  Future<void> _selectTime(BuildContext context) async {
+    TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      helpText: 'Uhrzeit auswählen',
+      cancelText: 'Abbrechen',
+      confirmText: 'OK',
+      hourLabelText: 'Stunde',
+      minuteLabelText: 'Minute',
+    );
+
+    if (picked != null) {
+      final now = DateTime.now();
+      final selectedDateTime = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+      final formattedTime = DateFormat.Hm("de_DE").format(selectedDateTime);
+      
+      if (mounted) {
+        setState(() {
+          _timeController.text = formattedTime;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -951,6 +1012,7 @@ class _TerminepageState extends State<Terminepage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _timeController.clear();
+          _nameController.clear();
           showDialog(
             context: context,
             builder: (context) {
@@ -959,6 +1021,10 @@ class _TerminepageState extends State<Terminepage> {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: "Name eingeben"),
+                    ),
                     DropdownButtonFormField(
                       value: _selectedService,
                       items: _services.map((service) {
@@ -985,8 +1051,8 @@ class _TerminepageState extends State<Terminepage> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      if (_timeController.text.isNotEmpty) {
-                        _addEvent("$_selectedService um ${_timeController.text}");
+                      if (_timeController.text.isNotEmpty && _nameController.text.isNotEmpty) {
+                        _addEvent("${_nameController.text} - $_selectedService um ${_timeController.text}");
                       }
                       Navigator.pop(context);
                     },
