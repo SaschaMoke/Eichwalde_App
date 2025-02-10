@@ -177,6 +177,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   Timer? timer;
   int? expandedIndex;
   int? selectedindex;
+  Stations? selectedStation = Stations.eichwalde;
 
   int currentPickedHour = 0;
   int currentPickedMinute = 0;
@@ -201,7 +202,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   Future<void> fetchAndUpdateData() async {
     try {
       final response = await http.get(
-        Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&remarks=false&duration=60'),
+        Uri.parse('https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=false&duration=60'),
       );
 
       if (response.statusCode == 200) {
@@ -254,16 +255,48 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 ),
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 40,
-                      width: 370,
-                      child: Text(
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 380,
+                      child: DropdownMenu<Stations>(
+                        width: 380,
+                        initialSelection: Stations.eichwalde,
+                        controller: TextEditingController(),
+                        requestFocusOnTap: true,
+                        label: const Text('Ausgewählte Haltestelle'),
+                        onSelected: (Stations? val) {
+                          setState(() {
+                            selectedStation = val;
+                          });
+                          fetchAndUpdateData();
+                        },
+                        dropdownMenuEntries: Stations.values.map<DropdownMenuEntry<Stations>>(
+                          (Stations station) {
+                            return DropdownMenuEntry<Stations>(
+                              value: station,
+                              label: station.stationName,
+                              style: MenuItemButton.styleFrom(
+                                foregroundColor: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                            );
+                          }).toList(),
+                        menuStyle: MenuStyle(
+                          backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 255, 255, 255))
+                        ),
+                        textStyle: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
+                      /*Text(
                         textAlign: TextAlign.left,                //auf jeden Fall schöner machen
                         style: TextStyle(
                           fontSize: 30, 
                         ),
                         'S Eichwalde'
-                      ),
+                      ),*/
                     ),
                     SizedBox(
                       height: 330,

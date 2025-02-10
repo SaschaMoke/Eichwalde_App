@@ -1,5 +1,15 @@
 import 'package:intl/intl.dart';
 
+enum Stations {
+  friedenstr('Eichwalde, Friedenstr.', 900260665),
+  schmockwitz('Eichwalde, Schmöckwitzer Str.', 900260669),
+  eichwalde('S Eichwalde', 900260004);
+
+  const Stations(this.stationName, this.stationID);
+  final String stationName;
+  final int stationID;
+}
+
 class Departure {
   final String destination;
   final String? when;
