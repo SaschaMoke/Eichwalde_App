@@ -172,7 +172,6 @@ class Verkehrspage extends StatefulWidget {
   //fahrt fällt aus schöner machen! (-//-)
   //benachrichtigung (Wecker)
   //appicon
-  //Stationswahl mit DropdownMenu
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
   String lastUpdate = '';
@@ -275,6 +274,10 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           });
                           fetchAndUpdateData();
                         },
+                        hintText: selectedStation!.stationName,
+                        //helperText: 'Hello',
+                        //errorText: null,
+                        enableFilter: true,
                         dropdownMenuEntries: Stations.values.map<DropdownMenuEntry<Stations>>(
                           (Stations station) {
                             return DropdownMenuEntry<Stations>(
@@ -291,14 +294,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         textStyle: TextStyle(
                           color: Color.fromARGB(255, 0, 0, 0),
                         ),
-                      ),
-                      /*Text(
-                        textAlign: TextAlign.left,                //auf jeden Fall schöner machen
-                        style: TextStyle(
-                          fontSize: 30, 
+                        inputDecorationTheme: InputDecorationTheme(
+                          filled: true,
+                          fillColor: Color.fromARGB(255, 240, 240, 230),  //Farbe
+                          border: OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(Radius.circular(12))
+                          ),
                         ),
-                        'S Eichwalde'
-                      ),*/
+                      ),
                     ),
                     SizedBox(
                       height: 330,
@@ -639,39 +642,41 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 30),
-        Row(
-          children: [
-            SizedBox(width: 25),
-            SizedBox(
-              height: 75,
-              width: 75,
-              child: Image(
-                image: AssetImage('Assets/wappen_Eichwalde.png'),
+    return SafeArea(
+      child: Column(
+        children: [
+          //const SizedBox(height: 30),
+          Row(
+            children: [
+              const SizedBox(width: 25),
+              const SizedBox(
+                height: 75,
+                width: 75,
+                child: Image(
+                  image: AssetImage('Assets/wappen_Eichwalde.png'),
+                ),
               ),
-            ),
-            SizedBox(width: 5),
-            Text(
-              'Eichwalde',
-              style: TextStyle(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
+              SizedBox(width: 5),
+              Text(
+                'Eichwalde',
+                style: TextStyle(
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AdminCheckPage()),
-            );
-          },
-          child: Text('Admin'),
-        )
-      ],
+            ],
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AdminCheckPage()),
+              );
+            },
+            child: Text('Admin'),
+          )
+        ],
+      ),
     );
   }
 }
