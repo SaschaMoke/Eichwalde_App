@@ -689,6 +689,61 @@ class AdminCheckPage extends StatefulWidget {
 }
 
 class _AdminCheckPageState extends State<AdminCheckPage> {
+   String Eingabe = '';
+  
+  void updateEingabe(String text){
+    setState(() {
+      Eingabe = text;
+      
+    });
+    {if (Eingabe == '1234'){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AdminPage()),
+              );
+              }
+      }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Admin Panel")),
+      body:Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:[
+         /*Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width*0.2,
+              ),
+              SizedBox(
+                child:*/TextField(
+                onSubmitted: updateEingabe,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Passwort'
+                ),
+                ),
+           //   ),
+       //     ]
+  //       )
+        ] 
+     ),
+    );
+      
+  }
+}
+
+class AdminPage extends StatefulWidget {
+  const AdminPage({super.key});
+
+  @override
+  State<AdminPage> createState() => _AdminPageState();
+}
+
+class _AdminPageState extends State<AdminPage> {
   Map<DateTime, List<String>> _events = {};
 
   @override
@@ -734,6 +789,7 @@ class _AdminCheckPageState extends State<AdminCheckPage> {
               }).toList(),
             ),
     );
+
   }
 }
 
