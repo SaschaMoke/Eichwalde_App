@@ -2,6 +2,7 @@
 import 'package:eichwalde_app/gewerbe.dart';
 import 'package:eichwalde_app/notification_service.dart';
 import 'package:eichwalde_app/vbb_api.dart';
+import 'package:eichwalde_app/settings.dart';
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
@@ -98,19 +99,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
-          
-         // floatingActionButton: FloatingActionButton(
-           // onPressed: () {
-                //setState(() {
-                  //page = Placeholder();
-                //selectedIndex = 2;
-            //  }); 
-            //},
+          floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => Overlay.of(context).insert(settingsPage),
             //foregroundColor: customizations[index].$1,
             //backgroundColor: customizations[index].$2,
             //shape: customizations[index].$3,
-            //child: const Icon(Icons.settings),
-          //),
+            child: const Icon(Icons.settings),
+          ),
 
           bottomNavigationBar: NavigationBarTheme(
             data:  const NavigationBarThemeData(
@@ -148,6 +144,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 selectedIcon: Icon(Icons.calendar_month),
                 icon: Icon(Icons.calendar_month_outlined),
                 label: 'Termine',
+              ),
+               NavigationDestination(
+                selectedIcon: Icon(Icons.abc_outlined),
+                icon: Icon(Icons.abc),
+                label: 'Test5er',
               ),
             ],
             ),
