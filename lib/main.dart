@@ -747,6 +747,8 @@ class AdminPage extends StatefulWidget {
 class _AdminPageState extends State<AdminPage> {
   Map<DateTime, List<String>> _events = {};
 
+  final storage = 'gs:eichwalde-app-3527e.firebasestorage.app';
+
   @override
   void initState() {
     super.initState();
