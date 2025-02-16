@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "684116063569",
+    "project_id": "eichwalde-app-3527e",
+    "storage_bucket": "eichwalde-app-3527e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684116063569:android:c130d3cdae28ef9a644f70",
+        "android_client_info": {
+          "package_name": "com.example.eichwalde_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcPRgBRld9TlEVPwryEQPYElzT_yU4_u0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

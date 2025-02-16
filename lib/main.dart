@@ -1,5 +1,7 @@
 //import 'package:cron/cron.dart';
 import 'package:eichwalde_app/gewerbe.dart';
+import 'cloudgewerbe.dart';
+//import 'Gewerbecloud.dart';
 import 'package:eichwalde_app/notification_service.dart';
 import 'package:eichwalde_app/vbb_api.dart';
 import 'package:eichwalde_app/settings.dart';
@@ -15,14 +17,16 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 //import 'package:flutter_localizations/flutter_localizations.dart';
 
 
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp();
   //init notifications
   NotificationService().initNotification();
   initializeDateFormatting('de_DE', null);  // Deutsch aktivieren
@@ -747,7 +751,45 @@ class AdminPage extends StatefulWidget {
 class _AdminPageState extends State<AdminPage> {
   Map<DateTime, List<String>> _events = {};
 
-  final storage = 'gs:eichwalde-app-3527e.firebasestorage.app';
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController gewerbeartController = TextEditingController();
+  final TextEditingController adresseController = TextEditingController();
+  final TextEditingController telController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
+  final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
+    
+
+  void _clearFields() {
+    nameController.clear();
+    gewerbeartController.clear();
+    adresseController.clear();
+    telController.clear();
+    imageController.clear();
+  }
+
+   Future<void> _addGewerbe() async {
+    String name = nameController.text;
+    String gewerbeart = gewerbeartController.text;
+    String adresse = adresseController.text;
+    int? tel = int.tryParse(telController.text);
+    String image = imageController.text;
+
+    if (name.isNotEmpty && gewerbeart.isNotEmpty && adresse.isNotEmpty && tel != null) {
+      await cloudGewerbe.addGewerbe(name, gewerbeart, adresse, tel, image);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Gewerbe erfolgreich hinzugefügt!")),
+      );
+      _clearFields();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Bitte alle Felder ausfüllen!")),
+      );
+    }
+  }
+
+  @override
+  
 
   @override
   void initState() {
@@ -775,7 +817,8 @@ class _AdminPageState extends State<AdminPage> {
       body: _events.isEmpty
           ? Center(child: Text("Keine Termine gefunden"))
           : ListView(
-              children: _events.entries.map((entry) {
+              children:[
+                ListView(children: _events.entries.map((entry) {
                 return Card(
                   margin: EdgeInsets.all(8),
                   child: ListTile(
@@ -790,7 +833,23 @@ class _AdminPageState extends State<AdminPage> {
                   ),
                 );
               }).toList(),
-            ),
+              ),
+              Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(controller: nameController, decoration: InputDecoration(labelText: "Name")),
+            TextField(controller: gewerbeartController, decoration: InputDecoration(labelText: "Gewerbeart")),
+            TextField(controller: adresseController, decoration: InputDecoration(labelText: "Adresse")),
+            TextField(controller: telController, decoration: InputDecoration(labelText: "Telefonnummer"), keyboardType: TextInputType.number),
+            TextField(controller: imageController, decoration: InputDecoration(labelText: "Bild-URL")),
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: _addGewerbe, child: Text("Gewerbe hinzufügen")),
+          ],
+        ),
+      ),
+     ]),
+        
     );
 
   }
