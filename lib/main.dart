@@ -173,6 +173,7 @@ class Verkehrspage extends StatefulWidget {
   State<Verkehrspage> createState() => _VerkehrspageState();
 }
   //evtl kein ausklappen
+  //S Eichwalde steht schon in Auswahl
   //list sortieren nach zeit (sollte funktionieren, muss noch geprüft werden)
   //fahrt fällt aus schöner machen! (-//-)
   //benachrichtigung (Wecker)
@@ -246,9 +247,82 @@ class _VerkehrspageState extends State<Verkehrspage> {
         body: Center(
           child: Column(  
             children: [
-              const SizedBox(
-                height: 250,
+              //const SizedBox(
+                //height: 20,
+              //),
+              SafeArea( //Safe Area nach oben, Textfeld hier drüber
+                child: Container(
+                  height: 200,
+                  width: 400,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 5,
+                      color: Color.fromARGB(255, 0, 200, 0),
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Color.fromARGB(255, 235, 235, 235),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 300,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            height: 100,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color.fromARGB(255, 255, 255, 255),
+                            ),
+                            child: Container( 
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 26,
+                                    width: 26,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color: Color.fromARGB(255, 255, 0, 0),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Container(
+                                    height: 26,
+                                    width: 26,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color: Color.fromARGB(255, 255, 255, 0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
+              //const SizedBox(
+              //  height: 50,
+              //),
               Container(
                 width: 400,
                 height: 400,

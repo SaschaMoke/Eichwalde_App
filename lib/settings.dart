@@ -20,8 +20,12 @@ OverlayEntry settingsPage = OverlayEntry(
             height: 60,
             width: 380,           //dynamisch
             child: Card(
-              child: Text('Text'),
-            )
+              child: Row(
+                children: [
+                  Text('Text'),
+                ],
+              ),
+            ),
           ),
         ],
       ),
