@@ -1,4 +1,5 @@
 //import 'package:cron/cron.dart';
+import 'package:eichwalde_app/Read%20data/getGewerbeName.dart';
 import 'package:eichwalde_app/gewerbe.dart';
 import 'cloudgewerbe.dart';
 //import 'Gewerbecloud.dart';
@@ -743,7 +744,7 @@ class _HomepageState extends State<Homepage> {
               ),
             ],
           ),
-          /*ElevatedButton(
+          ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
@@ -751,7 +752,7 @@ class _HomepageState extends State<Homepage> {
               );
             },
             child: Text('Admin'),
-          )*/
+          ),
         ],
       ),
     );
@@ -839,7 +840,7 @@ class _AdminPageState extends State<AdminPage> {
     imageController.clear();
   }
 
-   Future<void> _addGewerbe() async {
+   Future _addGewerbe() async {
     String name = nameController.text;
     String gewerbeart = gewerbeartController.text;
     String adresse = adresseController.text;
@@ -890,7 +891,7 @@ class _AdminPageState extends State<AdminPage> {
           ? Center(child: Text("Keine Termine gefunden"))
           : ListView(
               children:[
-                ListView(children: _events.entries.map((entry) {
+                /*ListView(children: _events.entries.map((entry) {
                 return Card(
                   margin: EdgeInsets.all(8),
                   child: ListTile(
@@ -905,11 +906,10 @@ class _AdminPageState extends State<AdminPage> {
                   ),
                 );
               }).toList(),
-              ),
-              Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
+              ),*/
+            Card(
+              child: Column(
+              children: [
             TextField(controller: nameController, decoration: InputDecoration(labelText: "Name")),
             TextField(controller: gewerbeartController, decoration: InputDecoration(labelText: "Gewerbeart")),
             TextField(controller: adresseController, decoration: InputDecoration(labelText: "Adresse")),
@@ -934,6 +934,8 @@ class GewerbePage extends StatefulWidget {
 }
 
 class _GewerbePageState extends State<GewerbePage> {
+
+final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
 
 OverlayEntry? overlayEntry;
 
@@ -1020,7 +1022,49 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
         ),
         centerTitle: true,
       ),
-      body: GridView.builder(
+      body: FutureBuilder(
+        future: cloudGewerbe.getDocId(),
+        builder: (context, snapshot){
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
+          crossAxisCount: 2,
+          mainAxisExtent: 250,
+            ),
+          itemCount: cloudGewerbe.docIDs.length,
+          itemBuilder: (context,index) {
+            return GestureDetector(
+              child: Container(
+                        padding: EdgeInsets.all(0.5),
+                        child:Card(
+                          color: Color.fromARGB(255, 150, 200, 150),
+                          child: Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              width: 150,
+                              height: 120,
+                              /*child: Image(
+                                image: AssetImage(gewerbes[index].image)
+                              ),*/
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                            width: 160,
+                              child: Getgewerbename(documentId: cloudGewerbe.docIDs[index]),
+                              ),
+                          ]
+                        ),
+                      ),
+                    ), 
+                  );
+          }
+          );
+        })
+      /* GridView.builder(
         itemCount: gewerbes.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
           crossAxisCount: 2,
@@ -1075,7 +1119,7 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
                   );       
 
             }
-           ),
+           ),*/
          );
       }
 }

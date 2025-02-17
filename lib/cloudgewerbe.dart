@@ -12,4 +12,17 @@ class Cloudgewerbe {
       'image': image,
     });
   }
+
+  List<String> docIDs = [];
+
+  Future getDocId() async {
+    await FirebaseFirestore.instance.collection('Gewerbe').get().then(
+      (snapshot) => snapshot.docs.forEach((document) {
+        print(document.reference);
+        docIDs.add(document.reference.id);
+      }
+    ),
+    );
+
+  }
 }
