@@ -10,6 +10,52 @@ enum Stations {
   final int stationID;
 }
 
+class SchrankeZug {
+  final int time;
+  final String id;
+
+  SchrankeZug({
+    required this.time,
+    required this.id,
+  });
+}
+
+List schrankeTrains = [];
+//Unterschied Richtung einbauen
+bool checkSchranke(List departures) {
+  DateTime nowSchranke = DateTime.now();
+  var currentHourSchranke = int.parse(DateFormat('HH').format(nowSchranke));
+  var currentMinSchranke = int.parse(DateFormat('mm').format(nowSchranke));
+  
+  for (var dep in departures) {
+    if (dep.product == 'suburban') {
+      int mincountSchranke;
+      var formattedHour = int.parse(dep.formattedHour);
+      var formattedMin = int.parse(dep.formattedMin);
+      if (formattedHour == currentHourSchranke) {
+        mincountSchranke = (formattedMin-currentMinSchranke);
+      } else {
+        mincountSchranke = (formattedMin+(60-currentMinSchranke));
+      }
+
+      if (mincountSchranke < 2) {
+        if (!schrankeTrains.contains(dep)) {
+          schrankeTrains.add(dep);
+        }
+        if (mincountSchranke < 0) {
+          schrankeTrains.remove(dep);
+        }
+      }
+    }
+  }
+
+  if (schrankeTrains.isEmpty) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 class Departure {
   final String destination;
   final String? when;
@@ -18,7 +64,7 @@ class Departure {
   final String? platform;
   final String line;
   final String product;
-  //final bool? cancelled;
+  final String tripID;
 
   Departure({
     required this.destination,
@@ -28,7 +74,7 @@ class Departure {
     this.platform,
     this.line = 'Unbekannt',
     this.product = 'Unbekannt',
-    //this.cancelled,
+    this.tripID = 'Unbekannt',
   });
   
   factory Departure.fromJson(Map<String, dynamic> json) {
@@ -40,7 +86,7 @@ class Departure {
       platform: json['platform'],
       line: json['line']['name'],
       product: json['line']['product'],
-      //cancelled: json['cancelled'],
+      tripID: json['tripId'],
     );
   }
   String get formattedHour {

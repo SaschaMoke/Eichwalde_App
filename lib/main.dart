@@ -181,6 +181,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   int? expandedIndex;
   int? selectedindex;
   Stations? selectedStation = Stations.eichwalde;
+  bool schranke = false;     
 
   int currentPickedHour = 0;
   int currentPickedMinute = 0;
@@ -219,6 +220,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
           final bTime = b.when ?? b.plannedWhen;
           return aTime.compareTo(bTime);
         });
+
+        schranke = checkSchranke(departures);
       } else {
         throw Exception('Failed to load data');        //evtl anzeigen lassen 
       }
@@ -239,6 +242,18 @@ class _VerkehrspageState extends State<Verkehrspage> {
     var currentHour = int.parse(DateFormat('HH').format(now));
     var currentMin = int.parse(DateFormat('mm').format(now));
 
+    Color schrankeFrame;    //animieren wenn ändert
+    Color schrankeRed;      //animieren wenn ändert
+    Color schrankeGelb;     //animieren wenn ändert     last state variable
+    if (schranke) {
+      schrankeFrame = Color.fromARGB(255, 255, 0, 0);
+      schrankeRed = Color.fromARGB(255, 255, 0, 0);
+      schrankeGelb = Color.fromARGB(255, 50, 50, 50);           
+    } else {
+      schrankeFrame = Color.fromARGB(255, 0, 200, 0);
+      schrankeRed = Color.fromARGB(255, 50, 50, 50);
+      schrankeGelb = Color.fromARGB(255, 50, 50, 50);      
+    }
     return Scaffold(
         body: Center(
           child: Column(  
@@ -247,13 +262,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 //height: 20,
               //),
               SafeArea( //Safe Area nach oben, Textfeld hier drüber
-                child: Container(
+                child: Container(   //Schrankencontainer
                   height: 200,
-                  width: 400,
+                  width: 400, 
                   decoration: BoxDecoration(
                     border: Border.all(
                       width: 5,
-                      color: Color.fromARGB(255, 0, 200, 0),
+                      color: schrankeFrame,
                     ),
                     borderRadius: BorderRadius.circular(20),
                     color: Color.fromARGB(255, 235, 235, 235),
@@ -295,7 +310,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     width: 26,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(14),
-                                      color: Color.fromARGB(255, 255, 0, 0),
+                                      color: schrankeRed,
                                     ),
                                   ),
                                   SizedBox(
@@ -306,7 +321,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     width: 26,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(14),
-                                      color: Color.fromARGB(255, 255, 255, 0),
+                                      color: schrankeGelb,
                                     ),
                                   ),
                                 ],
