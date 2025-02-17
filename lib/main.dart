@@ -26,7 +26,7 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp();       
   //init notifications
   NotificationService().initNotification();
   initializeDateFormatting('de_DE', null);  // Deutsch aktivieren
@@ -96,6 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
     case 3:
       page = Terminepage();
       break;
+    case 4:
+      page = SettingsPage();
+      break;
     default:
       throw UnimplementedError('no widget for $selectedIndex');
   }
@@ -103,15 +106,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => Overlay.of(context).insert(settingsPage),
-            //foregroundColor: customizations[index].$1,
-            //backgroundColor: customizations[index].$2,
-            //shape: customizations[index].$3,
-            child: const Icon(Icons.settings),
-          ),
-
           bottomNavigationBar: NavigationBarTheme(
             data:  const NavigationBarThemeData(
             labelTextStyle: WidgetStatePropertyAll(TextStyle(
@@ -150,9 +144,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: 'Termine',
               ),
                NavigationDestination(
-                selectedIcon: Icon(Icons.abc_outlined),
-                icon: Icon(Icons.abc),
-                label: 'Test5er',
+                selectedIcon: Icon(Icons.settings),
+                icon: Icon(Icons.settings_outlined),
+                label: 'Settings',
               ),
             ],
             ),
@@ -178,6 +172,7 @@ class Verkehrspage extends StatefulWidget {
   //fahrt fällt aus schöner machen! (-//-)
   //benachrichtigung (Wecker)
   //appicon
+  //dynamisch größen gerätgröße
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
   String lastUpdate = '';
@@ -264,10 +259,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   ),
                   child: Column(
                     children: [
+                      SizedBox(
+                        height: 10,
+                      ),
                       Row(
                         children: [
                           SizedBox(
-                            width: 300,
+                            width: 320,
                           ),
                           Container(
                             padding: EdgeInsets.all(10),
@@ -745,7 +743,7 @@ class _HomepageState extends State<Homepage> {
               ),
             ],
           ),
-          ElevatedButton(
+          /*ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
@@ -753,7 +751,7 @@ class _HomepageState extends State<Homepage> {
               );
             },
             child: Text('Admin'),
-          )
+          )*/
         ],
       ),
     );
@@ -928,7 +926,6 @@ class _AdminPageState extends State<AdminPage> {
 
   }
 }
-
 
 class GewerbePage extends StatefulWidget {
 

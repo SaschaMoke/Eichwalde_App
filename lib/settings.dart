@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
-void removeSettingsOverlay() {
-  settingsPage.remove();
-  settingsPage.dispose();
+class SettingsPage extends StatefulWidget {
+  @override
+  State<SettingsPage> createState() => _HomepageState();
 }
 
-OverlayEntry settingsPage = OverlayEntry(
-  builder: (BuildContext context) {
-    return Scaffold(
-      floatingActionButton: ElevatedButton(
-        onPressed: () => settingsPage.remove(),
-        child: Text('Zurück'),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: Column(
+class _HomepageState extends State<SettingsPage> {
+  int selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
@@ -30,6 +28,5 @@ OverlayEntry settingsPage = OverlayEntry(
         ],
       ),
     );
-  },
-);
-
+  }
+}
