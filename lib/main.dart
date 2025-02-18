@@ -172,7 +172,7 @@ class Verkehrspage extends StatefulWidget {
   //list sortieren nach zeit (sollte funktionieren, muss noch geprüft werden)
   //benachrichtigung (Wecker)
   //appicon
-  //dynamisch größen gerätgröße
+  //dynamisch größen gerätgröße   "MediaQuery.of(context).size.width*0.2,""
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
   String lastUpdate = '';
@@ -283,7 +283,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 320,
+                            width: 200,
+                            child: Column(
+                              children: [
+                                Text('Anzahl Züge: ${schrankeTrains.length}'),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 120,
                           ),
                           Container(
                             padding: EdgeInsets.all(10),
