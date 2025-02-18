@@ -170,7 +170,6 @@ class Verkehrspage extends StatefulWidget {
   //evtl kein ausklappen
   //S Eichwalde steht schon in Auswahl
   //list sortieren nach zeit (sollte funktionieren, muss noch geprüft werden)
-  //fahrt fällt aus schöner machen! (-//-)
   //benachrichtigung (Wecker)
   //appicon
   //dynamisch größen gerätgröße
@@ -191,6 +190,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
     super.initState();
     fetchAndUpdateData(); 
     timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
+    //setState(() {
+      selectedStation = Stations.eichwalde;
+    //});
   }
   @override
   void dispose() {

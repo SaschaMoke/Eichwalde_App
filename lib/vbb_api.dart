@@ -1,9 +1,9 @@
 import 'package:intl/intl.dart';
 
 enum Stations {
+  eichwalde('S Eichwalde', 900260004),
   friedenstr('Eichwalde, Friedenstr.', 900260665),
-  schmockwitz('Eichwalde, Schmöckwitzer Str.', 900260669),
-  eichwalde('S Eichwalde', 900260004);
+  schmockwitz('Eichwalde, Schmöckwitzer Str.', 900260669);
 
   const Stations(this.stationName, this.stationID);
   final String stationName;
