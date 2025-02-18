@@ -27,7 +27,15 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();       
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey:"AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
+      projectId: "eichwalde-app-3527e",
+      storageBucket: "eichwalde-app-3527e.firebasestorage.app",
+      messagingSenderId: "684116063569",
+      appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
+    )
+  );       
   //init notifications
   NotificationService().initNotification();
   initializeDateFormatting('de_DE', null);  // Deutsch aktivieren
