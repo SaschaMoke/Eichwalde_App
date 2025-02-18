@@ -20,7 +20,7 @@ class SchrankeZug {
   });
 }
 
-List schrankeTrains = [];
+List<Departure> schrankeTrains = [];
 //Unterschied Richtung einbauen
 bool checkSchranke(List departures) {
   DateTime nowSchranke = DateTime.now();
@@ -42,7 +42,7 @@ bool checkSchranke(List departures) {
         if (!schrankeTrains.contains(dep)) {
           schrankeTrains.add(dep);
         }
-        if (mincountSchranke < 0) {
+        if (mincountSchranke == 0) {        //nimmt ihn zu früh weg
           schrankeTrains.remove(dep);
         }
       }
@@ -77,6 +77,16 @@ class Departure {
     this.tripID = 'Unbekannt',
   });
   
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Departure &&
+        other.when == when &&
+        other.tripID == tripID; 
+  }
+  @override
+  int get hashCode => Object.hash(when, tripID);
+
   factory Departure.fromJson(Map<String, dynamic> json) {
     return Departure(
       destination: json['destination']['name'],

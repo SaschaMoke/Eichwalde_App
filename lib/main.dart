@@ -35,7 +35,7 @@ void main() async {
       messagingSenderId: "684116063569",
       appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
     )
-  );       
+  ); 
   //init notifications
   NotificationService().initNotification();
   initializeDateFormatting('de_DE', null);  // Deutsch aktivieren
@@ -175,12 +175,12 @@ class Verkehrspage extends StatefulWidget {
   @override
   State<Verkehrspage> createState() => _VerkehrspageState();
 }
-  //evtl kein ausklappen
+  //ausklappen bei gewerbe nutzen
   //S Eichwalde steht schon in Auswahl
-  //list sortieren nach zeit (sollte funktionieren, muss noch geprüft werden)
+  //list sortieren nach zeit (sollte funktionieren, ausfall muss noch geprüft werden)
   //benachrichtigung (Wecker)
-  //appicon
-  //dynamisch größen gerätgröße   "MediaQuery.of(context).size.width*0.2,""
+  //appicon schöner machen
+  //dynamisch größen gerätgröße   "MediaQuery.of(context).size.width*0.2,"
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
   String lastUpdate = '';
@@ -240,7 +240,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
     }
   }
 
-  void expand(int index) {
+  void expand(int index) {          //expanded logik
     setState(() {
       expandedIndex = (expandedIndex == index) ? null : index;
     });
@@ -266,13 +266,33 @@ class _VerkehrspageState extends State<Verkehrspage> {
     }
     return Scaffold(
         body: Center(
-          child: Column(  
-            children: [
-              //const SizedBox(
-                //height: 20,
-              //),
-              SafeArea( //Safe Area nach oben, Textfeld hier drüber
-                child: Container(   //Schrankencontainer
+          child: SafeArea(
+            child: Column(  
+              children: [
+                Row(
+                  children: [
+                    SizedBox(width: 25), // MediaQuery.of(context).size.width*0.2 -- geht net
+                    const SizedBox(
+                      height: 75,
+                      width: 75,
+                      child: Image(
+                        image: AssetImage('Assets/wappen_Eichwalde.png'),
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                    'Verkehr',
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(   //Schrankencontainer
                   height: 200,
                   width: 400, 
                   decoration: BoxDecoration(
@@ -290,10 +310,34 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       ),
                       Row(
                         children: [
+                          const SizedBox(
+                            width: 15,
+                          ),
                           SizedBox(
-                            width: 200,
+                            width: 185,
+                            height: 100,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                const Text(
+                                  style: TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  'Schranke'
+                                ),
+                                const Text(
+                                  style: TextStyle(
+                                    height: 0.1,
+                                    fontSize: 20,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  'Friedensstraße'
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
                                 Text('Anzahl Züge: ${schrankeTrains.length}'),
                               ],
                             ),
@@ -351,13 +395,287 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ],
                   ),
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: 400,
+                  height: 400,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 150, 200, 150),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 255, 255, 255)
+                    ),
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: Column(
+                    children: [
+                      const SizedBox(                           //Überschrift
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 30,
+                        width: 380,
+                        child: DropdownMenu<Stations>(
+                          width: 380,
+                          initialSelection: Stations.eichwalde,
+                          controller: TextEditingController(),
+                          requestFocusOnTap: true,
+                          label: const Text('Ausgewählte Haltestelle'),
+                          onSelected: (Stations? val) {
+                            setState(() {
+                              selectedStation = val;
+                            });
+                            fetchAndUpdateData();
+                          },
+                          hintText: selectedStation!.stationName,
+                          //helperText: 'Hello',
+                          //errorText: null,
+                          enableFilter: true,
+                          dropdownMenuEntries: Stations.values.map<DropdownMenuEntry<Stations>>(
+                            (Stations station) {
+                              return DropdownMenuEntry<Stations>(
+                                value: station,
+                                label: station.stationName,
+                                style: MenuItemButton.styleFrom(
+                                  foregroundColor: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              );
+                            }).toList(),
+                          menuStyle: MenuStyle(
+                            backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 255, 255, 255))
+                          ),
+                          textStyle: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                          inputDecorationTheme: InputDecorationTheme(
+                            filled: true,
+                            fillColor: Color.fromARGB(255, 240, 240, 230),  //Farbe
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(Radius.circular(12))
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        height: 305,
+                        child: ListView.builder(
+                          itemCount: departures.length,
+                          itemBuilder: (context, index) {
+                          final departure = departures[index];
+                          final expanded = expandedIndex == index;        //expanded logik
+                          
+                          Color timecolor = const Color.fromARGB(255, 0, 0, 0);
+                          var delay = (departure.delay)/60;
+                          if (delay > 0 && delay < 5)  {
+                            timecolor = const Color.fromARGB(255, 255, 135, 0);
+                          } else if (delay > 5) {
+                            timecolor = const Color.fromARGB(255, 255, 0, 0);
+                          }
+                          else {
+                            timecolor = const Color.fromARGB(255, 0, 0, 0);
+                          }
+            
+                          int mincount;
+                          String deptime;
+                          var formattedHour = int.parse(departure.formattedHour);
+                          var formattedMin = int.parse(departure.formattedMin);
+                          if (formattedHour == currentHour) {
+                            mincount = (formattedMin-currentMin);
+                          } else {
+                            mincount = (formattedMin+(60-currentMin));
+                          }
+                          if (mincount == 0) {
+                            if (delay > 0) {
+                              deptime = 'jetzt (+${delay.round()})';
+                            } else {
+                              deptime = 'jetzt';
+                            }
+                          } else {
+                            if (delay > 0) {
+                              deptime = 'in $mincount min (+${delay.round()})';
+                            } else {
+                              deptime = 'in $mincount min';
+                            }
+                          }
+            
+                          TextStyle deststyle;
+                          if (departure.when == 'Fahrt fällt aus') {
+                            deststyle = const TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 255, 0, 0),
+                              decoration: TextDecoration.lineThrough,
+                              decorationColor: Color.fromARGB(255, 255, 0, 0),
+                            );
+                            deptime = 'Fahrt fällt aus';
+                            timecolor = const Color.fromARGB(255, 255, 0, 0);
+                          } else {
+                            deststyle = const TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              decoration: TextDecoration.none,
+                            );
+                          }
+            
+                          AssetImage lineImage = const AssetImage('Assets/Bus.png');
+                          SizedBox linelogo;
+                          if (departure.product == 'suburban') {
+                            if (departure.line == 'S46') {
+                              lineImage = const AssetImage('Assets/S46.png');
+                            } else if (departure.line == 'S8') {
+                              lineImage = const AssetImage('Assets/S8.png');
+                            }
+                            linelogo = SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: Image(image: lineImage)
+                            );
+                          } else {
+                            linelogo = SizedBox(
+                              height: 60,
+                              width: 40,
+                              child: 
+                                Column(
+                                  children: [
+                                    Image(
+                                      image: lineImage,
+                                      height: 30,
+                                      width: 30,
+                                    ),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
+                                    Text(
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      departure.line,
+                                    ),
+                                  ],
+                                ),
+                            );
+                          }
+
+                          //expanded logik anfang
+                          IconData arrow;
+                          if (expanded) {
+                            arrow = Icons.keyboard_arrow_up_rounded;
+                          } else {
+                            arrow = Icons.keyboard_arrow_down_rounded;
+                          }
+                          //expanded logik ende
+                          double tileheight;
+                          int linecount;
+                          if (departure.destination.length > 27) {
+                            linecount = 2;
+                            tileheight = 100;
+                          } else {
+                            linecount = 1;
+                            tileheight = 80;
+                          }
+
+                          return Center(
+                            child: Column(
+                              children:[
+                                SizedBox(
+                                  width: 380,
+                                  height: tileheight,
+                                  child: Card(
+                                    child: ListTile(
+                                      onTap: () => expand(index),             //expanded logik
+                                      leading: SizedBox(
+                                        height: 60,
+                                        width: 40,
+                                        child: linelogo,
+                                      ),
+                                        title: Text(
+                                          style: deststyle,
+                                          maxLines: linecount,
+                                        departure.destination
+                                      ),
+                                      subtitle: Row(
+                                        children: [
+                                          Text(
+                                             style: TextStyle(
+                                               fontSize: 15,
+                                               color: timecolor,
+                                             ),
+                                             deptime
+                                          ),
+                                          SizedBox(width: 25),
+                                          Text(
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                            'Gleis: ${departure.platform}'
+                                          ),
+                                        ],
+                                      ), 
+                                      trailing: Icon(
+                                        size: 25,
+                                        arrow
+                                      ),
+                                    ),
+                                  ),
+                                ),  
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Text(   //last update text
+                      'Zuletzt aktualisiert: $lastUpdate')
+                  ],
+                ),
               ),
-              //const SizedBox(
-              //  height: 50,
-              //),
+              /*Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      fetchAndUpdateData();
+            
+                      NotificationService().showNotification(
+                        title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
+                        body: 
+            '''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
+            ${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
+            ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
+                      );
+                    }, 
+                    child: const Text('Send Notification')
+                  ),
+            
+              //scheduled Notification
+              //id muss fortlaufend gespeichert werden (entspricht anzahl an timern)
+              //zudem müssen die timer gespeichert bleiben
+                  ElevatedButton(
+                    onPressed: () {
+                      fetchAndUpdateData();
+            
+                      NotificationService().scheduleNotification(
+                        title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
+                        body: 
+            '''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
+            ${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
+            ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
+                        hour: currentPickedHour,
+                        minute: currentPickedMinute,
+                      );
+                    }, 
+                    child: const Text('Schedule Notification')
+                  ),
+                ],
+              ),
               Container(
                 width: 400,
-                height: 400,
+                height: 110,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 150, 200, 150),
                   border: Border.all(
@@ -365,296 +683,31 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   ),
                   borderRadius: BorderRadius.circular(20)
                 ),
-                child: Column(
+                child: Row(
                   children: [
-                    SizedBox(
-                      height: 10,
+                    NumberPicker(
+                      infiniteLoop: true,
+                      minValue: 0, 
+                      maxValue: 23, 
+                      value: currentPickedHour, //aktuelle Zeit?
+                      onChanged: (value) => setState(() => currentPickedHour = value)
                     ),
-                    SizedBox(
-                      height: 30,
-                      width: 380,
-                      child: DropdownMenu<Stations>(
-                        width: 380,
-                        initialSelection: Stations.eichwalde,
-                        controller: TextEditingController(),
-                        requestFocusOnTap: true,
-                        label: const Text('Ausgewählte Haltestelle'),
-                        onSelected: (Stations? val) {
-                          setState(() {
-                            selectedStation = val;
-                          });
-                          fetchAndUpdateData();
-                        },
-                        hintText: selectedStation!.stationName,
-                        //helperText: 'Hello',
-                        //errorText: null,
-                        enableFilter: true,
-                        dropdownMenuEntries: Stations.values.map<DropdownMenuEntry<Stations>>(
-                          (Stations station) {
-                            return DropdownMenuEntry<Stations>(
-                              value: station,
-                              label: station.stationName,
-                              style: MenuItemButton.styleFrom(
-                                foregroundColor: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            );
-                          }).toList(),
-                        menuStyle: MenuStyle(
-                          backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 255, 255, 255))
-                        ),
-                        textStyle: TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                        inputDecorationTheme: InputDecorationTheme(
-                          filled: true,
-                          fillColor: Color.fromARGB(255, 240, 240, 230),  //Farbe
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(Radius.circular(12))
-                          ),
-                        ),
-                      ),
+                    NumberPicker(
+                      infiniteLoop: true,
+                      minValue: 0, 
+                      maxValue: 59, 
+                      value: currentPickedMinute, //aktuelle Zeit?
+                      onChanged: (value) => setState(() => currentPickedMinute = value)
                     ),
-                    SizedBox(
-                      height: 330,
-                      child: ListView.builder(
-                        itemCount: departures.length,
-                        itemBuilder: (context, index) {
-                        final departure = departures[index];
-                        final expanded = expandedIndex == index;
-                        
-                        Color timecolor = const Color.fromARGB(255, 0, 0, 0);
-                        var delay = (departure.delay)/60;
-                        if (delay > 0 && delay < 5)  {
-                          timecolor = const Color.fromARGB(255, 255, 135, 0);
-                        } else if (delay > 5) {
-                          timecolor = const Color.fromARGB(255, 255, 0, 0);
-                        }
-                        else {
-                          timecolor = const Color.fromARGB(255, 0, 0, 0);
-                        }
-
-                        int mincount;
-                        String deptime;
-                        var formattedHour = int.parse(departure.formattedHour);
-                        var formattedMin = int.parse(departure.formattedMin);
-                        if (formattedHour == currentHour) {
-                          mincount = (formattedMin-currentMin);
-                        } else {
-                          mincount = (formattedMin+(60-currentMin));
-                        }
-                        if (mincount == 0) {
-                          if (delay > 0) {
-                            deptime = 'jetzt (+ ${delay.round()})';
-                          } else {
-                            deptime = 'jetzt';
-                          }
-                        } else {
-                          if (delay > 0) {
-                            deptime = 'in $mincount min (+ ${delay.round()})';
-                          } else {
-                            deptime = 'in $mincount min';
-                          }
-                        }
-
-                        TextStyle deststyle;
-                        if (departure.when == 'Fahrt fällt aus') {
-                          deststyle = const TextStyle(
-                            fontSize: 17,
-                            color: Color.fromARGB(255, 255, 0, 0),
-                            decoration: TextDecoration.lineThrough,
-                            decorationColor: Color.fromARGB(255, 255, 0, 0),
-                          );
-                          deptime = 'Fahrt fällt aus';
-                          timecolor = const Color.fromARGB(255, 255, 0, 0);
-                        } else {
-                          deststyle = const TextStyle(
-                            fontSize: 17,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            decoration: TextDecoration.none,
-                          );
-                        }
-
-                        AssetImage lineImage = const AssetImage('Assets/Bus.png');
-                        SizedBox linelogo;
-                        if (departure.product == 'suburban') {
-                          if (departure.line == 'S46') {
-                            lineImage = const AssetImage('Assets/S46.png');
-                          } else if (departure.line == 'S8') {
-                            lineImage = const AssetImage('Assets/S8.png');
-                          }
-                          linelogo = SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: Image(image: lineImage)
-                          );
-                        } else {
-                          linelogo = SizedBox(
-                            height: 60,
-                            width: 40,
-                            child: 
-                              Column(
-                                children: [
-                                  Image(
-                                    image: lineImage,
-                                    height: 30,
-                                    width: 30,
-                                  ),
-                                  const SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    departure.line,
-                                  ),
-                                ],
-                              ),
-                          );
-                        }
-
-                        double tileheight;
-                        IconData arrow;
-                        int linecount;
-                        if (expanded) {
-                          tileheight = 160;
-                          arrow = Icons.keyboard_arrow_up_rounded;
-                          linecount = 2;
-                        } else {
-                          tileheight = 80;
-                          arrow = Icons.keyboard_arrow_down_rounded;
-                          linecount = 1;
-                        }
-                        return Center(
-                          child: Column(
-                            children:[
-                              SizedBox(
-                                width: 380,
-                                height: tileheight,
-                                child: Card(
-                                  child: ListTile(
-                                    onTap: () => expand(index),
-                                    leading: SizedBox(
-                                      height: 60,
-                                      width: 40,
-                                      child: linelogo,
-                                    ),
-                                      title: Text(
-                                        style: deststyle,
-                                        maxLines: linecount,
-                                      departure.destination
-                                    ),
-                                    subtitle: Row(
-                                      children: [
-                                        Text(
-                                           style: TextStyle(
-                                             fontSize: 15,
-                                             color: timecolor,
-                                           ),
-                                           deptime
-                                        ),
-                                        SizedBox(width: 25),
-                                        Text(
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Color.fromARGB(255, 0, 0, 0),
-                                          ),
-                                          'Gleis: ${departure.platform}'
-                                        ),
-                                      ],
-                                    ), 
-                                    trailing: Icon(
-                                      size: 25,
-                                      arrow
-                                    ),
-                                  ),
-                                ),
-                              ),  
-                            ],
-                          ),
-                        );
-                      },
+                    ElevatedButton(
+                      onPressed: () => Overlay.of(context).insert(scheduleAlarmOverlay),
+                      child: const Text('Overlay test'))
+                  ],
+                ),
+              ),*/
+            ],
                     ),
-                  ),
-                  Text(   //last update text
-                    'Zuletzt aktualisiert: $lastUpdate')
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    fetchAndUpdateData();
-
-                    NotificationService().showNotification(
-                      title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
-                      body: 
-'''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
-${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
-${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
-                    );
-                  }, 
-                  child: const Text('Send Notification')
-                ),
-
-            //scheduled Notification
-            //id muss fortlaufend gespeichert werden (entspricht anzahl an timern)
-            //zudem müssen die timer gespeichert bleiben
-                ElevatedButton(
-                  onPressed: () {
-                    fetchAndUpdateData();
-
-                    NotificationService().scheduleNotification(
-                      title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
-                      body: 
-'''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
-${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
-${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
-                      hour: currentPickedHour,
-                      minute: currentPickedMinute,
-                    );
-                  }, 
-                  child: const Text('Schedule Notification')
-                ),
-              ],
-            ),
-            Container(
-              width: 400,
-              height: 110,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 150, 200, 150),
-                border: Border.all(
-                  color: const Color.fromARGB(255, 255, 255, 255)
-                ),
-                borderRadius: BorderRadius.circular(20)
-              ),
-              child: Row(
-                children: [
-                  NumberPicker(
-                    infiniteLoop: true,
-                    minValue: 0, 
-                    maxValue: 23, 
-                    value: currentPickedHour, //aktuelle Zeit?
-                    onChanged: (value) => setState(() => currentPickedHour = value)
-                  ),
-                  NumberPicker(
-                    infiniteLoop: true,
-                    minValue: 0, 
-                    maxValue: 59, 
-                    value: currentPickedMinute, //aktuelle Zeit?
-                    onChanged: (value) => setState(() => currentPickedMinute = value)
-                  ),
-                  ElevatedButton(
-                    onPressed: () => Overlay.of(context).insert(scheduleAlarmOverlay),
-                    child: const Text('Overlay test'))
-                ],
-              ),
-            ),
-          ],
-        )
+          )
       ),
     );
   }
