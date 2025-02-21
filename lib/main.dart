@@ -177,7 +177,6 @@ class Verkehrspage extends StatefulWidget {
 }
   //ausklappen bei gewerbe nutzen
   //S Eichwalde steht schon in Auswahl
-  //list sortieren nach zeit (sollte funktionieren, ausfall muss noch geprüft werden)
   //benachrichtigung (Wecker)
   //appicon schöner machen
   //dynamisch größen gerätgröße   "MediaQuery.of(context).size.width*0.2,"
@@ -217,6 +216,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
     try {
       final response = await http.get(
         Uri.parse('https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=false&duration=60'),
+        //Uri.parse('https://v6.vbb.transport.rest/stops/900192001/departures?linesOfStops=false&remarks=false&duration=60'),       Schöneweide als Test
       );
 
       if (response.statusCode == 200) {
@@ -226,8 +226,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
           lastUpdate = apiResponse.lastUpdate.toString();
         });
         departures.sort((a, b) {
-          final aTime = a.when ?? a.plannedWhen;
-          final bTime = b.when ?? b.plannedWhen;
+          String aTime = a.when; //?? a.plannedWhen;
+          if (a.when == 'Fahrt fällt aus') {
+            aTime = a.plannedWhen;
+          }
+          String bTime = b.when; //?? b.plannedWhen;
+          if (b.when == 'Fahrt fällt aus') {
+            bTime = b.plannedWhen;
+          }
           return aTime.compareTo(bTime);
         });
 
@@ -271,7 +277,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
               children: [
                 Row(
                   children: [
-                    SizedBox(width: 25), // MediaQuery.of(context).size.width*0.2 -- geht net
+                    SizedBox(width: 25),
                     const SizedBox(
                       height: 75,
                       width: 75,
@@ -392,6 +398,20 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           ),
                         ],
                       ),
+                      SizedBox(
+                        child: schrankeTrains.isNotEmpty ? ListView.builder(
+                          itemCount: schrankeTrains.length,
+                          itemBuilder: (context, index) {
+                            final train = schrankeTrains[index];
+                            return Text(
+                              '${train.line}  ${train.destination}'
+                            );  
+                          }
+                        )
+                        :Text('Keine Züge'),
+                      ),
+                      
+                                
                     ],
                   ),
                 ),
