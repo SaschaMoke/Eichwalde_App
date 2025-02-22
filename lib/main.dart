@@ -188,6 +188,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   int? selectedindex;
   Stations? selectedStation = Stations.eichwalde;
   bool schranke = false;     
+  String schrankeWahl = 'Lidl';
 
   int currentPickedHour = 0;
   int currentPickedMinute = 0;
@@ -237,7 +238,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
           return aTime.compareTo(bTime);
         });
 
-        schranke = checkSchranke(departures);
+        schranke = checkSchranke(departures, schrankeWahl);
       } else {
         throw Exception('Failed to load data');        //evtl anzeigen lassen 
       }
@@ -269,6 +270,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
       schrankeFrame = Color.fromARGB(255, 0, 200, 0);
       schrankeRed = Color.fromARGB(255, 50, 50, 50);
       schrankeGelb = Color.fromARGB(255, 50, 50, 50);      
+    }
+
+    String schrankeName;
+    if (schrankeWahl == 'Lidl') {
+      schrankeName = 'Friedensstraße';
+    } else {
+      schrankeName = 'Waldstraße';
     }
     return Scaffold(
         body: Center(
@@ -332,14 +340,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                   ),
                                   'Schranke'
                                 ),
-                                const Text(
+                                Text(
                                   style: TextStyle(
                                     height: 0.1,
                                     fontSize: 20,
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.w500,
                                   ),
-                                  'Friedensstraße'
+                                  schrankeName//'Friedensstraße'
                                 ),
                                 const SizedBox(
                                   height: 15,
@@ -349,7 +357,41 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             ),
                           ),
                           SizedBox(
-                            width: 120,
+                            width: 100,
+                            height: 40,
+                            child: SegmentedButton(
+                              segments: [
+                                ButtonSegment(
+                                  value: 'Lidl',
+                                  label: Text(
+                                    style: TextStyle(
+                                      fontSize: 12
+                                    ),
+                                    'Lidl'
+                                  ),
+                                ),
+                                ButtonSegment(
+                                  value: 'Wald',
+                                  label: Text(
+                                    style: TextStyle(
+                                      fontSize: 12
+                                    ),
+                                    'Wald'
+                                  ),
+                                ),
+                              ],
+                              selected: {schrankeWahl},
+                              onSelectionChanged: (Set newSelection) {
+                                setState(() {
+                                  schrankeWahl = newSelection.first;
+                                  schranke = checkSchranke(departures, schrankeWahl);     //muss noch überprüft werden
+                                });
+                              },
+                              showSelectedIcon: false,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
                           ),
                           Container(
                             padding: EdgeInsets.all(10),
@@ -399,6 +441,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         ],
                       ),
                       SizedBox(
+                        height: 80,
                         child: schrankeTrains.isNotEmpty ? ListView.builder(
                           itemCount: schrankeTrains.length,
                           itemBuilder: (context, index) {

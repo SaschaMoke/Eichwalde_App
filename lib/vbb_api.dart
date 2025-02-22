@@ -23,7 +23,7 @@ class SchrankeZug {
 List<Departure> schrankeTrains = [];
 //Unterschied Richtung einbauen
 //check ausfall
-bool checkSchranke(List departures) {
+bool checkSchranke(List departures, String schrankeOrt) {
   DateTime nowSchranke = DateTime.now();
   var currentHourSchranke = int.parse(DateFormat('HH').format(nowSchranke));
   var currentMinSchranke = int.parse(DateFormat('mm').format(nowSchranke));
@@ -39,25 +39,25 @@ bool checkSchranke(List departures) {
         mincountSchranke = (formattedMin+(60-currentMinSchranke));
       }
 
-      //if ("schrankelidl") {
-       // if (dep.platform == 4) {
-       //   mincountSchranke = mincountSchranke - 1;
-        //} else if (dep.platform == 3) {
-        //  mincountSchranke = mincountSchranke + 1;
-        //}
-      //} else {
-        // if (dep.platform == 3) {
-        //  mincountSchranke = mincountSchranke - 1;
-        //} else if (dep.platform == 4) {
-        //  mincountSchranke = mincountSchranke + 1;
-        //}
-      //}
-
-      if (dep.platform == 4) {
-        mincountSchranke = mincountSchranke - 1;
-      } else if (dep.platform == 3) {
-        mincountSchranke = mincountSchranke + 1;
+      if (schrankeOrt == 'Lidl') {
+        if (dep.platform == 4) {
+          mincountSchranke = mincountSchranke - 1;
+        } else if (dep.platform == 3) {
+          mincountSchranke = mincountSchranke + 1;
+        }
+      } else {
+         if (dep.platform == 3) {
+          mincountSchranke = mincountSchranke - 1;
+        } else if (dep.platform == 4) {
+          mincountSchranke = mincountSchranke + 1;
+        }
       }
+
+      //if (dep.platform == 4) {
+        //mincountSchranke = mincountSchranke - 1;
+      //} else if (dep.platform == 3) {
+        //mincountSchranke = mincountSchranke + 1;
+      //}
 
       if (mincountSchranke < 2) {
         if (!schrankeTrains.contains(dep)) {
