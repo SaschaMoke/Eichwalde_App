@@ -1,5 +1,9 @@
 //import 'package:cron/cron.dart';
 import 'package:eichwalde_app/Read%20data/getGewerbeName.dart';
+import 'package:eichwalde_app/Read%20data/getGewerbeimage.dart';
+import 'package:eichwalde_app/Read%20data/getGewerbeart.dart';
+import 'package:eichwalde_app/Read%20data/getGewerbeAdresse.dart';
+import 'package:eichwalde_app/Read%20data/getGewerbeTel.dart';
 import 'package:eichwalde_app/gewerbe.dart';
 import 'cloudgewerbe.dart';
 //import 'Gewerbecloud.dart';
@@ -1101,7 +1105,7 @@ void removeOverlay() {
   overlayEntry = null;
 }
 
-void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
+void showOverlay(BuildContext context, String documentId, Offset position, int index) {
   removeOverlay(); 
   final screenSize = MediaQuery.of(context).size;
   final overlayWidth = MediaQuery.of(context).size.width * 0.7;
@@ -1130,13 +1134,13 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
           mainAxisSize: MainAxisSize.min, 
           children: [
             ListTile(
-              title: Text(gewerbe.adresse, style: TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(gewerbe.gewerbeart),
+              title: GetgewerbeAdresse(documentId: cloudGewerbe.docIDs[index]),
+              subtitle: Getgewerbeart(documentId: cloudGewerbe.docIDs[index]),
             ),
             Divider(), 
             Padding(
               padding: EdgeInsets.all(10),
-              child: Text('Telefon: +' + gewerbe.tel.toString()),
+              child: GetgewerbeTel(documentId: cloudGewerbe.docIDs[index]),
             ),
             TextButton(
               onPressed: removeOverlay, 
@@ -1182,6 +1186,13 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
           itemCount: cloudGewerbe.docIDs.length,
           itemBuilder: (context,index) {
             return GestureDetector(
+              onTapDown:(details) {
+              if (_overlayEntry != null) {
+              removeOverlay();
+              } else {
+              showOverlay(context, cloudGewerbe.docIDs[index], details.globalPosition, index);
+              }
+              },
               child: Container(
                         padding: EdgeInsets.all(0.5),
                         child:Card(
@@ -1194,10 +1205,8 @@ void showOverlay(BuildContext context, Gewerbe gewerbe, Offset position) {
                             SizedBox(
                               width: 150,
                               height: 120,
-                              /*child: Image(
-                                image: AssetImage(gewerbes[index].image)
-                              ),*/
-                            ),
+                              child: Getgewerbeimage(documentId: cloudGewerbe.docIDs[index]),
+                              ),
                             SizedBox(
                               height: 5,
                             ),
