@@ -121,12 +121,14 @@ class _MyHomePageState extends State<MyHomePage> {
         return Scaffold(
           bottomNavigationBar: NavigationBarTheme(
             data:  const NavigationBarThemeData(
-            labelTextStyle: WidgetStatePropertyAll(TextStyle(
-                  color: Colors.black,
-               ),
+              labelTextStyle: WidgetStatePropertyAll(
+                TextStyle(
+                color: Colors.black,
+                ),
               )
             ),
             child: NavigationBar(
+              //labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
               backgroundColor: Color.fromRGBO(150, 200, 150, 1),
               onDestinationSelected: (int index) {
                 setState(() {
@@ -445,7 +447,18 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         ],
                       ),
                       SizedBox(
-                        height: 80,
+                        height: 5,
+                      ),
+                      Container(
+                        width: 400,
+                        height: 2,
+                        color: Color.fromARGB(255, 50, 50, 50),
+                      ),
+                      SizedBox(
+                        height: 5
+                      ),
+                      SizedBox(
+                        height: 68,
                         child: schrankeTrains.isNotEmpty ? ListView.builder(
                           itemCount: schrankeTrains.length,
                           itemBuilder: (context, index) {

@@ -67,9 +67,18 @@ bool checkSchranke(List departures, String schrankeOrt) {
           schrankeTrains.remove(dep);
         }
       }
+
     }
   }
 
+  //if (schrankeTrains.isEmpty) {
+    //for (var train in schrankeTrains) {
+      //if (!departures.contains(train)) {
+        //schrankeTrains.remove(train);
+      //}
+    //}
+  //}
+    
   if (schrankeTrains.isEmpty) {
     return false;
   } else {
