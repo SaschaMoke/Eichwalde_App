@@ -25,4 +25,13 @@ class Cloudgewerbe {
     );
 
   }
+
+   Future<void> deleteGewerbe(String docId) async {
+    try {
+      await FirebaseFirestore.instance.collection('Gewerbe').doc(docId).delete();
+    } catch (e) {
+      print('Fehler beim Löschen: $e');
+      throw e;
+    }
+  }
 }

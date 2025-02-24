@@ -1,4 +1,5 @@
 //import 'package:cron/cron.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eichwalde_app/Read%20data/getGewerbeName.dart';
 import 'package:eichwalde_app/Read%20data/getGewerbeimage.dart';
 import 'package:eichwalde_app/Read%20data/getGewerbeart.dart';
@@ -32,13 +33,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
-    options: FirebaseOptions(
+    /*options: FirebaseOptions(
       apiKey:"AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
       projectId: "eichwalde-app-3527e",
       storageBucket: "eichwalde-app-3527e.firebasestorage.app",
       messagingSenderId: "684116063569",
       appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
-    )
+    )*/
   ); 
   //init notifications
   NotificationService().initNotification();
@@ -1026,8 +1027,6 @@ class _AdminPageState extends State<AdminPage> {
       );
     }
   }
-
-  @override
   
 
   @override
@@ -1053,9 +1052,9 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Admin Panel")),
-      body: _events.isEmpty
-          ? Center(child: Text("Keine Termine gefunden"))
-          : ListView(
+      body: //_events.isEmpty
+        //  ? Center(child: Text("Keine Termine gefunden"))
+          ListView(
               children:[
                 /*ListView(children: _events.entries.map((entry) {
                 return Card(
@@ -1073,7 +1072,82 @@ class _AdminPageState extends State<AdminPage> {
                 );
               }).toList(),
               ),*/
-            Card(
+            ElevatedButton(
+              onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GewerbeHinzufuegenPage()),
+              );
+            },
+              child: Text('Gewerbe hinzufügen') 
+              ),
+            ElevatedButton(
+              onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GewerbeLoeschenPage()),
+              );
+            },
+              child: Text('Gewerbe löschen') 
+              ),
+        ]
+     ),
+        
+    );
+
+  }
+}
+
+class GewerbeHinzufuegenPage extends StatefulWidget {
+  const GewerbeHinzufuegenPage({super.key});
+
+  @override
+  State<GewerbeHinzufuegenPage> createState() => _GewerbeHinzufuegenPageState();
+}
+
+class _GewerbeHinzufuegenPageState extends State<GewerbeHinzufuegenPage> {
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController gewerbeartController = TextEditingController();
+  final TextEditingController adresseController = TextEditingController();
+  final TextEditingController telController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
+  final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
+    
+
+  void _clearFields() {
+    nameController.clear();
+    gewerbeartController.clear();
+    adresseController.clear();
+    telController.clear();
+    imageController.clear();
+  }
+
+   Future _addGewerbe() async {
+    String name = nameController.text;
+    String gewerbeart = gewerbeartController.text;
+    String adresse = adresseController.text;
+    int? tel = int.tryParse(telController.text);
+    String image = imageController.text;
+
+    if (name.isNotEmpty && gewerbeart.isNotEmpty && adresse.isNotEmpty && tel != null) {
+      await cloudGewerbe.addGewerbe(name, gewerbeart, adresse, tel, image);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Gewerbe erfolgreich hinzugefügt!")),
+      );
+      _clearFields();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Bitte alle Felder ausfüllen!")),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Card(
               child: Column(
               children: [
             TextField(controller: nameController, decoration: InputDecoration(labelText: "Name")),
@@ -1086,12 +1160,102 @@ class _AdminPageState extends State<AdminPage> {
           ],
         ),
       ),
-     ]),
-        
     );
-
   }
 }
+
+class GewerbeLoeschenPage extends StatefulWidget {
+  const GewerbeLoeschenPage({super.key});
+
+  @override
+  State<GewerbeLoeschenPage> createState() => _GewerbeLoeschenPageState();
+}
+
+class _GewerbeLoeschenPageState extends State<GewerbeLoeschenPage> {
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController gewerbeartController = TextEditingController();
+  final TextEditingController adresseController = TextEditingController();
+  final TextEditingController telController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
+  final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
+    
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: cloudGewerbe.getDocId(),
+        builder: (context, snapshot){
+         if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Fehler: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Keine Gewerbe gefunden'));
+          }
+
+          List<String> docIDs = snapshot.data!;
+
+          return ListView.builder(
+            itemCount: docIDs.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Getgewerbename(documentId: docIDs[index]),
+                leading: IconButton(
+                  onPressed: () async {
+                    bool confirmDelete = await _showDeleteDialog(context);
+                    if (confirmDelete) {
+                      try {
+                        await cloudGewerbe.deleteGewerbe(docIDs[index]);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Gewerbe gelöscht")),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Fehler beim Löschen: $e")),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  // Dialog zur Bestätigung des Löschens
+  Future<bool> _showDeleteDialog(BuildContext context) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Löschen bestätigen"),
+            content: Text("Möchtest du dieses Gewerbe wirklich löschen?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text("Abbrechen"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text("Löschen", style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+}
+
+
+
 
 class GewerbePage extends StatefulWidget {
 
