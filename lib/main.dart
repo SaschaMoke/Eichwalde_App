@@ -11,6 +11,7 @@ import 'cloudgewerbe.dart';
 import 'package:eichwalde_app/notification_service.dart';
 import 'package:eichwalde_app/vbb_api.dart';
 import 'package:eichwalde_app/settings.dart';
+import 'package:eichwalde_app/gewerbe_layout_neu.dart';
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
@@ -33,13 +34,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
-    /*options: FirebaseOptions(
+    options: FirebaseOptions(
       apiKey:"AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
       projectId: "eichwalde-app-3527e",
       storageBucket: "eichwalde-app-3527e.firebasestorage.app",
       messagingSenderId: "684116063569",
       appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
-    )*/
+    )
   ); 
   //init notifications
   NotificationService().initNotification();
@@ -106,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
       break;
     case 2:
       page = GewerbePage();
+      //page = GewerbeLayoutNeu();
       break;
     case 3:
       page = Terminepage();
@@ -660,7 +662,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           }
 
                           return Center(
-                            child: Column(
+                            child: Column(            //weg machen
                               children:[
                                 SizedBox(
                                   width: 380,
