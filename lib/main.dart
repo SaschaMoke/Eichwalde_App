@@ -25,7 +25,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 //import 'package:flutter_localizations/flutter_localizations.dart';
 
 
@@ -33,7 +33,8 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
+  if (kIsWeb) {
+    await Firebase.initializeApp(
     options: FirebaseOptions(
       apiKey:"AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
       projectId: "eichwalde-app-3527e",
@@ -41,7 +42,18 @@ void main() async {
       messagingSenderId: "684116063569",
       appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
     )
-  ); 
+    ); 
+  } else {
+    await Firebase.initializeApp(
+    /*options: FirebaseOptions(
+      apiKey:"AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
+      projectId: "eichwalde-app-3527e",
+      storageBucket: "eichwalde-app-3527e.firebasestorage.app",
+      messagingSenderId: "684116063569",
+      appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
+    )*/
+    ); 
+  }
   //init notifications
   NotificationService().initNotification();
   initializeDateFormatting('de_DE', null);  // Deutsch aktivieren
@@ -131,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             ),
             child: NavigationBar(
-              //labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
               backgroundColor: Color.fromRGBO(150, 200, 150, 1),
               onDestinationSelected: (int index) {
                 setState(() {
