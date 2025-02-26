@@ -5,7 +5,6 @@ import 'package:eichwalde_app/Read%20data/getGewerbeimage.dart';
 import 'package:eichwalde_app/Read%20data/getGewerbeart.dart';
 import 'package:eichwalde_app/Read%20data/getGewerbeAdresse.dart';
 import 'package:eichwalde_app/Read%20data/getGewerbeTel.dart';
-import 'package:eichwalde_app/gewerbe.dart';
 import 'cloudgewerbe.dart';
 //import 'Gewerbecloud.dart';
 import 'package:eichwalde_app/notification_service.dart';
@@ -1021,7 +1020,7 @@ class _AdminPageState extends State<AdminPage> {
     imageController.clear();
   }
 
-   Future _addGewerbe() async {
+   /*Future _addGewerbe() async {
     String name = nameController.text;
     String gewerbeart = gewerbeartController.text;
     String adresse = adresseController.text;
@@ -1040,7 +1039,7 @@ class _AdminPageState extends State<AdminPage> {
         SnackBar(content: Text("Bitte alle Felder ausfüllen!")),
       );
     }
-  }
+  }*/
   
 
   @override
@@ -1196,54 +1195,60 @@ class _GewerbeLoeschenPageState extends State<GewerbeLoeschenPage> {
     
 
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: cloudGewerbe.getDocId(),
-        builder: (context, snapshot){
-         if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Fehler: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Keine Gewerbe gefunden'));
-          }
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Gewerbe').snapshots(),
+      builder: (context, snapshot) {
+        print("StreamBuilder aktualisiert!");
+        print("ConnectionState: ${snapshot.connectionState}");
 
-          List<String> docIDs = snapshot.data!;
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          print("Warte auf Daten...");
+          return Center(child: CircularProgressIndicator());
+        }
 
-          return ListView.builder(
-            itemCount: docIDs.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Getgewerbename(documentId: docIDs[index]),
-                leading: IconButton(
-                  onPressed: () async {
-                    bool confirmDelete = await _showDeleteDialog(context);
-                    if (confirmDelete) {
-                      try {
-                        await cloudGewerbe.deleteGewerbe(docIDs[index]);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Gewerbe gelöscht")),
-                        );
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Fehler beim Löschen: $e")),
-                        );
-                      }
-                    }
-                  },
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
+        if (snapshot.hasError) {
+          print("Fehler: ${snapshot.error}");
+          return Center(child: Text('Fehler: ${snapshot.error}'));
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          print("Keine Daten vorhanden!");
+          return Center(child: Text('Keine Gewerbe gefunden'));
+        }
+
+        var docs = snapshot.data!.docs;
+        print("Daten empfangen: ${docs.length} Gewerbe");
+
+        return ListView.builder(
+          itemCount: docs.length,
+          itemBuilder: (context, index) {
+            print("Dokument ${index + 1}: ${docs[index].id}");
+            
+            return ListTile(
+              title: Text(docs[index]["name"] ?? "Kein Name"),
+              leading: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () async {
+                  bool confirmDelete = await _showDeleteDialog(context);
+                  if (confirmDelete) {
+                    await FirebaseFirestore.instance
+                        .collection('Gewerbe')
+                        .doc(docs[index].id)
+                        .delete();
+                    print("Dokument gelöscht: ${docs[index].id}");
+                  }
+                },
+              ),
+            );
+          },
+        );
+      },
+    ),
+  );
+}
 
   // Dialog zur Bestätigung des Löschens
   Future<bool> _showDeleteDialog(BuildContext context) async {

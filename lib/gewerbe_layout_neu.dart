@@ -2,16 +2,16 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'Gewerbe.dart';        //auf firebase anpassen
+//import 'Gewerbe.dart';        //auf firebase anpassen
 
-class GewerbeLayoutNeu extends StatefulWidget{
+/*class GewerbeLayoutNeu extends StatefulWidget{
   @override
   State<GewerbeLayoutNeu> createState() => _GewerbeLayoutNeuState();
 }
 
 class _GewerbeLayoutNeuState extends State<GewerbeLayoutNeu> {
   @override
-  Widget build(BuildContext context) {
+ Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: SafeArea(
@@ -88,6 +88,6 @@ class _GewerbeLayoutNeuState extends State<GewerbeLayoutNeu> {
       ),
     );
   } 
-}
+}*/
 
   
