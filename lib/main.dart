@@ -27,35 +27,32 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 //import 'package:flutter_localizations/flutter_localizations.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (kIsWeb) {
     await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey:"AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
+        options: FirebaseOptions(
+      apiKey: "AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
       projectId: "eichwalde-app-3527e",
       storageBucket: "eichwalde-app-3527e.firebasestorage.app",
       messagingSenderId: "684116063569",
       appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
-    )
-    ); 
+    ));
   } else {
     await Firebase.initializeApp(
-    /*options: FirebaseOptions(
-      apiKey:"AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
+        /*   options: FirebaseOptions(
+      apiKey: "AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
       projectId: "eichwalde-app-3527e",
       storageBucket: "eichwalde-app-3527e.firebasestorage.app",
       messagingSenderId: "684116063569",
       appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
     )*/
-    ); 
+        );
   }
   //init notifications
   NotificationService().initNotification();
-  initializeDateFormatting('de_DE', null);  // Deutsch aktivieren
+  initializeDateFormatting('de_DE', null); // Deutsch aktivieren
   runApp(const MyApp());
 }
 
@@ -64,7 +61,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(            
+    return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
         title: 'Namer App',
@@ -72,22 +69,22 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
         ),
-        home: MyHomePage(),                 
+        home: MyHomePage(),
       ),
     );
   }
 }
 
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();                        
- var favorites = <WordPair>[];
+  var current = WordPair.random();
+  var favorites = <WordPair>[];
 
-  void GetNext() {                                        
+  void GetNext() {
     current = WordPair.random();
     notifyListeners();
   }
 
-   void toggleFavorite() {
+  void toggleFavorite() {
     if (favorites.contains(current)) {
       favorites.remove(current);
     } else {
@@ -107,47 +104,44 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = Homepage();
+        break;
+      case 1:
+        page = Verkehrspage();
+        break;
+      case 2:
+        page = GewerbePage();
+        //page = GewerbeLayoutNeu();
+        break;
+      case 3:
+        page = Terminepage();
+        break;
+      case 4:
+        page = SettingsPage();
+        break;
+      default:
+        throw UnimplementedError('no widget for $selectedIndex');
+    }
 
-  Widget page;
-  switch (selectedIndex) {
-    case 0:
-      page = Homepage();
-      break;
-    case 1:
-      page = Verkehrspage();
-      break;
-    case 2:
-      page = GewerbePage();
-      //page = GewerbeLayoutNeu();
-      break;
-    case 3:
-      page = Terminepage();
-      break;
-    case 4:
-      page = SettingsPage();
-      break;
-    default:
-      throw UnimplementedError('no widget for $selectedIndex');
-  }
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Scaffold(
-          bottomNavigationBar: NavigationBarTheme(
-            data:  const NavigationBarThemeData(
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
+        bottomNavigationBar: NavigationBarTheme(
+          data: const NavigationBarThemeData(
               labelTextStyle: WidgetStatePropertyAll(
-                TextStyle(
-                color: Colors.black,
-                ),
-              )
+            TextStyle(
+              color: Colors.black,
             ),
-            child: NavigationBar(
-              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-              backgroundColor: Color.fromRGBO(150, 200, 150, 1),
-              onDestinationSelected: (int index) {
-                setState(() {
-                  selectedIndex = index;
-            });
+          )),
+          child: NavigationBar(
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+            backgroundColor: Color.fromRGBO(150, 200, 150, 1),
+            onDestinationSelected: (int index) {
+              setState(() {
+                selectedIndex = index;
+              });
             },
             indicatorColor: Theme.of(context).colorScheme.primaryContainer,
             selectedIndex: selectedIndex,
@@ -155,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
               NavigationDestination(
                 selectedIcon: Icon(Icons.home),
                 icon: Icon(Icons.home_outlined),
-                label: 'Home', 
+                label: 'Home',
               ),
               NavigationDestination(
                 selectedIcon: Icon(Icons.route),
@@ -172,20 +166,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icon(Icons.calendar_month_outlined),
                 label: 'Termine',
               ),
-               NavigationDestination(
+              NavigationDestination(
                 selectedIcon: Icon(Icons.settings),
                 icon: Icon(Icons.settings_outlined),
                 label: 'Settings',
               ),
             ],
-            ),
           ),
-          body:Container(
-            child: page,
-          ),
-        );
-      }
-    );
+        ),
+        body: Container(
+          child: page,
+        ),
+      );
+    });
   }
 }
 
@@ -195,11 +188,12 @@ class Verkehrspage extends StatefulWidget {
   @override
   State<Verkehrspage> createState() => _VerkehrspageState();
 }
-  //ausklappen bei gewerbe nutzen
-  //S Eichwalde steht schon in Auswahl
-  //benachrichtigung (Wecker)
-  //appicon schöner machen
-  //dynamisch größen gerätgröße   "MediaQuery.of(context).size.width*0.2,"
+
+//ausklappen bei gewerbe nutzen
+//S Eichwalde steht schon in Auswahl
+//benachrichtigung (Wecker)
+//appicon schöner machen
+//dynamisch größen gerätgröße   "MediaQuery.of(context).size.width*0.2,"
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
   String lastUpdate = '';
@@ -207,7 +201,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   int? expandedIndex;
   int? selectedindex;
   Stations? selectedStation = Stations.eichwalde;
-  bool schranke = false;     
+  bool schranke = false;
   String schrankeWahl = 'Lidl';
 
   int currentPickedHour = 0;
@@ -216,10 +210,12 @@ class _VerkehrspageState extends State<Verkehrspage> {
   @override
   void initState() {
     super.initState();
-    fetchAndUpdateData(); 
-    timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
+    fetchAndUpdateData();
+    timer = Timer.periodic(
+        const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
     selectedStation = Stations.eichwalde;
   }
+
   @override
   void dispose() {
     timer?.cancel();
@@ -234,7 +230,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
   Future<void> fetchAndUpdateData() async {
     try {
       final response = await http.get(
-        Uri.parse('https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=false&duration=60'),
+        Uri.parse(
+            'https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=false&duration=60'),
         //Uri.parse('https://v6.vbb.transport.rest/stops/900192001/departures?linesOfStops=false&remarks=false&duration=60'),       Schöneweide als Test
       );
 
@@ -258,14 +255,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
         schranke = checkSchranke(departures, schrankeWahl);
       } else {
-        throw Exception('Failed to load data');        //evtl anzeigen lassen 
+        throw Exception('Failed to load data'); //evtl anzeigen lassen
       }
     } catch (error) {
-      print('Error fetching data: $error');             //evtl anzeigen lassen
+      print('Error fetching data: $error'); //evtl anzeigen lassen
     }
   }
 
-  void expand(int index) {          //expanded logik
+  void expand(int index) {
+    //expanded logik
     setState(() {
       expandedIndex = (expandedIndex == index) ? null : index;
     });
@@ -277,17 +275,17 @@ class _VerkehrspageState extends State<Verkehrspage> {
     var currentHour = int.parse(DateFormat('HH').format(now));
     var currentMin = int.parse(DateFormat('mm').format(now));
 
-    Color schrankeFrame;    //animieren wenn ändert
-    Color schrankeRed;      //animieren wenn ändert
-    Color schrankeGelb;     //animieren wenn ändert     last state variable
+    Color schrankeFrame; //animieren wenn ändert
+    Color schrankeRed; //animieren wenn ändert
+    Color schrankeGelb; //animieren wenn ändert     last state variable
     if (schranke) {
       schrankeFrame = Color.fromARGB(255, 255, 0, 0);
       schrankeRed = Color.fromARGB(255, 255, 0, 0);
-      schrankeGelb = Color.fromARGB(255, 50, 50, 50);           
+      schrankeGelb = Color.fromARGB(255, 50, 50, 50);
     } else {
       schrankeFrame = Color.fromARGB(255, 0, 200, 0);
       schrankeRed = Color.fromARGB(255, 50, 50, 50);
-      schrankeGelb = Color.fromARGB(255, 50, 50, 50);      
+      schrankeGelb = Color.fromARGB(255, 50, 50, 50);
     }
 
     String schrankeName;
@@ -297,454 +295,440 @@ class _VerkehrspageState extends State<Verkehrspage> {
       schrankeName = 'Waldstraße';
     }
     return Scaffold(
-        body: Center(
+      body: Center(
           child: SafeArea(
-            child: Column(  
+        child: Column(
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    SizedBox(width: 25),
-                    const SizedBox(
-                      height: 75,
-                      width: 75,
-                      child: Image(
-                        image: AssetImage('Assets/wappen_Eichwalde.png'),
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                    Text(
-                    'Verkehr',
-                      style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+                SizedBox(width: 25),
                 const SizedBox(
-                  height: 20,
-                ),
-                AnimatedContainer(   //Schrankencontainer
-                  duration: Duration(milliseconds: 500),
-                  height: 200,
-                  width: 400, 
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 5,
-                      color: schrankeFrame,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color.fromARGB(255, 235, 235, 235),
+                  height: 75,
+                  width: 75,
+                  child: Image(
+                    image: AssetImage('Assets/wappen_Eichwalde.png'),
                   ),
-                  child: Column(
+                ),
+                SizedBox(width: 5),
+                Text(
+                  'Verkehr',
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            AnimatedContainer(
+              //Schrankencontainer
+              duration: Duration(milliseconds: 500),
+              height: 200,
+              width: 400,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 5,
+                  color: schrankeFrame,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                color: Color.fromARGB(255, 235, 235, 235),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
                     children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          SizedBox(
-                            width: 185,
-                            height: 100,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  style: TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  'Schranke'
-                                ),
-                                Text(
-                                  style: TextStyle(
-                                    height: 0.1,
-                                    fontSize: 20,
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  schrankeName//'Friedensstraße'
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                Text('Anzahl Züge: ${schrankeTrains.length}'),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            height: 40,
-                            child: SegmentedButton(
-                              segments: [
-                                ButtonSegment(
-                                  value: 'Lidl',
-                                  label: Text(
-                                    style: TextStyle(
-                                      fontSize: 12
-                                    ),
-                                    'Lidl'
-                                  ),
-                                ),
-                                ButtonSegment(
-                                  value: 'Wald',
-                                  label: Text(
-                                    style: TextStyle(
-                                      fontSize: 12
-                                    ),
-                                    'Wald'
-                                  ),
-                                ),
-                              ],
-                              selected: {schrankeWahl},
-                              onSelectionChanged: (Set newSelection) {
-                                setState(() {
-                                  schrankeWahl = newSelection.first;
-                                  schranke = checkSchranke(departures, schrankeWahl);     //muss noch überprüft werden
-                                });
-                              },
-                              showSelectedIcon: false,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            height: 100,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                              color: Color.fromARGB(255, 255, 255, 255),
-                            ),
-                            child: Container( 
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(5),
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  AnimatedContainer(
-                                    duration: Duration(milliseconds: 500),
-                                    height: 26,
-                                    width: 26,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(14),
-                                      color: schrankeRed,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Container(
-                                    height: 26,
-                                    width: 26,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(14),
-                                      color: schrankeGelb,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                      const SizedBox(
+                        width: 15,
                       ),
                       SizedBox(
-                        height: 5,
+                        width: 185,
+                        height: 100,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                'Schranke'),
+                            Text(
+                                style: TextStyle(
+                                  height: 0.1,
+                                  fontSize: 20,
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                schrankeName //'Friedensstraße'
+                                ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Text('Anzahl Züge: ${schrankeTrains.length}'),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 100,
+                        height: 40,
+                        child: SegmentedButton(
+                          segments: [
+                            ButtonSegment(
+                              value: 'Lidl',
+                              label:
+                                  Text(style: TextStyle(fontSize: 12), 'Lidl'),
+                            ),
+                            ButtonSegment(
+                              value: 'Wald',
+                              label:
+                                  Text(style: TextStyle(fontSize: 12), 'Wald'),
+                            ),
+                          ],
+                          selected: {schrankeWahl},
+                          onSelectionChanged: (Set newSelection) {
+                            setState(() {
+                              schrankeWahl = newSelection.first;
+                              schranke = checkSchranke(departures,
+                                  schrankeWahl); //muss noch überprüft werden
+                            });
+                          },
+                          showSelectedIcon: false,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
                       ),
                       Container(
-                        width: 400,
-                        height: 2,
-                        color: Color.fromARGB(255, 50, 50, 50),
-                      ),
-                      SizedBox(
-                        height: 5
-                      ),
-                      SizedBox(
-                        height: 68,
-                        child: schrankeTrains.isNotEmpty ? ListView.builder(
-                          itemCount: schrankeTrains.length,
-                          itemBuilder: (context, index) {
-                            final train = schrankeTrains[index];
-                            return Text(
-                              '${train.line}  ${train.destination}'
-                            );  
-                          }
-                        )
-                        :Text('Keine Züge'),
-                      ),
-                      
-                                
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: 400,
-                  height: 400,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 150, 200, 150),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 255, 255, 255)
-                    ),
-                    borderRadius: BorderRadius.circular(20)
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(                           //Überschrift
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 30,
-                        width: 380,
-                        child: DropdownMenu<Stations>(
-                          width: 380,
-                          initialSelection: Stations.eichwalde,
-                          controller: TextEditingController(),
-                          requestFocusOnTap: true,
-                          label: const Text('Ausgewählte Haltestelle'),
-                          onSelected: (Stations? val) {
-                            setState(() {
-                              selectedStation = val;
-                            });
-                            fetchAndUpdateData();
-                          },
-                          hintText: selectedStation!.stationName,
-                          //helperText: 'Hello',
-                          //errorText: null,
-                          enableFilter: true,
-                          dropdownMenuEntries: Stations.values.map<DropdownMenuEntry<Stations>>(
-                            (Stations station) {
-                              return DropdownMenuEntry<Stations>(
-                                value: station,
-                                label: station.stationName,
-                                style: MenuItemButton.styleFrom(
-                                  foregroundColor: Color.fromARGB(255, 0, 0, 0),
-                                ),
-                              );
-                            }).toList(),
-                          menuStyle: MenuStyle(
-                            backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 255, 255, 255))
+                        padding: EdgeInsets.all(10),
+                        height: 100,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
                           ),
-                          textStyle: TextStyle(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(5),
                             color: Color.fromARGB(255, 0, 0, 0),
                           ),
-                          inputDecorationTheme: InputDecorationTheme(
-                            filled: true,
-                            fillColor: Color.fromARGB(255, 240, 240, 230),  //Farbe
-                            border: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(Radius.circular(12))
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 500),
+                                height: 26,
+                                width: 26,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: schrankeRed,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                height: 26,
+                                width: 26,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: schrankeGelb,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 30,
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    width: 400,
+                    height: 2,
+                    color: Color.fromARGB(255, 50, 50, 50),
+                  ),
+                  SizedBox(height: 5),
+                  SizedBox(
+                    height: 68,
+                    child: schrankeTrains.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: schrankeTrains.length,
+                            itemBuilder: (context, index) {
+                              final train = schrankeTrains[index];
+                              return Text(
+                                  '${train.line}  ${train.destination}');
+                            })
+                        : Text('Keine Züge'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: 400,
+              height: 400,
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 150, 200, 150),
+                  border: Border.all(
+                      color: const Color.fromARGB(255, 255, 255, 255)),
+                  borderRadius: BorderRadius.circular(20)),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    //Überschrift
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 30,
+                    width: 380,
+                    child: DropdownMenu<Stations>(
+                      width: 380,
+                      initialSelection: Stations.eichwalde,
+                      controller: TextEditingController(),
+                      requestFocusOnTap: true,
+                      label: const Text('Ausgewählte Haltestelle'),
+                      onSelected: (Stations? val) {
+                        setState(() {
+                          selectedStation = val;
+                        });
+                        fetchAndUpdateData();
+                      },
+                      hintText: selectedStation!.stationName,
+                      //helperText: 'Hello',
+                      //errorText: null,
+                      enableFilter: true,
+                      dropdownMenuEntries: Stations.values
+                          .map<DropdownMenuEntry<Stations>>((Stations station) {
+                        return DropdownMenuEntry<Stations>(
+                          value: station,
+                          label: station.stationName,
+                          style: MenuItemButton.styleFrom(
+                            foregroundColor: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        );
+                      }).toList(),
+                      menuStyle: MenuStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                              Color.fromARGB(255, 255, 255, 255))),
+                      textStyle: TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
                       ),
-                      SizedBox(
-                        height: 305,
-                        child: ListView.builder(
-                          itemCount: departures.length,
-                          itemBuilder: (context, index) {
-                          final departure = departures[index];
-                          //final expanded = expandedIndex == index;        //expanded logik
-                          
-                          Color timecolor = const Color.fromARGB(255, 0, 0, 0);
-                          var delay = (departure.delay)/60;
-                          if (delay > 0 && delay < 5)  {
-                            timecolor = const Color.fromARGB(255, 255, 135, 0);
-                          } else if (delay > 5) {
-                            timecolor = const Color.fromARGB(255, 255, 0, 0);
-                          }
-                          else {
-                            timecolor = const Color.fromARGB(255, 0, 0, 0);
-                          }
-            
-                          int mincount;
-                          String deptime;
-                          var formattedHour = int.parse(departure.formattedHour);
-                          var formattedMin = int.parse(departure.formattedMin);
-                          if (formattedHour == currentHour) {
-                            mincount = (formattedMin-currentMin);
+                      inputDecorationTheme: InputDecorationTheme(
+                        filled: true,
+                        fillColor: Color.fromARGB(255, 240, 240, 230), //Farbe
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(12))),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  SizedBox(
+                    height: 305,
+                    child: ListView.builder(
+                      itemCount: departures.length,
+                      itemBuilder: (context, index) {
+                        final departure = departures[index];
+                        //final expanded = expandedIndex == index;        //expanded logik
+
+                        Color timecolor = const Color.fromARGB(255, 0, 0, 0);
+                        var delay = (departure.delay) / 60;
+                        if (delay > 0 && delay < 5) {
+                          timecolor = const Color.fromARGB(255, 255, 135, 0);
+                        } else if (delay > 5) {
+                          timecolor = const Color.fromARGB(255, 255, 0, 0);
+                        } else {
+                          timecolor = const Color.fromARGB(255, 0, 0, 0);
+                        }
+
+                        int mincount;
+                        String deptime;
+                        var formattedHour = int.parse(departure.formattedHour);
+                        var formattedMin = int.parse(departure.formattedMin);
+                        if (formattedHour == currentHour) {
+                          mincount = (formattedMin - currentMin);
+                        } else {
+                          mincount = (formattedMin + (60 - currentMin));
+                        }
+                        if (mincount == 0) {
+                          if (delay > 0) {
+                            deptime = 'jetzt (+${delay.round()})';
                           } else {
-                            mincount = (formattedMin+(60-currentMin));
+                            deptime = 'jetzt';
                           }
-                          if (mincount == 0) {
-                            if (delay > 0) {
-                              deptime = 'jetzt (+${delay.round()})';
-                            } else {
-                              deptime = 'jetzt';
-                            }
+                        } else {
+                          if (delay > 0) {
+                            deptime = 'in $mincount min (+${delay.round()})';
                           } else {
-                            if (delay > 0) {
-                              deptime = 'in $mincount min (+${delay.round()})';
-                            } else {
-                              deptime = 'in $mincount min';
-                            }
+                            deptime = 'in $mincount min';
                           }
-            
-                          TextStyle deststyle;
-                          if (departure.when == 'Fahrt fällt aus') {
-                            deststyle = const TextStyle(
-                              fontSize: 17,
-                              color: Color.fromARGB(255, 255, 0, 0),
-                              decoration: TextDecoration.lineThrough,
-                              decorationColor: Color.fromARGB(255, 255, 0, 0),
-                            );
-                            deptime = 'Fahrt fällt aus';
-                            timecolor = const Color.fromARGB(255, 255, 0, 0);
-                          } else {
-                            deststyle = const TextStyle(
-                              fontSize: 17,
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              decoration: TextDecoration.none,
-                            );
+                        }
+
+                        TextStyle deststyle;
+                        if (departure.when == 'Fahrt fällt aus') {
+                          deststyle = const TextStyle(
+                            fontSize: 17,
+                            color: Color.fromARGB(255, 255, 0, 0),
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: Color.fromARGB(255, 255, 0, 0),
+                          );
+                          deptime = 'Fahrt fällt aus';
+                          timecolor = const Color.fromARGB(255, 255, 0, 0);
+                        } else {
+                          deststyle = const TextStyle(
+                            fontSize: 17,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            decoration: TextDecoration.none,
+                          );
+                        }
+
+                        AssetImage lineImage =
+                            const AssetImage('Assets/Bus.png');
+                        SizedBox linelogo;
+                        if (departure.product == 'suburban') {
+                          if (departure.line == 'S46') {
+                            lineImage = const AssetImage('Assets/S46.png');
+                          } else if (departure.line == 'S8') {
+                            lineImage = const AssetImage('Assets/S8.png');
                           }
-            
-                          AssetImage lineImage = const AssetImage('Assets/Bus.png');
-                          SizedBox linelogo;
-                          if (departure.product == 'suburban') {
-                            if (departure.line == 'S46') {
-                              lineImage = const AssetImage('Assets/S46.png');
-                            } else if (departure.line == 'S8') {
-                              lineImage = const AssetImage('Assets/S8.png');
-                            }
-                            linelogo = SizedBox(
+                          linelogo = SizedBox(
                               height: 40,
                               width: 40,
-                              child: Image(image: lineImage)
-                            );
-                          } else {
-                            linelogo = SizedBox(
-                              height: 60,
-                              width: 40,
-                              child: 
-                                Column(
-                                  children: [
-                                    Image(
-                                      image: lineImage,
-                                      height: 30,
-                                      width: 30,
-                                    ),
-                                    const SizedBox(
-                                      height: 2,
-                                    ),
-                                    Text(
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      departure.line,
-                                    ),
-                                  ],
+                              child: Image(image: lineImage));
+                        } else {
+                          linelogo = SizedBox(
+                            height: 60,
+                            width: 40,
+                            child: Column(
+                              children: [
+                                Image(
+                                  image: lineImage,
+                                  height: 30,
+                                  width: 30,
                                 ),
-                            );
-                          }
-
-                          //expanded logik anfang
-                          //IconData arrow;
-                          //if (expanded) {
-                          //  arrow = Icons.keyboard_arrow_up_rounded;
-                          //} else {
-                          //  arrow = Icons.keyboard_arrow_down_rounded;
-                          //}
-                          //expanded logik ende
-                          double tileheight;
-                          int linecount;
-                          if (departure.destination.length > 27) {
-                            linecount = 2;
-                            tileheight = 100;
-                          } else {
-                            linecount = 1;
-                            tileheight = 80;
-                          }
-
-                          return Center(
-                            child: Column(            //weg machen
-                              children:[
-                                SizedBox(
-                                  width: 380,
-                                  height: tileheight,
-                                  child: Card(
-                                    child: ListTile(
-                                      onTap: () => expand(index),             //expanded logik
-                                      leading: SizedBox(
-                                        height: 60,
-                                        width: 40,
-                                        child: linelogo,
-                                      ),
-                                        title: Text(
-                                          style: deststyle,
-                                          maxLines: linecount,
-                                        departure.destination
-                                      ),
-                                      subtitle: Row(
-                                        children: [
-                                          Text(
-                                             style: TextStyle(
-                                               fontSize: 15,
-                                               color: timecolor,
-                                             ),
-                                             deptime
-                                          ),
-                                          SizedBox(width: 25),
-                                          Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                            'Gleis: ${departure.platform}'
-                                          ),
-                                        ],
-                                      ), 
-                                      trailing: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                            'Gleis:'
-                                          ),
-                                          Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                            '${departure.platform}'
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                const SizedBox(
+                                  height: 2,
+                                ),
+                                Text(
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                ),  
+                                  departure.line,
+                                ),
                               ],
                             ),
                           );
-                        },
-                      ),
+                        }
+
+                        //expanded logik anfang
+                        //IconData arrow;
+                        //if (expanded) {
+                        //  arrow = Icons.keyboard_arrow_up_rounded;
+                        //} else {
+                        //  arrow = Icons.keyboard_arrow_down_rounded;
+                        //}
+                        //expanded logik ende
+                        double tileheight;
+                        int linecount;
+                        if (departure.destination.length > 27) {
+                          linecount = 2;
+                          tileheight = 100;
+                        } else {
+                          linecount = 1;
+                          tileheight = 80;
+                        }
+
+                        return Center(
+                          child: Column(
+                            //weg machen
+                            children: [
+                              SizedBox(
+                                width: 380,
+                                height: tileheight,
+                                child: Card(
+                                  child: ListTile(
+                                    onTap: () => expand(index), //expanded logik
+                                    leading: SizedBox(
+                                      height: 60,
+                                      width: 40,
+                                      child: linelogo,
+                                    ),
+                                    title: Text(
+                                        style: deststyle,
+                                        maxLines: linecount,
+                                        departure.destination),
+                                    subtitle: Row(
+                                      children: [
+                                        Text(
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: timecolor,
+                                            ),
+                                            deptime),
+                                        SizedBox(width: 25),
+                                        Text(
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                            'Gleis: ${departure.platform}'),
+                                      ],
+                                    ),
+                                    trailing: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                            'Gleis:'),
+                                        Text(
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                            '${departure.platform}'),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                    Text(   //last update text
+                  ),
+                  Text(//last update text
                       'Zuletzt aktualisiert: $lastUpdate')
-                  ],
-                ),
+                ],
               ),
-              /*Row(
+            ),
+            /*Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
@@ -815,10 +799,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   ],
                 ),
               ),*/
-            ],
-                    ),
-          )
-      ),
+          ],
+        ),
+      )),
     );
   }
 }
@@ -841,8 +824,7 @@ OverlayEntry scheduleAlarmOverlay = OverlayEntry(
             child: Container(
               decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 150, 200, 150),
-                  borderRadius: BorderRadius.circular(20)
-              ),
+                  borderRadius: BorderRadius.circular(20)),
               child: Column(
                 children: [
                   SizedBox(height: 75),
@@ -852,22 +834,22 @@ OverlayEntry scheduleAlarmOverlay = OverlayEntry(
                       children: [
                         SizedBox(width: 10),
                         NumberPicker(
-                          itemWidth: 185,
-                          infiniteLoop: true,
-                          minValue: 0, 
-                          maxValue: 23, 
-                          value: pickedHour, //aktuelle Zeit?
-                          onChanged: (value) => _VerkehrspageState().currentPickedHour = value
-                        ),
+                            itemWidth: 185,
+                            infiniteLoop: true,
+                            minValue: 0,
+                            maxValue: 23,
+                            value: pickedHour, //aktuelle Zeit?
+                            onChanged: (value) =>
+                                _VerkehrspageState().currentPickedHour = value),
                         SizedBox(width: 10),
                         NumberPicker(
-                          itemWidth: 185,
-                          infiniteLoop: true,
-                          minValue: 0, 
-                          maxValue: 59, 
-                          value: pickedMinute, //aktuelle Zeit?
-                          onChanged: (value) => _VerkehrspageState().currentPickedMinute = value
-                        ),
+                            itemWidth: 185,
+                            infiniteLoop: true,
+                            minValue: 0,
+                            maxValue: 59,
+                            value: pickedMinute, //aktuelle Zeit?
+                            onChanged: (value) => _VerkehrspageState()
+                                .currentPickedMinute = value),
                       ],
                     ),
                   ),
@@ -878,19 +860,15 @@ OverlayEntry scheduleAlarmOverlay = OverlayEntry(
                     child: Row(
                       children: [
                         ElevatedButton(
-                          onPressed: () {
-                            scheduleAlarmOverlay.remove();
-                          }, 
-                          child: Text('Abbrechen')
-                        ),
+                            onPressed: () {
+                              scheduleAlarmOverlay.remove();
+                            },
+                            child: Text('Abbrechen')),
                         ElevatedButton(
-                          onPressed: () {
-                           
-
-                            scheduleAlarmOverlay.remove();
-                          } , 
-                          child: Text('Bestätigen')
-                        ),
+                            onPressed: () {
+                              scheduleAlarmOverlay.remove();
+                            },
+                            child: Text('Bestätigen')),
                       ],
                     ),
                   ),
@@ -903,8 +881,6 @@ OverlayEntry scheduleAlarmOverlay = OverlayEntry(
     );
   },
 );
-
-
 
 class Homepage extends StatefulWidget {
   @override
@@ -963,50 +939,45 @@ class AdminCheckPage extends StatefulWidget {
 }
 
 class _AdminCheckPageState extends State<AdminCheckPage> {
-   String Eingabe = '';
-  
-  void updateEingabe(String text){
+  String Eingabe = '';
+
+  void updateEingabe(String text) {
     setState(() {
       Eingabe = text;
-      
     });
-    {if (Eingabe == '1234'){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AdminPage()),
-              );
-              }
+    {
+      if (Eingabe == '1234') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AdminPage()),
+        );
       }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Admin Panel")),
-      body:Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children:[
-         /*Row(
+      body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        /*Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width*0.2,
               ),
               SizedBox(
-                child:*/TextField(
-                onSubmitted: updateEingabe,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Passwort'
-                ),
-                ),
-           //   ),
-       //     ]
-  //       )
-        ] 
-     ),
+                child:*/
+        TextField(
+          onSubmitted: updateEingabe,
+          decoration: InputDecoration(
+              border: OutlineInputBorder(), labelText: 'Passwort'),
+        ),
+        //   ),
+        //     ]
+        //       )
+      ]),
     );
-      
   }
 }
 
@@ -1026,7 +997,6 @@ class _AdminPageState extends State<AdminPage> {
   final TextEditingController telController = TextEditingController();
   final TextEditingController imageController = TextEditingController();
   final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
-    
 
   void _clearFields() {
     nameController.clear();
@@ -1036,7 +1006,7 @@ class _AdminPageState extends State<AdminPage> {
     imageController.clear();
   }
 
-   /*Future _addGewerbe() async {
+  /*Future _addGewerbe() async {
     String name = nameController.text;
     String gewerbeart = gewerbeartController.text;
     String adresse = adresseController.text;
@@ -1056,7 +1026,6 @@ class _AdminPageState extends State<AdminPage> {
       );
     }
   }*/
-  
 
   @override
   void initState() {
@@ -1071,7 +1040,8 @@ class _AdminPageState extends State<AdminPage> {
       Map<String, dynamic> decodedEvents = jsonDecode(eventsString);
       setState(() {
         _events = decodedEvents.map(
-          (key, value) => MapEntry(DateTime.parse(key), List<String>.from(value)),
+          (key, value) =>
+              MapEntry(DateTime.parse(key), List<String>.from(value)),
         );
       });
     }
@@ -1081,47 +1051,47 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Admin Panel")),
-      body: ListView(
-              children:[
-                _events.isNotEmpty ? ListView(children: _events.entries.map((entry) {             //hier bedingung
-                return Card(
-                  margin: EdgeInsets.all(8),
-                  child: ListTile(
-                    title: Text(
-                      "${entry.key.day}.${entry.key.month}.${entry.key.year}",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+      body: ListView(children: [
+        _events.isNotEmpty
+            ? ListView(
+                children: _events.entries.map((entry) {
+                  //hier bedingung
+                  return Card(
+                    margin: EdgeInsets.all(8),
+                    child: ListTile(
+                      title: Text(
+                        "${entry.key.day}.${entry.key.month}.${entry.key.year}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children:
+                            entry.value.map((event) => Text(event)).toList(),
+                      ),
                     ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: entry.value.map((event) => Text(event)).toList(),
-                    ),
-                  ),
-                );
+                  );
                 }).toList(),
-              ): Center(child: Text("Keine Termine gefunden")),                                   //ersatz wenn leer
-            ElevatedButton(
-              onPressed: () {
+              )
+            : Center(child: Text("Keine Termine gefunden")), //ersatz wenn leer
+        ElevatedButton(
+            onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => GewerbeHinzufuegenPage()),
+                MaterialPageRoute(
+                    builder: (context) => GewerbeHinzufuegenPage()),
               );
             },
-              child: Text('Gewerbe hinzufügen') 
-              ),
-            ElevatedButton(
-              onPressed: () {
+            child: Text('Gewerbe hinzufügen')),
+        ElevatedButton(
+            onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => GewerbeLoeschenPage()),
               );
             },
-              child: Text('Gewerbe löschen') 
-              ),
-        ]
-     ),
-        
+            child: Text('Gewerbe löschen')),
+      ]),
     );
-
   }
 }
 
@@ -1133,14 +1103,12 @@ class GewerbeHinzufuegenPage extends StatefulWidget {
 }
 
 class _GewerbeHinzufuegenPageState extends State<GewerbeHinzufuegenPage> {
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController gewerbeartController = TextEditingController();
   final TextEditingController adresseController = TextEditingController();
   final TextEditingController telController = TextEditingController();
   final TextEditingController imageController = TextEditingController();
   final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
-    
 
   void _clearFields() {
     nameController.clear();
@@ -1150,14 +1118,17 @@ class _GewerbeHinzufuegenPageState extends State<GewerbeHinzufuegenPage> {
     imageController.clear();
   }
 
-   Future _addGewerbe() async {
+  Future _addGewerbe() async {
     String name = nameController.text;
     String gewerbeart = gewerbeartController.text;
     String adresse = adresseController.text;
     int? tel = int.tryParse(telController.text);
     String image = imageController.text;
 
-    if (name.isNotEmpty && gewerbeart.isNotEmpty && adresse.isNotEmpty && tel != null) {
+    if (name.isNotEmpty &&
+        gewerbeart.isNotEmpty &&
+        adresse.isNotEmpty &&
+        tel != null) {
       await cloudGewerbe.addGewerbe(name, gewerbeart, adresse, tel, image);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1175,15 +1146,27 @@ class _GewerbeHinzufuegenPageState extends State<GewerbeHinzufuegenPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Card(
-              child: Column(
-              children: [
-            TextField(controller: nameController, decoration: InputDecoration(labelText: "Name")),
-            TextField(controller: gewerbeartController, decoration: InputDecoration(labelText: "Gewerbeart")),
-            TextField(controller: adresseController, decoration: InputDecoration(labelText: "Adresse")),
-            TextField(controller: telController, decoration: InputDecoration(labelText: "Telefonnummer"), keyboardType: TextInputType.number),
-            TextField(controller: imageController, decoration: InputDecoration(labelText: "Bild-URL")),
+        child: Column(
+          children: [
+            TextField(
+                controller: nameController,
+                decoration: InputDecoration(labelText: "Name")),
+            TextField(
+                controller: gewerbeartController,
+                decoration: InputDecoration(labelText: "Gewerbeart")),
+            TextField(
+                controller: adresseController,
+                decoration: InputDecoration(labelText: "Adresse")),
+            TextField(
+                controller: telController,
+                decoration: InputDecoration(labelText: "Telefonnummer"),
+                keyboardType: TextInputType.number),
+            TextField(
+                controller: imageController,
+                decoration: InputDecoration(labelText: "Bild-URL")),
             SizedBox(height: 20),
-            ElevatedButton(onPressed: _addGewerbe, child: Text("Gewerbe hinzufügen")),
+            ElevatedButton(
+                onPressed: _addGewerbe, child: Text("Gewerbe hinzufügen")),
           ],
         ),
       ),
@@ -1199,70 +1182,67 @@ class GewerbeLoeschenPage extends StatefulWidget {
 }
 
 class _GewerbeLoeschenPageState extends State<GewerbeLoeschenPage> {
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController gewerbeartController = TextEditingController();
   final TextEditingController adresseController = TextEditingController();
   final TextEditingController telController = TextEditingController();
   final TextEditingController imageController = TextEditingController();
   final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
-    
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('Gewerbe').snapshots(),
+        builder: (context, snapshot) {
+          print("StreamBuilder aktualisiert!");
+          print("ConnectionState: ${snapshot.connectionState}");
 
- @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('Gewerbe').snapshots(),
-      builder: (context, snapshot) {
-        print("StreamBuilder aktualisiert!");
-        print("ConnectionState: ${snapshot.connectionState}");
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            print("Warte auf Daten...");
+            return Center(child: CircularProgressIndicator());
+          }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          print("Warte auf Daten...");
-          return Center(child: CircularProgressIndicator());
-        }
+          if (snapshot.hasError) {
+            print("Fehler: ${snapshot.error}");
+            return Center(child: Text('Fehler: ${snapshot.error}'));
+          }
 
-        if (snapshot.hasError) {
-          print("Fehler: ${snapshot.error}");
-          return Center(child: Text('Fehler: ${snapshot.error}'));
-        }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            print("Keine Daten vorhanden!");
+            return Center(child: Text('Keine Gewerbe gefunden'));
+          }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          print("Keine Daten vorhanden!");
-          return Center(child: Text('Keine Gewerbe gefunden'));
-        }
+          var docs = snapshot.data!.docs;
+          print("Daten empfangen: ${docs.length} Gewerbe");
 
-        var docs = snapshot.data!.docs;
-        print("Daten empfangen: ${docs.length} Gewerbe");
+          return ListView.builder(
+            itemCount: docs.length,
+            itemBuilder: (context, index) {
+              print("Dokument ${index + 1}: ${docs[index].id}");
 
-        return ListView.builder(
-          itemCount: docs.length,
-          itemBuilder: (context, index) {
-            print("Dokument ${index + 1}: ${docs[index].id}");
-            
-            return ListTile(
-              title: Text(docs[index]["name"] ?? "Kein Name"),
-              leading: IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () async {
-                  bool confirmDelete = await _showDeleteDialog(context);
-                  if (confirmDelete) {
-                    await FirebaseFirestore.instance
-                        .collection('Gewerbe')
-                        .doc(docs[index].id)
-                        .delete();
-                    print("Dokument gelöscht: ${docs[index].id}");
-                  }
-                },
-              ),
-            );
-          },
-        );
-      },
-    ),
-  );
-}
+              return ListTile(
+                title: Text(docs[index]["name"] ?? "Kein Name"),
+                leading: IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () async {
+                    bool confirmDelete = await _showDeleteDialog(context);
+                    if (confirmDelete) {
+                      await FirebaseFirestore.instance
+                          .collection('Gewerbe')
+                          .doc(docs[index].id)
+                          .delete();
+                      print("Dokument gelöscht: ${docs[index].id}");
+                    }
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
 
   // Dialog zur Bestätigung des Löschens
   Future<bool> _showDeleteDialog(BuildContext context) async {
@@ -1287,152 +1267,146 @@ Widget build(BuildContext context) {
   }
 }
 
-
-
-
 class GewerbePage extends StatefulWidget {
-
   @override
   State<GewerbePage> createState() => _GewerbePageState();
 }
 
 class _GewerbePageState extends State<GewerbePage> {
+  final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
 
-final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
+  OverlayEntry? overlayEntry;
 
-OverlayEntry? overlayEntry;
+  OverlayEntry? _overlayEntry;
 
+  void closeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
 
-OverlayEntry? _overlayEntry;
+  void removeOverlay() {
+    overlayEntry?.remove();
+    overlayEntry = null;
+  }
 
-void closeOverlay() {
-  _overlayEntry?.remove();
-  _overlayEntry = null;
-}
+  void showOverlay(
+      BuildContext context, String documentId, Offset position, int index) {
+    removeOverlay();
+    final screenSize = MediaQuery.of(context).size;
+    final overlayWidth = MediaQuery.of(context).size.width * 0.7;
+    final overlayHeight = 210.00;
+    double dx = position.dx;
+    double dy = position.dy;
 
-void removeOverlay() {
-  overlayEntry?.remove();
-  overlayEntry = null;
-}
-
-void showOverlay(BuildContext context, String documentId, Offset position, int index) {
-  removeOverlay(); 
-  final screenSize = MediaQuery.of(context).size;
-  final overlayWidth = MediaQuery.of(context).size.width * 0.7;
-  final overlayHeight =  210.00; 
-  double dx = position.dx;
-  double dy = position.dy;
-
-  if (dx + overlayWidth > screenSize.width) {
+    if (dx + overlayWidth > screenSize.width) {
       dx = screenSize.width - overlayWidth - 10;
     }
-  if (dy + overlayHeight > screenSize.height) {
+    if (dy + overlayHeight > screenSize.height) {
       dy = screenSize.height - overlayHeight - 10;
     }
 
-  overlayEntry = OverlayEntry(
-    builder: (context) => Positioned(
-      left: MediaQuery.of(context).size.width * 0.1,  
-      top: MediaQuery.of(context).size.longestSide * 0.62, 
-      width: MediaQuery.of(context).size.width * 0.8, 
-      height: overlayHeight,
-      child: Material(
-        elevation: 4,
-        color: Color.fromARGB(255, 150, 200, 150),
-        borderRadius: BorderRadius.circular(10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, 
-          children: [
-            ListTile(
-              title: GetgewerbeAdresse(documentId: cloudGewerbe.docIDs[index]),
-              subtitle: Getgewerbeart(documentId: cloudGewerbe.docIDs[index]),
-            ),
-            Divider(), 
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: GetgewerbeTel(documentId: cloudGewerbe.docIDs[index]),
-            ),
-            TextButton(
-              onPressed: removeOverlay, 
-              child: Text("Schließen"),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-
-  Overlay.of(context).insert(overlayEntry!);
-}
-
-  @override
-
-
- Widget build(BuildContext context) {
- // List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(150, 200, 150, 1),
-        title:Text(
-          'Gewerbe',
-          style: TextStyle(
-            color: Color.fromRGBO(222, 236, 209, 1),
-            fontSize:40,
-            //fontWeight: FontWeight.w500,
-            letterSpacing:4.0,
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        left: MediaQuery.of(context).size.width * 0.1,
+        top: MediaQuery.of(context).size.longestSide * 0.62,
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: overlayHeight,
+        child: Material(
+          elevation: 4,
+          color: Color.fromARGB(255, 150, 200, 150),
+          borderRadius: BorderRadius.circular(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title:
+                    GetgewerbeAdresse(documentId: cloudGewerbe.docIDs[index]),
+                subtitle: Getgewerbeart(documentId: cloudGewerbe.docIDs[index]),
+              ),
+              Divider(),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: GetgewerbeTel(documentId: cloudGewerbe.docIDs[index]),
+              ),
+              TextButton(
+                onPressed: removeOverlay,
+                child: Text("Schließen"),
+              ),
+            ],
           ),
         ),
-        centerTitle: true,
       ),
-      body: FutureBuilder(
-        future: cloudGewerbe.getDocId(),
-        builder: (context, snapshot){
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
-          crossAxisCount: 2,
-          mainAxisExtent: 250,
+    );
+
+    Overlay.of(context).insert(overlayEntry!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
+
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color.fromRGBO(150, 200, 150, 1),
+          title: Text(
+            'Gewerbe',
+            style: TextStyle(
+              color: Color.fromRGBO(222, 236, 209, 1),
+              fontSize: 40,
+              //fontWeight: FontWeight.w500,
+              letterSpacing: 4.0,
             ),
-          itemCount: cloudGewerbe.docIDs.length,
-          itemBuilder: (context,index) {
-            return GestureDetector(
-              onTapDown:(details) {
-              if (_overlayEntry != null) {
-              removeOverlay();
-              } else {
-              showOverlay(context, cloudGewerbe.docIDs[index], details.globalPosition, index);
-              }
-              },
-              child: Container(
+          ),
+          centerTitle: true,
+        ),
+        body: FutureBuilder(
+            future: cloudGewerbe.getDocId(),
+            builder: (context, snapshot) {
+              return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 250,
+                  ),
+                  itemCount: cloudGewerbe.docIDs.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTapDown: (details) {
+                        if (_overlayEntry != null) {
+                          removeOverlay();
+                        } else {
+                          showOverlay(context, cloudGewerbe.docIDs[index],
+                              details.globalPosition, index);
+                        }
+                      },
+                      child: Container(
                         padding: EdgeInsets.all(0.5),
-                        child:Card(
+                        child: Card(
                           color: Color.fromARGB(255, 150, 200, 150),
-                          child: Column(
-                          children: [
+                          child: Column(children: [
                             SizedBox(
                               height: 10,
                             ),
                             SizedBox(
                               width: 150,
                               height: 120,
-                              child: Getgewerbeimage(documentId: cloudGewerbe.docIDs[index]),
-                              ),
+                              child: Getgewerbeimage(
+                                  documentId: cloudGewerbe.docIDs[index]),
+                            ),
                             SizedBox(
                               height: 5,
                             ),
                             SizedBox(
-                            width: 160,
-                              child: Getgewerbename(documentId: cloudGewerbe.docIDs[index]),
-                              ),
-                          ]
+                              width: 160,
+                              child: Getgewerbename(
+                                  documentId: cloudGewerbe.docIDs[index]),
+                            ),
+                          ]),
                         ),
                       ),
-                    ), 
-                  );
-          }
-          );
-        })
-      /* GridView.builder(
+                    );
+                  });
+            })
+        /* GridView.builder(
         itemCount: gewerbes.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
           crossAxisCount: 2,
@@ -1488,8 +1462,8 @@ void showOverlay(BuildContext context, String documentId, Offset position, int i
 
             }
            ),*/
-         );
-      }
+        );
+  }
 }
 
 class Terminepage extends StatefulWidget {
@@ -1520,7 +1494,8 @@ class _TerminepageState extends State<Terminepage> {
 
   void _addEvent(String event) {
     setState(() {
-      final normalizedDay = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+      final normalizedDay =
+          DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
       _events.putIfAbsent(normalizedDay, () => []).add(event);
       _saveEvents();
     });
@@ -1528,7 +1503,8 @@ class _TerminepageState extends State<Terminepage> {
 
   Future<void> _saveEvents() async {
     final prefs = await SharedPreferences.getInstance();
-    Map<String, List<String>> stringEvents = _events.map((key, value) => MapEntry(key.toIso8601String(), value));
+    Map<String, List<String>> stringEvents =
+        _events.map((key, value) => MapEntry(key.toIso8601String(), value));
     await prefs.setString('events', jsonEncode(stringEvents));
   }
 
@@ -1538,7 +1514,8 @@ class _TerminepageState extends State<Terminepage> {
     if (eventsString != null) {
       Map<String, dynamic> decodedEvents = jsonDecode(eventsString);
       setState(() {
-        _events = decodedEvents.map((key, value) => MapEntry(DateTime.parse(key), List<String>.from(value)));
+        _events = decodedEvents.map((key, value) =>
+            MapEntry(DateTime.parse(key), List<String>.from(value)));
       });
     }
   }
@@ -1556,9 +1533,10 @@ class _TerminepageState extends State<Terminepage> {
 
     if (picked != null) {
       final now = DateTime.now();
-      final selectedDateTime = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+      final selectedDateTime =
+          DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
       final formattedTime = DateFormat.Hm("de_DE").format(selectedDateTime);
-      
+
       if (mounted) {
         setState(() {
           _timeController.text = formattedTime;
@@ -1605,10 +1583,14 @@ class _TerminepageState extends State<Terminepage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: _events[DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day)]?.length ?? 0,
+              itemCount: _events[DateTime(_selectedDay.year, _selectedDay.month,
+                          _selectedDay.day)]
+                      ?.length ??
+                  0,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(_events[DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day)]![index]),
+                  title: Text(_events[DateTime(_selectedDay.year,
+                      _selectedDay.month, _selectedDay.day)]![index]),
                 );
               },
             ),
@@ -1648,7 +1630,8 @@ class _TerminepageState extends State<Terminepage> {
                     ),
                     TextField(
                       controller: _timeController,
-                      decoration: InputDecoration(hintText: "Uhrzeit auswählen"),
+                      decoration:
+                          InputDecoration(hintText: "Uhrzeit auswählen"),
                       readOnly: true,
                       onTap: () => _selectTime(context),
                     ),
@@ -1657,8 +1640,10 @@ class _TerminepageState extends State<Terminepage> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      if (_timeController.text.isNotEmpty && _nameController.text.isNotEmpty) {
-                        _addEvent("${_nameController.text} - $_selectedService um ${_timeController.text}");
+                      if (_timeController.text.isNotEmpty &&
+                          _nameController.text.isNotEmpty) {
+                        _addEvent(
+                            "${_nameController.text} - $_selectedService um ${_timeController.text}");
                       }
                       Navigator.pop(context);
                     },
