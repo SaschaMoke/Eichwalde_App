@@ -18,7 +18,7 @@ class Cloudgewerbe {
   Future getDocId() async {
     await FirebaseFirestore.instance.collection('Gewerbe').get().then(
       (snapshot) => snapshot.docs.forEach((document) {
-        print(document.reference);
+       // print(document.reference);
         docIDs.add(document.reference.id);
       }
     ),
@@ -30,7 +30,7 @@ class Cloudgewerbe {
     try {
       await FirebaseFirestore.instance.collection('Gewerbe').doc(docId).delete();
     } catch (e) {
-      print('Fehler beim Löschen: $e');
+      //print('Fehler beim Löschen: $e');
       throw e;
     }
   }

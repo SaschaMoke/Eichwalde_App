@@ -998,14 +998,6 @@ class _AdminPageState extends State<AdminPage> {
   final TextEditingController imageController = TextEditingController();
   final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
 
-  void _clearFields() {
-    nameController.clear();
-    gewerbeartController.clear();
-    adresseController.clear();
-    telController.clear();
-    imageController.clear();
-  }
-
   /*Future _addGewerbe() async {
     String name = nameController.text;
     String gewerbeart = gewerbeartController.text;
@@ -1195,31 +1187,31 @@ class _GewerbeLoeschenPageState extends State<GewerbeLoeschenPage> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('Gewerbe').snapshots(),
         builder: (context, snapshot) {
-          print("StreamBuilder aktualisiert!");
-          print("ConnectionState: ${snapshot.connectionState}");
+          //print("StreamBuilder aktualisiert!");
+          //print("ConnectionState: ${snapshot.connectionState}");
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            print("Warte auf Daten...");
+            //print("Warte auf Daten...");
             return Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
-            print("Fehler: ${snapshot.error}");
+            //print("Fehler: ${snapshot.error}");
             return Center(child: Text('Fehler: ${snapshot.error}'));
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            print("Keine Daten vorhanden!");
+            //print("Keine Daten vorhanden!");
             return Center(child: Text('Keine Gewerbe gefunden'));
           }
 
           var docs = snapshot.data!.docs;
-          print("Daten empfangen: ${docs.length} Gewerbe");
+          //print("Daten empfangen: ${docs.length} Gewerbe");
 
           return ListView.builder(
             itemCount: docs.length,
             itemBuilder: (context, index) {
-              print("Dokument ${index + 1}: ${docs[index].id}");
+              //print("Dokument ${index + 1}: ${docs[index].id}");
 
               return ListTile(
                 title: Text(docs[index]["name"] ?? "Kein Name"),
@@ -1232,7 +1224,7 @@ class _GewerbeLoeschenPageState extends State<GewerbeLoeschenPage> {
                           .collection('Gewerbe')
                           .doc(docs[index].id)
                           .delete();
-                      print("Dokument gelöscht: ${docs[index].id}");
+                      //print("Dokument gelöscht: ${docs[index].id}");
                     }
                   },
                 ),
