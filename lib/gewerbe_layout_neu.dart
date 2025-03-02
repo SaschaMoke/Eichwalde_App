@@ -1,10 +1,10 @@
-import 'dart:ffi';
+/*import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-//import 'Gewerbe.dart';        //auf firebase anpassen
+import 'Gewerbe.dart';        //auf firebase anpassen
 
-/*class GewerbeLayoutNeu extends StatefulWidget{
+class GewerbeLayoutNeu extends StatefulWidget{
   @override
   State<GewerbeLayoutNeu> createState() => _GewerbeLayoutNeuState();
 }
@@ -88,6 +88,6 @@ class _GewerbeLayoutNeuState extends State<GewerbeLayoutNeu> {
       ),
     );
   } 
-}*/
-
+}
+*/
   

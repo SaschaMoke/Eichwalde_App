@@ -218,9 +218,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
     super.initState();
     fetchAndUpdateData(); 
     timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
-    //setState(() {
-      selectedStation = Stations.eichwalde;
-    //});
+    selectedStation = Stations.eichwalde;
   }
   @override
   void dispose() {
@@ -326,7 +324,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 const SizedBox(
                   height: 20,
                 ),
-                Container(   //Schrankencontainer
+                AnimatedContainer(   //Schrankencontainer
+                  duration: Duration(milliseconds: 500),
                   height: 200,
                   width: 400, 
                   decoration: BoxDecoration(
@@ -435,7 +434,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
+                                  AnimatedContainer(
+                                    duration: Duration(milliseconds: 500),
                                     height: 26,
                                     width: 26,
                                     decoration: BoxDecoration(
@@ -560,7 +560,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           itemCount: departures.length,
                           itemBuilder: (context, index) {
                           final departure = departures[index];
-                          final expanded = expandedIndex == index;        //expanded logik
+                          //final expanded = expandedIndex == index;        //expanded logik
                           
                           Color timecolor = const Color.fromARGB(255, 0, 0, 0);
                           var delay = (departure.delay)/60;
@@ -655,12 +655,12 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           }
 
                           //expanded logik anfang
-                          IconData arrow;
-                          if (expanded) {
-                            arrow = Icons.keyboard_arrow_up_rounded;
-                          } else {
-                            arrow = Icons.keyboard_arrow_down_rounded;
-                          }
+                          //IconData arrow;
+                          //if (expanded) {
+                          //  arrow = Icons.keyboard_arrow_up_rounded;
+                          //} else {
+                          //  arrow = Icons.keyboard_arrow_down_rounded;
+                          //}
                           //expanded logik ende
                           double tileheight;
                           int linecount;
@@ -710,9 +710,25 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                           ),
                                         ],
                                       ), 
-                                      trailing: Icon(
-                                        size: 25,
-                                        arrow
+                                      trailing: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                            'Gleis:'
+                                          ),
+                                          Text(
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                            '${departure.platform}'
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -1065,11 +1081,9 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Admin Panel")),
-      body: //_events.isEmpty
-        //  ? Center(child: Text("Keine Termine gefunden"))
-          ListView(
+      body: ListView(
               children:[
-                /*ListView(children: _events.entries.map((entry) {
+                _events.isNotEmpty ? ListView(children: _events.entries.map((entry) {             //hier bedingung
                 return Card(
                   margin: EdgeInsets.all(8),
                   child: ListTile(
@@ -1083,8 +1097,8 @@ class _AdminPageState extends State<AdminPage> {
                     ),
                   ),
                 );
-              }).toList(),
-              ),*/
+                }).toList(),
+              ): Center(child: Text("Keine Termine gefunden")),                                   //ersatz wenn leer
             ElevatedButton(
               onPressed: () {
               Navigator.push(
