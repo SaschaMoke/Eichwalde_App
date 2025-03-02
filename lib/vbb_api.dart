@@ -21,13 +21,18 @@ class SchrankeZug {
 }
 
 List<Departure> schrankeTrains = [];
-//Unterschied Richtung einbauen
+int nextClose = 100;
+int nextOpen = 100; 
+//Unterschied Richtung einbauen - müsste funktionieren
 //check ausfall
 bool checkSchranke(List departures, String schrankeOrt) {
   DateTime nowSchranke = DateTime.now();
   var currentHourSchranke = int.parse(DateFormat('HH').format(nowSchranke));
   var currentMinSchranke = int.parse(DateFormat('mm').format(nowSchranke));
   
+  nextClose = 100;
+  nextOpen = 100; 
+
   for (var dep in departures) {
     if (dep.product == 'suburban') {
       int mincountSchranke;
@@ -40,21 +45,24 @@ bool checkSchranke(List departures, String schrankeOrt) {
       }
 
       if (schrankeOrt == 'Lidl') {
-        print('Hi');
-        if (dep.platform == 4) {
+        //print('Lidl');
+        if (dep.platform == '4') {
           mincountSchranke = mincountSchranke - 1;
-        } else if (dep.platform == 3) {
+        } else if (dep.platform == '3') {
           mincountSchranke = mincountSchranke + 1;
         }
       } else {
-         print('wald');
-         if (dep.platform == 3) {
+         //print('wald');
+         if (dep.platform == '3') {
           mincountSchranke = mincountSchranke - 1;
-        } else if (dep.platform == 4) {
+        } else if (dep.platform == '4') {
           mincountSchranke = mincountSchranke + 1;
         }
       }
 
+      if (mincountSchranke < nextClose) {
+        nextClose = mincountSchranke;
+      }
       //if (dep.platform == 4) {
         //mincountSchranke = mincountSchranke - 1;
       //} else if (dep.platform == 3) {
@@ -67,6 +75,10 @@ bool checkSchranke(List departures, String schrankeOrt) {
         }
         if (mincountSchranke == 0) {        //nimmt ihn zu früh weg
           schrankeTrains.remove(dep);
+        }
+
+        if (mincountSchranke > nextOpen) {
+          nextOpen = mincountSchranke;
         }
       } else {
         if (schrankeTrains.contains(dep)) {

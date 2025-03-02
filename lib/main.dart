@@ -294,6 +294,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
     } else {
       schrankeName = 'Waldstraße';
     }
+
+    String schrankeTimeTillAction;
+    if (schranke) {
+      schrankeTimeTillAction = 'Nächste Öffnung vorraussichtlich in: $nextOpen min';
+    } else {
+      schrankeTimeTillAction = 'Nächste Schließung vorraussichtlich in: $nextClose min';
+    }
+
     return Scaffold(
       body: Center(
           child: SafeArea(
@@ -335,7 +343,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 borderRadius: BorderRadius.circular(20),
                 color: Color.fromARGB(255, 235, 235, 235),
               ),
-              child: Column(
+              child: departures.isNotEmpty ? Column(
                 children: [
                   SizedBox(
                     height: 10,
@@ -369,7 +377,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             const SizedBox(
                               height: 15,
                             ),
-                            Text('Anzahl Züge: ${schrankeTrains.length}'),
+                            Text(schrankeTimeTillAction),
                           ],
                         ),
                       ),
@@ -472,7 +480,16 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         : Text('Keine Züge'),
                   ),
                 ],
-              ),
+              ):Center(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25
+                    ),
+                    'Es konnten keine Daten empfangen werden.'
+                  ),
+                )
             ),
             const SizedBox(
               height: 20,
