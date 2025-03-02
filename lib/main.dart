@@ -11,7 +11,7 @@ import 'package:eichwalde_app/notification_service.dart';
 import 'package:eichwalde_app/vbb_api.dart';
 import 'package:eichwalde_app/settings.dart';
 import 'package:eichwalde_app/gewerbe_layout_neu.dart';
-
+import 'Newscloud.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -925,6 +925,16 @@ class _HomepageState extends State<Homepage> {
             },
             child: Text('Admin'),
           ),
+          SizedBox(
+            height:500,
+            child: Card(
+              color: Color.fromARGB(255, 150, 200, 150),
+              child:ListView(
+              children:[Text('Hallo'),
+              ],
+            ),
+            ),
+          )
         ],
       ),
     );
@@ -1082,7 +1092,86 @@ class _AdminPageState extends State<AdminPage> {
               );
             },
             child: Text('Gewerbe löschen')),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AdminNewsHinzufuegenPage()),
+              );
+            },
+            child: Text('News hinzufügen')),
       ]),
+    );
+  }
+}
+
+class AdminNewsHinzufuegenPage extends StatefulWidget {
+  const AdminNewsHinzufuegenPage({super.key});
+
+  @override
+  State<AdminNewsHinzufuegenPage> createState() => _AdminNewsHinzufuegenPageState();
+}
+
+class _AdminNewsHinzufuegenPageState extends State<AdminNewsHinzufuegenPage> {
+  final TextEditingController titelController = TextEditingController();
+  final TextEditingController inhaltController = TextEditingController();
+  final TextEditingController fotoUrlController = TextEditingController();
+
+  final Cloudnews cloudNews = Cloudnews(); // Instanz von CloudNews
+
+  Future<void> _addNews() async {
+    String titel = titelController.text;
+    String inhalt = inhaltController.text;
+    String fotoUrl = fotoUrlController.text;
+
+    if (titel.isNotEmpty && inhalt.isNotEmpty && fotoUrl.isNotEmpty) {
+      await cloudNews.addNews(titel, inhalt, fotoUrl);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("News erfolgreich hinzugefügt!")),
+      );
+      _clearFields();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Bitte alle Felder ausfüllen!")),
+      );
+    }
+  }
+
+  void _clearFields() {
+    titelController.clear();
+    inhaltController.clear();
+    fotoUrlController.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("News hinzufügen")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+             TextField(
+              controller: titelController,
+              decoration: InputDecoration(labelText: "Titel"),
+            ),
+            SizedBox(height: 10), 
+            TextField(
+              controller: inhaltController,
+              decoration: InputDecoration(labelText: "Inhalt"),
+              maxLines: 6,
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: fotoUrlController,
+              decoration: InputDecoration(labelText: "Bild-URL"),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: _addNews, child: Text("News hinzufügen")),
+          ],
+        ),
+      ),
     );
   }
 }

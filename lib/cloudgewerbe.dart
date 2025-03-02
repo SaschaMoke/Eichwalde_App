@@ -16,7 +16,7 @@ class Cloudgewerbe {
   List<String> docIDs = [];
 
   Future getDocId() async {
-    await FirebaseFirestore.instance.collection('Gewerbe').get().then(
+    await gewerbeCollection.get().then(
       (snapshot) => snapshot.docs.forEach((document) {
        // print(document.reference);
         docIDs.add(document.reference.id);
@@ -28,7 +28,7 @@ class Cloudgewerbe {
 
    Future<void> deleteGewerbe(String docId) async {
     try {
-      await FirebaseFirestore.instance.collection('Gewerbe').doc(docId).delete();
+      await gewerbeCollection.doc(docId).delete();
     } catch (e) {
       //print('Fehler beim Löschen: $e');
       throw e;
