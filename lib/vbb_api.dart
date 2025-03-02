@@ -40,12 +40,14 @@ bool checkSchranke(List departures, String schrankeOrt) {
       }
 
       if (schrankeOrt == 'Lidl') {
+        print('Hi');
         if (dep.platform == 4) {
           mincountSchranke = mincountSchranke - 1;
         } else if (dep.platform == 3) {
           mincountSchranke = mincountSchranke + 1;
         }
       } else {
+         print('wald');
          if (dep.platform == 3) {
           mincountSchranke = mincountSchranke - 1;
         } else if (dep.platform == 4) {
@@ -64,6 +66,10 @@ bool checkSchranke(List departures, String schrankeOrt) {
           schrankeTrains.add(dep);
         }
         if (mincountSchranke == 0) {        //nimmt ihn zu früh weg
+          schrankeTrains.remove(dep);
+        }
+      } else {
+        if (schrankeTrains.contains(dep)) {
           schrankeTrains.remove(dep);
         }
       }

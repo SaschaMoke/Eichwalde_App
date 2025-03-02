@@ -393,8 +393,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           onSelectionChanged: (Set newSelection) {
                             setState(() {
                               schrankeWahl = newSelection.first;
-                              schranke = checkSchranke(departures,
-                                  schrankeWahl); //muss noch überprüft werden
+                              schranke = checkSchranke(departures, schrankeWahl); //muss noch überprüft werden
                             });
                           },
                           showSelectedIcon: false,
@@ -541,7 +540,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   ),
                   SizedBox(
                     height: 305,
-                    child: ListView.builder(
+                    child: departures.isNotEmpty ? ListView.builder(
                       itemCount: departures.length,
                       itemBuilder: (context, index) {
                         final departure = departures[index];
@@ -664,7 +663,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                 height: tileheight,
                                 child: Card(
                                   child: ListTile(
-                                    onTap: () => expand(index), //expanded logik
+                                    //onTap: () => expand(index), //expanded logik
                                     leading: SizedBox(
                                       height: 60,
                                       width: 40,
@@ -674,24 +673,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                         style: deststyle,
                                         maxLines: linecount,
                                         departure.destination),
-                                    subtitle: Row(
-                                      children: [
-                                        Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: timecolor,
-                                            ),
-                                            deptime),
-                                        SizedBox(width: 25),
-                                        Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                            'Gleis: ${departure.platform}'),
-                                      ],
-                                    ),
+                                    subtitle: Text(
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                          color: timecolor,
+                                        ),
+                                      deptime
+                                    ),                                  
                                     trailing: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -721,7 +709,16 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           ),
                         );
                       },
-                    ),
+                    ): Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25
+                        ),
+                        'Es konnten keine Daten empfangen werden.'
+                      ),
+                    )
                   ),
                   Text(//last update text
                       'Zuletzt aktualisiert: $lastUpdate')
@@ -1054,10 +1051,12 @@ class _AdminPageState extends State<AdminPage> {
     return Scaffold(
       appBar: AppBar(title: Text("Admin Panel")),
       body: ListView(children: [
-        _events.isNotEmpty
-            ? ListView(
-                children: _events.entries.map((entry) {
-                  //hier bedingung
+        _events.isNotEmpty ?
+            /* ListView.builder(
+                itemCount: _events.length,
+                itemBuilder: (context, index) {
+                  final entry = _events.entries;
+                  
                   return Card(
                     margin: EdgeInsets.all(8),
                     child: ListTile(
@@ -1068,7 +1067,30 @@ class _AdminPageState extends State<AdminPage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children:
-                            entry.value.map((event) => Text(event)).toList(),
+                          entry.value.map((event) => Text(event)).toList(),
+                      ),
+                    )
+                  );
+                }
+              )*/
+            
+            ListView(
+                children: _events.entries.map((entry) {
+                  //hier bedingung
+                  return SizedBox(
+                    width: 400,
+                    child: Card(
+                      margin: EdgeInsets.all(8),
+                      child: ListTile(
+                        title: Text(
+                          "${entry.key.day}.${entry.key.month}.${entry.key.year}",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children:
+                              entry.value.map((event) => Text(event)).toList(),
+                        ),
                       ),
                     ),
                   );
