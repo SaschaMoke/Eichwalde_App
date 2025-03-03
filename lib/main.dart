@@ -191,7 +191,6 @@ class Verkehrspage extends StatefulWidget {
 
 //ausklappen bei gewerbe nutzen
 //S Eichwalde steht schon in Auswahl
-//benachrichtigung (Wecker)
 //appicon schöner machen
 //dynamisch größen gerätgröße   "MediaQuery.of(context).size.width*0.2,"
 class _VerkehrspageState extends State<Verkehrspage> {
@@ -212,7 +211,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
     super.initState();
     fetchAndUpdateData();
     timer = Timer.periodic(
-        const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
+    const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
     selectedStation = Stations.eichwalde;
   }
 
@@ -242,11 +241,11 @@ class _VerkehrspageState extends State<Verkehrspage> {
           lastUpdate = apiResponse.lastUpdate.toString();
         });
         departures.sort((a, b) {
-          String aTime = a.when; //?? a.plannedWhen;
+          String aTime = a.when; 
           if (a.when == 'Fahrt fällt aus') {
             aTime = a.plannedWhen;
           }
-          String bTime = b.when; //?? b.plannedWhen;
+          String bTime = b.when; 
           if (b.when == 'Fahrt fällt aus') {
             bTime = b.plannedWhen;
           }
@@ -258,7 +257,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
         throw Exception('Failed to load data'); //evtl anzeigen lassen
       }
     } catch (error) {
-      print('Error fetching data: $error'); //evtl anzeigen lassen
+      throw Exception('Error fetching data: $error'); //evtl anzeigen lassen
     }
   }
 
@@ -372,7 +371,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                   fontStyle: FontStyle.italic,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                schrankeName //'Friedensstraße'
+                                schrankeName
                                 ),
                             const SizedBox(
                               height: 15,
@@ -381,31 +380,40 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           ],
                         ),
                       ),
-                      SizedBox(
-                        width: 100,
-                        height: 40,
-                        child: SegmentedButton(
-                          segments: [
-                            ButtonSegment(
-                              value: 'Lidl',
-                              label:
-                                  Text(style: TextStyle(fontSize: 12), 'Lidl'),
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.info_outline_rounded),
+                            onPressed: () {},
+                            tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit. Aktuell werden nur die Daten der S-Bahn Berlin verarbeitet!',
+                          ),
+                          SizedBox(
+                            width: 100,
+                            height: 40,
+                            child: SegmentedButton(
+                              segments: [
+                                ButtonSegment(
+                                  value: 'Lidl',
+                                  label:
+                                      Text(style: TextStyle(fontSize: 12), 'Lidl'),
+                                ),
+                                ButtonSegment(
+                                  value: 'Wald',
+                                  label:
+                                      Text(style: TextStyle(fontSize: 12), 'Wald'),
+                                ),
+                              ],
+                              selected: {schrankeWahl},
+                              onSelectionChanged: (Set newSelection) {
+                                setState(() {
+                                  schrankeWahl = newSelection.first;
+                                  schranke = checkSchranke(departures, schrankeWahl); //muss noch überprüft werden
+                                });
+                              },
+                              showSelectedIcon: false,
                             ),
-                            ButtonSegment(
-                              value: 'Wald',
-                              label:
-                                  Text(style: TextStyle(fontSize: 12), 'Wald'),
-                            ),
-                          ],
-                          selected: {schrankeWahl},
-                          onSelectionChanged: (Set newSelection) {
-                            setState(() {
-                              schrankeWahl = newSelection.first;
-                              schranke = checkSchranke(departures, schrankeWahl); //muss noch überprüft werden
-                            });
-                          },
-                          showSelectedIcon: false,
-                        ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         width: 20,
