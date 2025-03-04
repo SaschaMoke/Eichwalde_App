@@ -308,10 +308,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
           children: [
             Row(
               children: [
-                SizedBox(width: 25),
-                const SizedBox(
-                  height: 75,
-                  width: 75,
+                SizedBox(
+                  //width: 25
+                  width: MediaQuery.of(context).size.width*0.06,                
+                ),
+                SizedBox(
+                  //height: 75,
+                  //width: 75,
+                  height: MediaQuery.of(context).size.height*0.08,   
+                  width: MediaQuery.of(context).size.width*0.175,   
                   child: Image(
                     image: AssetImage('Assets/wappen_Eichwalde.png'),
                   ),
@@ -326,14 +331,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              //height: 20,
+              height: MediaQuery.of(context).size.height*0.022,
             ),
             AnimatedContainer(
               //Schrankencontainer
               duration: Duration(milliseconds: 500),
-              height: 200,
-              width: 400,
+              height: MediaQuery.of(context).size.height*0.215,
+              width: MediaQuery.of(context).size.width*0.95,
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 5,
@@ -345,16 +351,20 @@ class _VerkehrspageState extends State<Verkehrspage> {
               child: departures.isNotEmpty ? Column(
                 children: [
                   SizedBox(
-                    height: 10,
+                    //height: 10,
+                    height: MediaQuery.of(context).size.height*0.011,
                   ),
                   Row(
                     children: [
-                      const SizedBox(
-                        width: 15,
+                      SizedBox(
+                        //width: 15,
+                        width: MediaQuery.of(context).size.width*0.035,
                       ),
                       SizedBox(
-                        width: 185,
-                        height: 100,
+                        //width: 185,
+                        //height: 100,
+                        width: MediaQuery.of(context).size.width*0.43,
+                        height: MediaQuery.of(context).size.height*0.107,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -373,8 +383,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                 ),
                                 schrankeName
                                 ),
-                            const SizedBox(
-                              height: 15,
+                            SizedBox(
+                              //height: 15,
+                              height: MediaQuery.of(context).size.height*0.016,
                             ),
                             Text(schrankeTimeTillAction),
                           ],
@@ -388,8 +399,10 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit. Aktuell werden nur die Daten der S-Bahn Berlin verarbeitet!',
                           ),
                           SizedBox(
-                            width: 100,
-                            height: 40,
+                            //width: 100,
+                            //height: 40,
+                            height: MediaQuery.of(context).size.height*0.043,
+                            width: MediaQuery.of(context).size.width*0.23,
                             child: SegmentedButton(
                               segments: [
                                 ButtonSegment(
@@ -416,12 +429,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         ],
                       ),
                       SizedBox(
-                        width: 20,
+                        //width: 20,
+                        width: MediaQuery.of(context).size.width*0.045,
                       ),
                       Container(
                         padding: EdgeInsets.all(10),
-                        height: 100,
-                        width: 60,
+                        //height: 100,
+                        //width: 60,
+                        height: MediaQuery.of(context).size.height*0.107,
+                        width: MediaQuery.of(context).size.width*0.14,
                         decoration: BoxDecoration(
                           border: Border.all(
                             width: 2,
@@ -442,19 +458,24 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             children: [
                               AnimatedContainer(
                                 duration: Duration(milliseconds: 500),
-                                height: 26,
-                                width: 26,
+                                //height: 26,
+                                //width: 26,
+                                height: MediaQuery.of(context).size.height*0.028,
+                                width: MediaQuery.of(context).size.width*0.06,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   color: schrankeRed,
                                 ),
                               ),
                               SizedBox(
-                                height: 5,
+                                //height: 5,
+                                height: MediaQuery.of(context).size.height*0.005,
                               ),
                               Container(
-                                height: 26,
-                                width: 26,
+                                //height: 26,
+                                //width: 26,
+                                height: MediaQuery.of(context).size.height*0.028,
+                                width: MediaQuery.of(context).size.width*0.06,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   color: schrankeGelb,
@@ -467,16 +488,21 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ],
                   ),
                   SizedBox(
-                    height: 5,
+                    //height: 5,
+                    height: MediaQuery.of(context).size.height*0.005,
                   ),
                   Container(
-                    width: 400,
+                    width: MediaQuery.of(context).size.width*0.95,
                     height: 2,
                     color: Color.fromARGB(255, 50, 50, 50),
                   ),
-                  SizedBox(height: 5),
                   SizedBox(
-                    height: 68,
+                    //height: 5,
+                    height: MediaQuery.of(context).size.height*0.005,
+                  ),
+                  SizedBox(
+                    //height: 68,
+                    height: MediaQuery.of(context).size.height*0.07,
                     child: schrankeTrains.isNotEmpty
                         ? ListView.builder(
                             itemCount: schrankeTrains.length,
@@ -499,12 +525,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   ),
                 )
             ),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              //height: 20,
+              height: MediaQuery.of(context).size.height*0.021,
             ),
             Container(
-              width: 400,
-              height: 400,
+              width: MediaQuery.of(context).size.width*0.95,
+              height: MediaQuery.of(context).size.height*0.43,
               decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 150, 200, 150),
                   border: Border.all(
@@ -512,15 +539,17 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   borderRadius: BorderRadius.circular(20)),
               child: Column(
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     //Überschrift
-                    height: 10,
+                    //height: 10,
+                    height: MediaQuery.of(context).size.height*0.011,
                   ),
                   SizedBox(
-                    height: 30,
-                    width: 380,
+                    //height: 30,
+                    height: MediaQuery.of(context).size.height*0.032,
+                    width: MediaQuery.of(context).size.width*0.885,
                     child: DropdownMenu<Stations>(
-                      width: 380,
+                      width: MediaQuery.of(context).size.width*0.885,
                       initialSelection: Stations.eichwalde,
                       controller: TextEditingController(),
                       requestFocusOnTap: true,
@@ -560,11 +589,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
+                  SizedBox(
+                    //height: 30,
+                    height: MediaQuery.of(context).size.height*0.032,
                   ),
                   SizedBox(
-                    height: 305,
+                    //height: 305,
+                    height: MediaQuery.of(context).size.height*0.327,
                     child: departures.isNotEmpty ? ListView.builder(
                       itemCount: departures.length,
                       itemBuilder: (context, index) {
@@ -632,19 +663,23 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             lineImage = const AssetImage('Assets/S8.png');
                           }
                           linelogo = SizedBox(
-                              height: 40,
-                              width: 40,
+                              //height: MediaQuery.of(context).size.height*0.1,
+                              //height: 40,
+                              //width: 40,
+                              width: MediaQuery.of(context).size.width*0.094,
                               child: Image(image: lineImage));
                         } else {
                           linelogo = SizedBox(
-                            height: 60,
-                            width: 40,
+                            //height: 60,
+                            //width: 40,
+                            width: MediaQuery.of(context).size.width*0.094,
                             child: Column(
                               children: [
                                 Image(
                                   image: lineImage,
-                                  height: 30,
-                                  width: 30,
+                                  //height: 30,
+                                  //width: 30,
+                                  width: MediaQuery.of(context).size.width*0.07,
                                 ),
                                 const SizedBox(
                                   height: 2,
@@ -671,66 +706,59 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         //expanded logik ende
                         double tileheight;
                         int linecount;
-                        if (departure.destination.length > 27) {
+                        if (departure.destination.length > 22) {
                           linecount = 2;
-                          tileheight = 100;
+                          //tileheight = 100;
+                          tileheight = MediaQuery.of(context).size.height*0.107;
                         } else {
                           linecount = 1;
-                          tileheight = 80;
+                          //tileheight = 80;
+                          tileheight = MediaQuery.of(context).size.height*0.086;
                         }
 
                         return Center(
-                          child: Column(
-                            //weg machen
-                            children: [
-                              SizedBox(
-                                width: 380,
-                                height: tileheight,
-                                child: Card(
-                                  child: ListTile(
-                                    //onTap: () => expand(index), //expanded logik
-                                    leading: SizedBox(
-                                      height: 60,
-                                      width: 40,
-                                      child: linelogo,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width*0.885,
+                            height: tileheight,
+                            child: Card(
+                              child: ListTile(
+                                //onTap: () => expand(index), //expanded logik
+                                leading: linelogo, 
+                                title: Text(
+                                    style: deststyle,
+                                    maxLines: linecount,
+                                    departure.destination),
+                                subtitle: Text(
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                      color: timecolor,
                                     ),
-                                    title: Text(
-                                        style: deststyle,
-                                        maxLines: linecount,
-                                        departure.destination),
-                                    subtitle: Text(
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                          color: timecolor,
+                                  deptime
+                                ),                                  
+                                trailing: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color:
+                                              Color.fromARGB(255, 0, 0, 0),
                                         ),
-                                      deptime
-                                    ),                                  
-                                    trailing: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                            'Gleis:'),
-                                        Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                            '${departure.platform}'),
-                                      ],
-                                    ),
-                                  ),
+                                        'Gleis:'),
+                                    Text(
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color:
+                                              Color.fromARGB(255, 0, 0, 0),
+                                        ),
+                                        '${departure.platform}'),
+                                  ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         );
                       },
