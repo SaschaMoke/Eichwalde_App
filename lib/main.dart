@@ -980,40 +980,83 @@ class _HomepageState extends State<Homepage> {
           ),
           SizedBox(
             height:500,
-            child: Card(
-              color: Color.fromARGB(255, 150, 200, 150),
-              child:StreamBuilder<QuerySnapshot>(
-        stream: newsCollection.orderBy('timestamp', descending: true).snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text("Keine News gefunden"));
-          }
-
-          return ListView(
-            children: snapshot.data!.docs.map((doc) {
-              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-              return ExpansionTile(
-                leading: data['foto'] != null && data['foto'].isNotEmpty
-                    ? Image.network(data['foto'], width: 50, height: 50, fit: BoxFit.cover)
-                    : Icon(Icons.image, size: 50),
-                title: Text(data['titel'] ?? "Ohne Titel", style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text("Tippe, um mehr zu lesen"),
-                children: [
+            width: MediaQuery.of(context).size.width*0.95,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 150, 200, 150),
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: EdgeInsets.all(10),
+              child: Column(children: [
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(data['inhalt'] ?? "Kein Inhalt verfügbar"),
-                     ),
-                   ],
-                 );
-               }).toList(),
-              );
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                "📰 Aktuelle News", // 🔹 HINZUGEFÜGT: Überschrift für den News-Bereich
+                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                stream: newsCollection.orderBy('timestamp', descending: true).snapshots(),
+                builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                  }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text("Keine News gefunden"));
+                  }
+
+            return ListView(
+          children: snapshot.data!.docs.map((doc) {
+            Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+            return Container(
+              width: MediaQuery.of(context).size.width*0.8,
+              margin: EdgeInsets.symmetric(vertical: 8), // Abstand zwischen den News
+              decoration: BoxDecoration(
+                color: Colors.white, // Hintergrundfarbe der Box
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                child: ExpansionTile(
+                  leading: data['foto'] != null && data['foto'].isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(data['foto'], width: 50, height: 50, fit: BoxFit.cover),
+                        )
+                      : Icon(Icons.image, size: 50),
+                  title: Text(
+                    data['titel'] ?? "Ohne Titel",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text("Tippe, um mehr zu lesen"),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(data['inhalt'] ?? "Kein Inhalt verfügbar"),
+                    ),
+                  ],
+                ),
+              )
+            );
+          }).toList(),
+            );
             },
           ),
+                ),
+           ],
         ),
+            ),
         ),
         ],
         
