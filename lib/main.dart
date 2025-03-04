@@ -940,6 +940,9 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   int selectedIndex = 0;
 
+  final Cloudnews cloudNews = Cloudnews();
+  final CollectionReference newsCollection = FirebaseFirestore.instance.collection('News');
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -979,15 +982,43 @@ class _HomepageState extends State<Homepage> {
             height:500,
             child: Card(
               color: Color.fromARGB(255, 150, 200, 150),
-              child:ListView(
-              children:[Text('Hallo'),
-              ],
-            ),
-            ),
-          )
+              child:StreamBuilder<QuerySnapshot>(
+        stream: newsCollection.orderBy('timestamp', descending: true).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text("Keine News gefunden"));
+          }
+
+          return ListView(
+            children: snapshot.data!.docs.map((doc) {
+              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+              return ExpansionTile(
+                leading: data['foto'] != null && data['foto'].isNotEmpty
+                    ? Image.network(data['foto'], width: 50, height: 50, fit: BoxFit.cover)
+                    : Icon(Icons.image, size: 50),
+                title: Text(data['titel'] ?? "Ohne Titel", style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text("Tippe, um mehr zu lesen"),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(data['inhalt'] ?? "Kein Inhalt verfügbar"),
+                     ),
+                   ],
+                 );
+               }).toList(),
+              );
+            },
+          ),
+        ),
+        ),
         ],
-      ),
-    );
+        
+         ),
+            );
   }
 }
 
@@ -1104,8 +1135,8 @@ class _AdminPageState extends State<AdminPage> {
     return Scaffold(
       appBar: AppBar(title: Text("Admin Panel")),
       body: ListView(children: [
-        _events.isNotEmpty ?
-            /* ListView.builder(
+        /*_events.isNotEmpty ?
+             ListView.builder(
                 itemCount: _events.length,
                 itemBuilder: (context, index) {
                   final entry = _events.entries;
@@ -1125,7 +1156,7 @@ class _AdminPageState extends State<AdminPage> {
                     )
                   );
                 }
-              )*/
+              )
             
             ListView(
                 children: _events.entries.map((entry) {
@@ -1149,7 +1180,7 @@ class _AdminPageState extends State<AdminPage> {
                   );
                 }).toList(),
               )
-            : Center(child: Text("Keine Termine gefunden")), //ersatz wenn leer
+            : Center(child: Text("Keine Termine gefunden")),*/ //ersatz wenn leer
         ElevatedButton(
             onPressed: () {
               Navigator.push(
