@@ -19,6 +19,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'cloudtermine.dart';
 //import 'package:numberpicker/numberpicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -1012,22 +1013,7 @@ class _HomepageState extends State<Homepage> {
           children: snapshot.data!.docs.map((doc) {
             Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-            return Container(
-              width: MediaQuery.of(context).size.width*0.8,
-              margin: EdgeInsets.symmetric(vertical: 8), // Abstand zwischen den News
-              decoration: BoxDecoration(
-                color: Colors.white, // Hintergrundfarbe der Box
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 5,
-                    spreadRadius: 2,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Card(
+            return Card(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                 child: ExpansionTile(
                   leading: data['foto'] != null && data['foto'].isNotEmpty
@@ -1048,8 +1034,7 @@ class _HomepageState extends State<Homepage> {
                     ),
                   ],
                 ),
-              )
-            );
+              );
           }).toList(),
             );
             },
@@ -1133,98 +1118,66 @@ class _AdminPageState extends State<AdminPage> {
   final TextEditingController imageController = TextEditingController();
   final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
 
-  /*Future _addGewerbe() async {
-    String name = nameController.text;
-    String gewerbeart = gewerbeartController.text;
-    String adresse = adresseController.text;
-    int? tel = int.tryParse(telController.text);
-    String image = imageController.text;
-
-    if (name.isNotEmpty && gewerbeart.isNotEmpty && adresse.isNotEmpty && tel != null) {
-      await cloudGewerbe.addGewerbe(name, gewerbeart, adresse, tel, image);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Gewerbe erfolgreich hinzugefügt!")),
-      );
-      _clearFields();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Bitte alle Felder ausfüllen!")),
-      );
-    }
-  }*/
-
   @override
   void initState() {
     super.initState();
-    _loadEvents();
   }
 
-  Future<void> _loadEvents() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? eventsString = prefs.getString('events');
-    if (eventsString != null) {
-      Map<String, dynamic> decodedEvents = jsonDecode(eventsString);
-      setState(() {
-        _events = decodedEvents.map(
-          (key, value) =>
-              MapEntry(DateTime.parse(key), List<String>.from(value)),
-        );
-      });
-    }
-  }
+   final CloudTermine cloudTermine = CloudTermine();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Admin Panel")),
-      body: ListView(children: [
-        /*_events.isNotEmpty ?
-             ListView.builder(
-                itemCount: _events.length,
-                itemBuilder: (context, index) {
-                  final entry = _events.entries;
-                  
-                  return Card(
-                    margin: EdgeInsets.all(8),
-                    child: ListTile(
-                      title: Text(
-                        "${entry.key.day}.${entry.key.month}.${entry.key.year}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children:
-                          entry.value.map((event) => Text(event)).toList(),
-                      ),
-                    )
-                  );
-                }
-              )
-            
-            ListView(
-                children: _events.entries.map((entry) {
-                  //hier bedingung
-                  return SizedBox(
-                    width: 400,
-                    child: Card(
-                      margin: EdgeInsets.all(8),
-                      child: ListTile(
-                        title: Text(
-                          "${entry.key.day}.${entry.key.month}.${entry.key.year}",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children:
-                              entry.value.map((event) => Text(event)).toList(),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              )
-            : Center(child: Text("Keine Termine gefunden")),*/ //ersatz wenn leer
+      body:Column(children: [
+         StreamBuilder<QuerySnapshot>(
+        stream: cloudTermine.getTermineForDate(DateTime.now()), // Termine für das heutige Datum laden
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator()); // Ladeindikator, wenn die Daten noch abgerufen werden
+          }
+
+          if (snapshot.hasError) {
+           return Center(child: Text("Fehler beim Laden der Termine: ${snapshot.error}"));
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text("Keine Termine gefunden"));
+          }
+
+          // Hier holen wir uns die Termine aus den Firestore-Daten
+          var termine = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: termine.length,
+            itemBuilder: (context, index) {
+              var termin = termine[index];
+              DateTime date = DateTime.parse(termin['date']);
+              String name = termin['name'];
+              String service = termin['service'];
+              String time = termin['time'];
+
+              return Card(
+                margin: EdgeInsets.all(8),
+                child: ListTile(
+                  title: Text(
+                    "${date.day}.${date.month}.${date.year}",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Name: $name"),
+                      Text("Service: $service"),
+                      Text("Time: $time"),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
         ElevatedButton(
             onPressed: () {
               Navigator.push(
@@ -1250,8 +1203,9 @@ class _AdminPageState extends State<AdminPage> {
               );
             },
             child: Text('News hinzufügen')),
-      ]),
-    );
+      ]
+      ),
+      );
   }
 }
 
@@ -1703,10 +1657,11 @@ class Terminepage extends StatefulWidget {
 }
 
 class _TerminepageState extends State<Terminepage> {
+  final CloudTermine cloudTermine = CloudTermine(); // Instanz von CloudTermine
+
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  Map<DateTime, List<String>> _events = {};
   String _selectedService = "Einwohnermeldeamt";
   List<String> _services = [
     "Einwohnermeldeamt",
@@ -1716,40 +1671,6 @@ class _TerminepageState extends State<Terminepage> {
   ];
   TextEditingController _timeController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _loadEvents();
-  }
-
-  void _addEvent(String event) {
-    setState(() {
-      final normalizedDay =
-          DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-      _events.putIfAbsent(normalizedDay, () => []).add(event);
-      _saveEvents();
-    });
-  }
-
-  Future<void> _saveEvents() async {
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, List<String>> stringEvents =
-        _events.map((key, value) => MapEntry(key.toIso8601String(), value));
-    await prefs.setString('events', jsonEncode(stringEvents));
-  }
-
-  Future<void> _loadEvents() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? eventsString = prefs.getString('events');
-    if (eventsString != null) {
-      Map<String, dynamic> decodedEvents = jsonDecode(eventsString);
-      setState(() {
-        _events = decodedEvents.map((key, value) =>
-            MapEntry(DateTime.parse(key), List<String>.from(value)));
-      });
-    }
-  }
 
   Future<void> _selectTime(BuildContext context) async {
     TimeOfDay? picked = await showTimePicker(
@@ -1773,6 +1694,19 @@ class _TerminepageState extends State<Terminepage> {
           _timeController.text = formattedTime;
         });
       }
+    }
+  }
+
+  void _deleteTermin(String docId) async {
+    try {
+      await cloudTermine.deleteGewerbe(docId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Termin gelöscht")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Fehler beim Löschen des Termins")),
+      );
     }
   }
 
@@ -1800,6 +1734,11 @@ class _TerminepageState extends State<Terminepage> {
             lastDay: DateTime.utc(2100, 12, 31),
             calendarFormat: _calendarFormat,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+             headerStyle: HeaderStyle(
+              titleCentered: true,
+              formatButtonVisible: false,
+            ),
+            daysOfWeekHeight: 20,
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
                 _selectedDay = selectedDay;
@@ -1813,15 +1752,46 @@ class _TerminepageState extends State<Terminepage> {
             },
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: _events[DateTime(_selectedDay.year, _selectedDay.month,
-                          _selectedDay.day)]
-                      ?.length ??
-                  0,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_events[DateTime(_selectedDay.year,
-                      _selectedDay.month, _selectedDay.day)]![index]),
+            child: FutureBuilder<QuerySnapshot>(
+              future: cloudTermine.getTermineForDate(_selectedDay).first,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(child: Text("Keine Termine an diesem Tag"));
+                }
+                
+                return Column(children: [
+                   Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Bereits belegte Termine",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView(
+                   key: ValueKey(_selectedDay),
+                  children: snapshot.data!.docs.map((doc) {
+                    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+                    return Card(
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      elevation: 4,
+                      child: ListTile(
+                        title: Text('${data['service']}'),
+                        subtitle: Text("Uhrzeit: ${data['time']}"),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _deleteTermin(doc.id),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                )
+                ]
                 );
               },
             ),
@@ -1861,8 +1831,7 @@ class _TerminepageState extends State<Terminepage> {
                     ),
                     TextField(
                       controller: _timeController,
-                      decoration:
-                          InputDecoration(hintText: "Uhrzeit auswählen"),
+                      decoration: InputDecoration(hintText: "Uhrzeit auswählen"),
                       readOnly: true,
                       onTap: () => _selectTime(context),
                     ),
@@ -1870,13 +1839,28 @@ class _TerminepageState extends State<Terminepage> {
                 ),
                 actions: [
                   TextButton(
-                    onPressed: () {
-                      if (_timeController.text.isNotEmpty &&
-                          _nameController.text.isNotEmpty) {
-                        _addEvent(
-                            "${_nameController.text} - $_selectedService um ${_timeController.text}");
+                    onPressed: () async {
+                      if (_timeController.text.isNotEmpty && _nameController.text.isNotEmpty) {
+                        bool success = await cloudTermine.addTermin(
+                          _nameController.text,
+                          _selectedService,
+                          _timeController.text,
+                          _selectedDay,
+                        );
+
+                        if (!success) {
+                         
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Mindestens 5 Minuten Abstand zum nächsten Termin erforderlich!"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        } else {
+                          Navigator.pop(context);
+                          setState(() {}); 
+                        }
                       }
-                      Navigator.pop(context);
                     },
                     child: Text("Hinzufügen"),
                   ),
