@@ -143,7 +143,7 @@ class VBBApiResponse {
   factory VBBApiResponse.fromJson(Map<String, dynamic> json) {
     return VBBApiResponse(
       departures: List.from(json['departures'].map((x) => Departure.fromJson(x)),),
-      lastUpdate: DateTime.fromMillisecondsSinceEpoch(json['realtimeDataUpdatedAt']),
+      lastUpdate: DateTime.fromMillisecondsSinceEpoch(json['realtimeDataUpdatedAt'] * 1000, ),
     );
     }
   }

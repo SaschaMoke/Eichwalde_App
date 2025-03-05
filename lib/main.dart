@@ -10,7 +10,7 @@ import 'cloudgewerbe.dart';
 import 'package:eichwalde_app/notification_service.dart';
 import 'package:eichwalde_app/vbb_api.dart';
 import 'package:eichwalde_app/settings.dart';
-import 'package:eichwalde_app/gewerbe_layout_neu.dart';
+//import 'package:eichwalde_app/gewerbe_layout_neu.dart';
 import 'Newscloud.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:numberpicker/numberpicker.dart';
+//import 'package:numberpicker/numberpicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -189,19 +189,20 @@ class Verkehrspage extends StatefulWidget {
   State<Verkehrspage> createState() => _VerkehrspageState();
 }
 
-//ausklappen bei gewerbe nutzen
 //S Eichwalde steht schon in Auswahl
 //appicon schöner machen
-//dynamisch größen gerätgröße   "MediaQuery.of(context).size.width*0.2,"
+//layout
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
   String lastUpdate = '';
   Timer? timer;
-  int? expandedIndex;
+  //int? expandedIndex;
   int? selectedindex;
   Stations? selectedStation = Stations.eichwalde;
   bool schranke = false;
   String schrankeWahl = 'Lidl';
+  final updateFormatTime = DateFormat('HH:mm:ss');
+  final updateFormatDate = DateFormat('dd.MM.yyyy');
 
   int currentPickedHour = 0;
   int currentPickedMinute = 0;
@@ -221,16 +222,16 @@ class _VerkehrspageState extends State<Verkehrspage> {
     super.dispose();
   }
 
-  void removeScheduleOverlay() {
+  /*void removeScheduleOverlay() {
     scheduleAlarmOverlay.remove();
     scheduleAlarmOverlay.dispose();
-  }
+  }*/
 
   Future<void> fetchAndUpdateData() async {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=false&duration=60'),
+          'https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=false&duration=60'),
         //Uri.parse('https://v6.vbb.transport.rest/stops/900192001/departures?linesOfStops=false&remarks=false&duration=60'),       Schöneweide als Test
       );
 
@@ -238,7 +239,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
         final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
         setState(() {
           departures = apiResponse.departures;
-          lastUpdate = apiResponse.lastUpdate.toString();
+          lastUpdate = '${updateFormatDate.format(apiResponse.lastUpdate)}, ${updateFormatTime.format(apiResponse.lastUpdate)}';
         });
         departures.sort((a, b) {
           String aTime = a.when; 
@@ -254,19 +255,19 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
         schranke = checkSchranke(departures, schrankeWahl);
       } else {
-        throw Exception('Failed to load data'); //evtl anzeigen lassen
+        throw Exception('Failed to load data');
       }
     } catch (error) {
-      throw Exception('Error fetching data: $error'); //evtl anzeigen lassen
+      throw Exception('Error fetching data: $error');
     }
   }
 
-  void expand(int index) {
+  /*void expand(int index) {
     //expanded logik
     setState(() {
       expandedIndex = (expandedIndex == index) ? null : index;
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -274,8 +275,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
     var currentHour = int.parse(DateFormat('HH').format(now));
     var currentMin = int.parse(DateFormat('mm').format(now));
 
-    Color schrankeFrame; //animieren wenn ändert
-    Color schrankeRed; //animieren wenn ändert
+    Color schrankeFrame; 
+    Color schrankeRed; 
     Color schrankeGelb; //animieren wenn ändert     last state variable
     if (schranke) {
       schrankeFrame = Color.fromARGB(255, 255, 0, 0);
@@ -303,7 +304,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
     return Scaffold(
       body: Center(
-          child: SafeArea(
+        child: SafeArea(
         child: Column(
           children: [
             Row(
@@ -434,10 +435,10 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       ),
                       Container(
                         padding: EdgeInsets.all(10),
-                        //height: 100,
-                        //width: 60,
-                        height: MediaQuery.of(context).size.height*0.107,
-                        width: MediaQuery.of(context).size.width*0.14,
+                        height: 100,
+                        width: 60,
+                        //height: MediaQuery.of(context).size.height*0.107,
+                        //width: MediaQuery.of(context).size.width*0.14,
                         decoration: BoxDecoration(
                           border: Border.all(
                             width: 2,
@@ -458,24 +459,24 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             children: [
                               AnimatedContainer(
                                 duration: Duration(milliseconds: 500),
-                                //height: 26,
-                                //width: 26,
-                                height: MediaQuery.of(context).size.height*0.028,
-                                width: MediaQuery.of(context).size.width*0.06,
+                                height: 26,
+                                width: 26,
+                                //height: MediaQuery.of(context).size.height*0.028,
+                                //width: MediaQuery.of(context).size.width*0.06,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   color: schrankeRed,
                                 ),
                               ),
                               SizedBox(
-                                //height: 5,
-                                height: MediaQuery.of(context).size.height*0.005,
+                                height: 5,
+                                //height: MediaQuery.of(context).size.height*0.005,
                               ),
                               Container(
-                                //height: 26,
-                                //width: 26,
-                                height: MediaQuery.of(context).size.height*0.028,
-                                width: MediaQuery.of(context).size.width*0.06,
+                                height: 26,
+                                width: 26,
+                                //height: MediaQuery.of(context).size.height*0.028,
+                                //width: MediaQuery.of(context).size.width*0.06,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   color: schrankeGelb,
@@ -856,7 +857,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   }
 }
 
-OverlayEntry scheduleAlarmOverlay = OverlayEntry(
+/*OverlayEntry scheduleAlarmOverlay = OverlayEntry(
   builder: (BuildContext context) {
     DateTime now = DateTime.now();
     int pickedHour = int.parse(DateFormat('HH').format(now));
@@ -930,7 +931,7 @@ OverlayEntry scheduleAlarmOverlay = OverlayEntry(
       ),
     );
   },
-);
+);*/
 
 class Homepage extends StatefulWidget {
   @override
