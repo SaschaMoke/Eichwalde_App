@@ -528,8 +528,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 )
             ),
             SizedBox(
-              //height: 20,
-              height: MediaQuery.of(context).size.height*0.021,
+              height: 20,
+              //height: MediaQuery.of(context).size.height*0.021,
             ),
             Container(
               width: MediaQuery.of(context).size.width*0.95,
@@ -543,12 +543,12 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 children: [
                   SizedBox(
                     //Überschrift
-                    //height: 10,
-                    height: MediaQuery.of(context).size.height*0.011,
+                    height: 10,
+                    //height: MediaQuery.of(context).size.height*0.011,
                   ),
                   SizedBox(
-                    //height: 30,
-                    height: MediaQuery.of(context).size.height*0.032,
+                    height: 30,
+                    //height: MediaQuery.of(context).size.height*0.032,
                     width: MediaQuery.of(context).size.width*0.885,
                     child: DropdownMenu<Stations>(
                       width: MediaQuery.of(context).size.width*0.885,
@@ -592,8 +592,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ),
                   ),
                   SizedBox(
-                    //height: 30,
-                    height: MediaQuery.of(context).size.height*0.032,
+                    height: 30,
+                    //height: MediaQuery.of(context).size.height*0.032,
                   ),
                   SizedBox(
                     //height: 305,
@@ -666,20 +666,20 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           }
                           linelogo = SizedBox(
                               //height: MediaQuery.of(context).size.height*0.1,
-                              //height: 40,
+                              height: 40,
                               //width: 40,
                               width: MediaQuery.of(context).size.width*0.094,
                               child: Image(image: lineImage));
                         } else {
                           linelogo = SizedBox(
-                            //height: 60,
+                            height: 60,
                             //width: 40,
                             width: MediaQuery.of(context).size.width*0.094,
                             child: Column(
                               children: [
                                 Image(
                                   image: lineImage,
-                                  //height: 30,
+                                  height: 30,
                                   //width: 30,
                                   width: MediaQuery.of(context).size.width*0.07,
                                 ),
@@ -710,12 +710,12 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         int linecount;
                         if (departure.destination.length > 22) {
                           linecount = 2;
-                          //tileheight = 100;
-                          tileheight = MediaQuery.of(context).size.height*0.107;
+                          tileheight = 100;
+                          //tileheight = MediaQuery.of(context).size.height*0.107;
                         } else {
                           linecount = 1;
-                          //tileheight = 80;
-                          tileheight = MediaQuery.of(context).size.height*0.086;
+                          tileheight = 80;
+                          //tileheight = MediaQuery.of(context).size.height*0.086;
                         }
 
                         return Center(
