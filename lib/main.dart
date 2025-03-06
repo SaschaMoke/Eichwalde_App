@@ -1110,7 +1110,7 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  Map<DateTime, List<String>> _events = {};
+
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController gewerbeartController = TextEditingController();
@@ -1126,6 +1126,19 @@ class _AdminPageState extends State<AdminPage> {
 
    final CloudTermine cloudTermine = CloudTermine();
 
+     void _deleteTermin(String docId) async {
+    try {
+      await cloudTermine.deleteGewerbe(docId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Termin gelöscht")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Fehler beim Löschen des Termins")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1135,7 +1148,7 @@ class _AdminPageState extends State<AdminPage> {
         stream: cloudTermine.getTermineForDate(DateTime.now()), // Termine für das heutige Datum laden
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator()); // Ladeindikator, wenn die Daten noch abgerufen werden
+            return Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -1146,44 +1159,34 @@ class _AdminPageState extends State<AdminPage> {
             return Center(child: Text("Keine Termine gefunden"));
           }
 
-          // Hier holen wir uns die Termine aus den Firestore-Daten
-          var termine = snapshot.data!.docs;
-
-          return SizedBox(
-            height: 400,
-            child: ListView.builder(
-              itemCount: termine.length,
-              itemBuilder: (context, index) {
-                var termin = termine[index];
-                DateTime date = DateTime.parse(termin['date']);
-                String name = termin['name'];
-                String service = termin['service'];
-                String time = termin['time'];
-            
-                return Card(
-                  margin: EdgeInsets.all(8),
-                  child: ListTile(
-                    title: Text(
-                      "${date.day}.${date.month}.${date.year}",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Name: $name"),
-                        Text("Service: $service"),
-                        Text("Time: $time"),
-                      ],
-                    ),
+         return SizedBox(
+            height: 500,
+           child: Expanded(
+                      child: ListView(
+                     key: ValueKey(DateTime.now()),
+                      children: snapshot.data!.docs.map((doc) {
+                      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+           
+                      return Card(
+                        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        elevation: 4,
+                        child: ListTile(
+                          title: Text("${data['name']} - ${data['service']}"),
+                          subtitle: Text("Uhrzeit: ${data['time']}"),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => _deleteTermin(doc.id),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                );
-              },
-            ),
-          );
-        },
-      ),
-        ElevatedButton(
-            onPressed: () {
+                  ),
+         );
+                }
+                ),
+              ElevatedButton(
+              onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -1207,11 +1210,113 @@ class _AdminPageState extends State<AdminPage> {
               );
             },
             child: Text('News hinzufügen')),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NewsLoeschenPage()),
+              );
+            },
+            child: Text('News löschen')),
       ]
       ),
       );
   }
 }
+
+class NewsLoeschenPage extends StatefulWidget {
+  const NewsLoeschenPage({super.key});
+
+  @override
+  State<NewsLoeschenPage> createState() => _NewsLoeschenPageState();
+}
+
+class _NewsLoeschenPageState extends State<NewsLoeschenPage> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController gewerbeartController = TextEditingController();
+  final TextEditingController adresseController = TextEditingController();
+  final TextEditingController telController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
+  final Cloudnews cloudNews = Cloudnews();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('News').snapshots(),
+        builder: (context, snapshot) {
+          //print("StreamBuilder aktualisiert!");
+          //print("ConnectionState: ${snapshot.connectionState}");
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            //print("Warte auf Daten...");
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            //print("Fehler: ${snapshot.error}");
+            return Center(child: Text('Fehler: ${snapshot.error}'));
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            //print("Keine Daten vorhanden!");
+            return Center(child: Text('Keine News gefunden'));
+          }
+
+          var docs = snapshot.data!.docs;
+          //print("Daten empfangen: ${docs.length} Gewerbe");
+
+          return ListView.builder(
+            itemCount: docs.length,
+            itemBuilder: (context, index) {
+              //print("Dokument ${index + 1}: ${docs[index].id}");
+
+              return ListTile(
+                title:  Text(
+                  (docs[index].data() as Map<String, dynamic>?)?['titel'] ?? "Kein Titel",
+                ),
+                leading: IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () async {
+                    bool confirmDelete = await _showDeleteDialog(context);
+                    if (confirmDelete) {
+                      await FirebaseFirestore.instance
+                          .collection('News')
+                          .doc(docs[index].id)
+                          .delete();
+                    }
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+Future<bool> _showDeleteDialog(BuildContext context) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Löschen bestätigen"),
+            content: Text("Möchtest du diese News wirklich löschen?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text("Abbrechen"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text("Löschen", style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
 
 class AdminNewsHinzufuegenPage extends StatefulWidget {
   const AdminNewsHinzufuegenPage({super.key});
@@ -1786,10 +1891,6 @@ class _TerminepageState extends State<Terminepage> {
                       child: ListTile(
                         title: Text('${data['service']}'),
                         subtitle: Text("Uhrzeit: ${data['time']}"),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => _deleteTermin(doc.id),
-                        ),
                       ),
                     );
                   }).toList(),
