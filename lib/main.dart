@@ -191,6 +191,7 @@ class Verkehrspage extends StatefulWidget {
 }
 
 //S Eichwalde steht schon in Auswahl
+//schranke muss sich immer auf s eichwalde beziehen
 //appicon schöner machen
 //layout
 class _VerkehrspageState extends State<Verkehrspage> {
@@ -1148,33 +1149,36 @@ class _AdminPageState extends State<AdminPage> {
           // Hier holen wir uns die Termine aus den Firestore-Daten
           var termine = snapshot.data!.docs;
 
-          return ListView.builder(
-            itemCount: termine.length,
-            itemBuilder: (context, index) {
-              var termin = termine[index];
-              DateTime date = DateTime.parse(termin['date']);
-              String name = termin['name'];
-              String service = termin['service'];
-              String time = termin['time'];
-
-              return Card(
-                margin: EdgeInsets.all(8),
-                child: ListTile(
-                  title: Text(
-                    "${date.day}.${date.month}.${date.year}",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+          return SizedBox(
+            height: 400,
+            child: ListView.builder(
+              itemCount: termine.length,
+              itemBuilder: (context, index) {
+                var termin = termine[index];
+                DateTime date = DateTime.parse(termin['date']);
+                String name = termin['name'];
+                String service = termin['service'];
+                String time = termin['time'];
+            
+                return Card(
+                  margin: EdgeInsets.all(8),
+                  child: ListTile(
+                    title: Text(
+                      "${date.day}.${date.month}.${date.year}",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Name: $name"),
+                        Text("Service: $service"),
+                        Text("Time: $time"),
+                      ],
+                    ),
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Name: $name"),
-                      Text("Service: $service"),
-                      Text("Time: $time"),
-                    ],
-                  ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         },
       ),
