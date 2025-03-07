@@ -190,15 +190,16 @@ class Verkehrspage extends StatefulWidget {
   State<Verkehrspage> createState() => _VerkehrspageState();
 }
 
-//S Eichwalde steht schon in Auswahl
-//schranke muss sich immer auf s eichwalde beziehen
+//S Eichwalde steht schon in Auswahl - kein Fix?
+//schranke muss sich immer auf s eichwalde beziehen - kein Fix?
+//dynm auf parentcontainer bezogen - LayoutBuilder
 //appicon schöner machen
-//layout
+//layout - segmented Button vertical
+//logo+text verkehr dynamisch
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
   String lastUpdate = '';
   Timer? timer;
-  //int? expandedIndex;
   int? selectedindex;
   Stations? selectedStation = Stations.eichwalde;
   bool schranke = false;
@@ -223,11 +224,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
     timer?.cancel();
     super.dispose();
   }
-
-  /*void removeScheduleOverlay() {
-    scheduleAlarmOverlay.remove();
-    scheduleAlarmOverlay.dispose();
-  }*/
 
   Future<void> fetchAndUpdateData() async {
     try {
@@ -264,13 +260,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
     }
   }
 
-  /*void expand(int index) {
-    //expanded logik
-    setState(() {
-      expandedIndex = (expandedIndex == index) ? null : index;
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
@@ -299,9 +288,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
     String schrankeTimeTillAction;
     if (schranke) {
-      schrankeTimeTillAction = 'Nächste Öffnung vorraussichtlich in: $nextOpen min';
+      schrankeTimeTillAction = 'Nächste Öffnung: $nextOpen min';
     } else {
-      schrankeTimeTillAction = 'Nächste Schließung vorraussichtlich in: $nextClose min';
+      schrankeTimeTillAction = 'Nächste Schließung: $nextClose min';
     }
 
     return Scaffold(
@@ -355,7 +344,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 children: [
                   SizedBox(
                     //height: 10,
-                    height: MediaQuery.of(context).size.height*0.011,
+                    height: MediaQuery.of(context).size.height*0.005,
                   ),
                   Row(
                     children: [
@@ -371,16 +360,18 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                                 style: TextStyle(
-                                  fontSize: 40,
+                                  //fontSize: 40,
+                                  fontSize: MediaQuery.of(context).size.width*0.093,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 'Schranke'),
                             Text(
                                 style: TextStyle(
                                   height: 0.1,
-                                  fontSize: 20,
+                                  //fontSize: 20,
+                                  fontSize: MediaQuery.of(context).size.width*0.046,
                                   fontStyle: FontStyle.italic,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -390,47 +381,37 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               //height: 15,
                               height: MediaQuery.of(context).size.height*0.016,
                             ),
-                            Text(schrankeTimeTillAction),
                           ],
                         ),
                       ),
-                      Column(
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.info_outline_rounded),
-                            onPressed: () {},
-                            tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit. Aktuell werden nur die Daten der S-Bahn Berlin verarbeitet!',
-                          ),
-                          SizedBox(
-                            //width: 100,
-                            //height: 40,
-                            height: MediaQuery.of(context).size.height*0.043,
-                            width: MediaQuery.of(context).size.width*0.23,
-                            child: SegmentedButton(
-                              segments: [
-                                ButtonSegment(
-                                  value: 'Lidl',
-                                  label:
-                                      Text(style: TextStyle(fontSize: 12), 'Lidl'),
-                                ),
-                                ButtonSegment(
-                                  value: 'Wald',
-                                  label:
-                                      Text(style: TextStyle(fontSize: 12), 'Wald'),
-                                ),
-                              ],
-                              selected: {schrankeWahl},
-                              onSelectionChanged: (Set newSelection) {
-                                setState(() {
-                                  schrankeWahl = newSelection.first;
-                                  schranke = checkSchranke(departures, schrankeWahl); //muss noch überprüft werden
-                                });
-                              },
-                              showSelectedIcon: false,
+                      SizedBox(
+                        //width: 100,
+                        //height: 40,
+                        height: MediaQuery.of(context).size.height*0.043,
+                        width: MediaQuery.of(context).size.width*0.23,
+                        child: SegmentedButton(
+                          segments: [
+                            ButtonSegment(
+                              value: 'Lidl',
+                              label:
+                                Text(style: TextStyle(fontSize: 12), 'Lidl'),
                             ),
-                          ),
-                        ],
-                      ),
+                            ButtonSegment(
+                              value: 'Wald',
+                              label:
+                                Text(style: TextStyle(fontSize: 12), 'Wald'),
+                            ),
+                          ],
+                          selected: {schrankeWahl},
+                          onSelectionChanged: (Set newSelection) {
+                            setState(() {
+                              schrankeWahl = newSelection.first;
+                              schranke = checkSchranke(departures, schrankeWahl); 
+                            });
+                          },
+                          showSelectedIcon: false,
+                        ),
+                      ),    
                       SizedBox(
                         //width: 20,
                         width: MediaQuery.of(context).size.width*0.045,
@@ -488,11 +469,24 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 100,
+                        child: IconButton(
+                          alignment: Alignment.topLeft,
+                          icon: Icon(Icons.info_outline_rounded),
+                          onPressed: () {},
+                          tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit. Aktuell werden nur die Daten der S-Bahn Berlin verarbeitet!',
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(
                     //height: 5,
                     height: MediaQuery.of(context).size.height*0.005,
+                  ),
+                  Text(
+                    textAlign: TextAlign.left,
+                    schrankeTimeTillAction
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width*0.95,
@@ -505,7 +499,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   ),
                   SizedBox(
                     //height: 68,
-                    height: MediaQuery.of(context).size.height*0.07,
+                    height: MediaQuery.of(context).size.height*0.058,
                     child: schrankeTrains.isNotEmpty
                         ? ListView.builder(
                             itemCount: schrankeTrains.length,
@@ -603,7 +597,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       itemCount: departures.length,
                       itemBuilder: (context, index) {
                         final departure = departures[index];
-                        //final expanded = expandedIndex == index;        //expanded logik
 
                         Color timecolor = const Color.fromARGB(255, 0, 0, 0);
                         var delay = (departure.delay) / 60;
@@ -699,14 +692,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           );
                         }
 
-                        //expanded logik anfang
-                        //IconData arrow;
-                        //if (expanded) {
-                        //  arrow = Icons.keyboard_arrow_up_rounded;
-                        //} else {
-                        //  arrow = Icons.keyboard_arrow_down_rounded;
-                        //}
-                        //expanded logik ende
                         double tileheight;
                         int linecount;
                         if (departure.destination.length > 22) {
@@ -725,7 +710,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             height: tileheight,
                             child: Card(
                               child: ListTile(
-                                //onTap: () => expand(index), //expanded logik
                                 leading: linelogo, 
                                 title: Text(
                                     style: deststyle,
@@ -858,82 +842,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
     );
   }
 }
-
-/*OverlayEntry scheduleAlarmOverlay = OverlayEntry(
-  builder: (BuildContext context) {
-    DateTime now = DateTime.now();
-    int pickedHour = int.parse(DateFormat('HH').format(now));
-    int pickedMinute = int.parse(DateFormat('mm').format(now));
-    return Container(
-      color: Color.fromARGB(100, 75, 75, 75),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 250,
-          ),
-          SizedBox(
-            width: 400,
-            height: 400,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 150, 200, 150),
-                  borderRadius: BorderRadius.circular(20)),
-              child: Column(
-                children: [
-                  SizedBox(height: 75),
-                  SizedBox(
-                    height: 150,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 10),
-                        NumberPicker(
-                            itemWidth: 185,
-                            infiniteLoop: true,
-                            minValue: 0,
-                            maxValue: 23,
-                            value: pickedHour, //aktuelle Zeit?
-                            onChanged: (value) =>
-                                _VerkehrspageState().currentPickedHour = value),
-                        SizedBox(width: 10),
-                        NumberPicker(
-                            itemWidth: 185,
-                            infiniteLoop: true,
-                            minValue: 0,
-                            maxValue: 59,
-                            value: pickedMinute, //aktuelle Zeit?
-                            onChanged: (value) => _VerkehrspageState()
-                                .currentPickedMinute = value),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 100),
-                  SizedBox(
-                    height: 50,
-                    width: 400,
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              scheduleAlarmOverlay.remove();
-                            },
-                            child: Text('Abbrechen')),
-                        ElevatedButton(
-                            onPressed: () {
-                              scheduleAlarmOverlay.remove();
-                            },
-                            child: Text('Bestätigen')),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  },
-);*/
 
 class Homepage extends StatefulWidget {
   @override
