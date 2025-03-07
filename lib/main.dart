@@ -920,8 +920,8 @@ class _HomepageState extends State<Homepage> {
 
             return ListView(
           children: snapshot.data!.docs.map((doc) {
-            Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
+            Map<String, dynamic> data = doc.data() as Map<String, dynamic>? ?? {};
+            print("Daten aus Firestore: $data");
             return Card(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                 child: ExpansionTile(
@@ -932,7 +932,9 @@ class _HomepageState extends State<Homepage> {
                         )
                       : Icon(Icons.image, size: 50),
                   title: Text(
-                    data['titel'] ?? "Ohne Titel",
+                    (data['titel'] != null && data['titel'].toString().trim().isNotEmpty)
+                        ? data['titel']
+                        : "Ohne Titel",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text("Tippe, um mehr zu lesen"),
@@ -1731,17 +1733,44 @@ class _TerminepageState extends State<Terminepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(150, 200, 150, 1),
+        leading: Image(
+                    image: AssetImage('Assets/wappen_Eichwalde.png'),
+        ),
+   //     backgroundColor: Color.fromRGBO(150, 200, 150, 1),
         title: Text(
-          'Termine',
-          style: TextStyle(
-            color: Color.fromRGBO(222, 236, 209, 1),
-            fontSize: 40,
-            letterSpacing: 4.0,
-          ),
+                  'Termine',
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+        ),
         ),
         centerTitle: true,
       ),
+      /*Row(
+              children: [
+                SizedBox(
+                  //width: 25
+                  width: MediaQuery.of(context).size.width*0.06,                
+                ),
+                SizedBox(
+                  //height: 75,
+                  //width: 75,
+                  height: MediaQuery.of(context).size.height*0.08,   
+                  width: MediaQuery.of(context).size.width*0.175,   
+                  child: Image(
+                    image: AssetImage('Assets/wappen_Eichwalde.png'),
+                  ),
+                ),
+                SizedBox(width: 5),
+                Text(
+                  'Verkehr',
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),*/
       body: Column(
         children: [
           TableCalendar(
