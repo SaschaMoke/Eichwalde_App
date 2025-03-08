@@ -120,7 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
         page = Terminepage();
         break;
       case 4:
-        page = SettingsPage();
+        //page = SettingsPage();
+        page = AdminCheckPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -169,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
               NavigationDestination(
                 selectedIcon: Icon(Icons.settings),
                 icon: Icon(Icons.settings_outlined),
-                label: 'Settings',
+                label: 'Admin',
               ),
             ],
           ),
@@ -513,8 +514,11 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               itemCount: schrankeTrains.length,
                               itemBuilder: (context, index) {
                                 final train = schrankeTrains[index];
-                                return Text(
-                                    '${train.line}  ${train.destination}');
+                                return SizedBox(
+                                  width: context.size!.width*0.9,
+                                  child: Text(
+                                      '${train.line}  ${train.destination}'),
+                                );
                               })
                           : Text('Keine Züge'),
                     ),
@@ -985,44 +989,115 @@ class AdminCheckPage extends StatefulWidget {
 }
 
 class _AdminCheckPageState extends State<AdminCheckPage> {
-  String Eingabe = '';
+  bool obscureText = true;
 
   void updateEingabe(String text) {
-    setState(() {
-      Eingabe = text;
-    });
-    {
-      if (Eingabe == '1234') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AdminPage()),
-        );
-      }
+    if (text == '1234') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AdminPage()),
+      );
     }
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Admin Panel")),
-      body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        /*Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body:Center(
+        child: SafeArea(
+          child: Column(
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width*0.2,
+              Row(
+                children: [
+                  SizedBox(
+                    //width: 25
+                    width: MediaQuery.of(context).size.width*0.06,                
+                  ),
+                  SizedBox(
+                    //height: 75,
+                    //width: 75,
+                    height: MediaQuery.of(context).size.height*0.08,   
+                    width: MediaQuery.of(context).size.width*0.175,   
+                    child: Image(
+                      image: AssetImage('Assets/wappen_Eichwalde.png'),
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    'Admin',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
-                child:*/
-        TextField(
-          onSubmitted: updateEingabe,
-          decoration: InputDecoration(
-              border: OutlineInputBorder(), labelText: 'Passwort'),
+                height: MediaQuery.of(context).size.height*0.1,
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height*0.5,
+                width: MediaQuery.of(context).size.width*0.95,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 150, 200, 150),
+                  border: Border.all(
+                      color: const Color.fromARGB(255, 255, 255, 255)),
+                  borderRadius: BorderRadius.circular(20)),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: constraints.maxHeight*0.1,
+                        ),
+                        SizedBox(
+                          width: constraints.maxWidth*0.9,
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: constraints.maxHeight*0.055
+                            ),
+                            'Bitte geben Sie das Password ein, um in den Admin-Bereich zu gelangen:'
+                          ),
+                        ),
+                        SizedBox(
+                          height: constraints.maxHeight*0.15,
+                        ),
+                        TextField(
+                          obscureText: obscureText,
+                          onSubmitted: updateEingabe,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                obscureText ? Icons.visibility : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                            ),
+                            fillColor: Color.fromARGB(255, 235, 235, 235),
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            constraints: BoxConstraints(
+                              maxHeight: constraints.maxHeight*0.12,
+                              maxWidth: constraints.maxWidth*0.95,
+                            ),
+                            labelText: 'Passwort'
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                ),
+              ),
+            ]
+          )
         ),
-        //   ),
-        //     ]
-        //       )
-      ]),
+      )
     );
   }
 }
@@ -1035,8 +1110,6 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController gewerbeartController = TextEditingController();
   final TextEditingController adresseController = TextEditingController();
@@ -1067,6 +1140,297 @@ class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body:Center(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width*0.02,                
+                  ),
+                  BackButton(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width*0.02,                
+                  ),
+                  SizedBox(
+                    //height: 75,
+                    //width: 75,
+                    height: MediaQuery.of(context).size.height*0.08,   
+                    width: MediaQuery.of(context).size.width*0.175,   
+                    child: Image(
+                      image: AssetImage('Assets/wappen_Eichwalde.png'),
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    'Admin',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.025,
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.3,
+                width: MediaQuery.of(context).size.width*0.95,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                  return Column(
+                    children: [
+                      Text(
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: constraints.maxWidth*0.06,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        'Termine am ${DateFormat('dd.MM.yyyy').format(DateTime.now())}:'
+                      ),
+                      Container(
+                        height: constraints.maxHeight*0.75,
+                        width: constraints.maxWidth,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 150, 200, 150),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 255, 255, 255)
+                          ),
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: cloudTermine.getTermineForDate(DateTime.now()), // Termine für das heutige Datum laden
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+
+                            if (snapshot.hasError) {
+                              return Center(child: Text("Fehler beim Laden der Termine: ${snapshot.error}"));
+                            }
+
+                            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  style: TextStyle(
+                                    fontSize: 20
+                                  ),
+                                  "Keine Termine gefunden"
+                                )
+                              );
+                            }
+
+                            return Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: ListView(
+                                key: ValueKey(DateTime.now()),
+                                children: snapshot.data!.docs.map((doc) {
+                                  Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                                         
+                                return Card(
+                                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                  elevation: 4,
+                                  child: ListTile(
+                                    title: Text("${data['name']} - ${data['service']}"),
+                                    subtitle: Text("Uhrzeit: ${data['time']}"),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () => _deleteTermin(doc.id),
+                                    ),
+                                  ),
+                                );
+                                }).toList(),
+                              ),
+                            );
+                          }
+                        ),
+
+                      ),
+                    ],
+                  );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.01,
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.15,
+                width: MediaQuery.of(context).size.width*0.95,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                  return Column(
+                    children: [
+                      Text(
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: constraints.maxWidth*0.06,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        'News'
+                      ),
+                      Container(
+                        height: constraints.maxHeight*0.7,
+                        width: constraints.maxWidth,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 150, 200, 150),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 255, 255, 255)
+                          ),
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => AdminNewsHinzufuegenPage()),
+                              );
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add_outlined),
+                                  SizedBox(width: 5),
+                                  Text('Hinzufügen'),
+                                ],
+                              )
+                            ),
+                            SizedBox(
+                              width: constraints.maxWidth*0.025,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => NewsLoeschenPage()),
+                              );
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(Icons.delete_outline),
+                                  SizedBox(width: 5),
+                                  Text('Löschen'),
+                                ],
+                              )
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.05,
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.2,
+                width: MediaQuery.of(context).size.width*0.95,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                  return Column(
+                    children: [
+                      Text(
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: constraints.maxWidth*0.06,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        'Gewerbe'
+                      ),
+                      Container(
+                        height: constraints.maxHeight*0.7,
+                        width: constraints.maxWidth,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 150, 200, 150),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 255, 255, 255)
+                          ),
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => GewerbeHinzufuegenPage()),
+                                  );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.add_outlined),
+                                      SizedBox(width: 5),
+                                      Text('Hinzufügen'),
+                                    ],
+                                  )
+                                ),
+                                SizedBox(
+                                  width: constraints.maxWidth*0.025,
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => GewerbeBearbeitenPage()),
+                                  );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.edit_outlined),
+                                      SizedBox(width: 5),
+                                      Text('Bearbeiten'),
+                                    ],
+                                  )
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: constraints.maxWidth*0.025,
+                            ),
+                            SizedBox(
+                              width: constraints.maxWidth*0.35,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => GewerbeLoeschenPage()),
+                                );
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.delete_outline),
+                                    SizedBox(width: 5),
+                                    Text('Löschen'),
+                                  ],
+                                )
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                  },
+                ),
+              ),
+            ]
+          )
+        ),
+      )
+    );
+    
+   
+    /*return Scaffold(
       appBar: AppBar(title: Text("Admin Panel")),
       body:Column(children: [
          StreamBuilder<QuerySnapshot>(
@@ -1153,7 +1517,7 @@ class _AdminPageState extends State<AdminPage> {
             child: Text('News löschen')),
       ]
       ),
-      );
+      );*/
   }
 }
 
@@ -1175,6 +1539,7 @@ class _NewsLoeschenPageState extends State<NewsLoeschenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("News löschen")),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('News').snapshots(),
         builder: (context, snapshot) {
@@ -1372,6 +1737,7 @@ class _GewerbeHinzufuegenPageState extends State<GewerbeHinzufuegenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Gewerbe hinzufügen")),
       body: Card(
         child: Column(
           children: [
@@ -1419,6 +1785,7 @@ class _GewerbeLoeschenPageState extends State<GewerbeLoeschenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Gewerbe löschen")),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('Gewerbe').snapshots(),
         builder: (context, snapshot) {
@@ -1611,7 +1978,6 @@ class _GewerbeEditFormState extends State<GewerbeEditForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Gewerbe bearbeiten"),
-        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
@@ -1626,7 +1992,6 @@ class _GewerbeEditFormState extends State<GewerbeEditForm> {
             ElevatedButton(
               onPressed: _updateGewerbe,
               child: Text("Speichern"),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             ),
           ],
         ),
@@ -2080,3 +2445,14 @@ class _TerminepageState extends State<Terminepage> {
     );
   }
 }
+
+
+/*child: LayoutBuilder(
+  builder: (context, constraints) {
+    return Column(
+      children: [   
+                                
+      ],
+    );
+  }
+),*/
