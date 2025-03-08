@@ -1,4 +1,3 @@
-//import 'package:cron/cron.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eichwalde_app/Read%20data/getGewerbeName.dart';
 import 'package:eichwalde_app/Read%20data/getGewerbeimage.dart';
@@ -192,7 +191,7 @@ class Verkehrspage extends StatefulWidget {
 
 //S Eichwalde steht schon in Auswahl - kein Fix?
 //schranke muss sich immer auf s eichwalde beziehen - kein Fix?
-//dynm auf parentcontainer bezogen - LayoutBuilder
+//dynm auf parentcontainer bezogen - LayoutBuilder - Simon muss testen
 //appicon schöner machen
 //layout - segmented Button vertical
 //logo+text verkehr dynamisch
@@ -340,187 +339,191 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 borderRadius: BorderRadius.circular(20),
                 color: Color.fromARGB(255, 235, 235, 235),
               ),
-              child: departures.isNotEmpty ? Column(
-                children: [
-                  SizedBox(
-                    //height: 10,
-                    height: MediaQuery.of(context).size.height*0.005,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        //width: 15,
-                        width: MediaQuery.of(context).size.width*0.035,
-                      ),
-                      SizedBox(
-                        //width: 185,
-                        //height: 100,
-                        width: MediaQuery.of(context).size.width*0.43,
-                        height: MediaQuery.of(context).size.height*0.107,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                style: TextStyle(
-                                  //fontSize: 40,
-                                  fontSize: MediaQuery.of(context).size.width*0.093,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                'Schranke'),
-                            Text(
-                                style: TextStyle(
-                                  height: 0.1,
-                                  //fontSize: 20,
-                                  fontSize: MediaQuery.of(context).size.width*0.046,
-                                  fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                schrankeName
-                                ),
-                            SizedBox(
-                              //height: 15,
-                              height: MediaQuery.of(context).size.height*0.016,
-                            ),
-                          ],
+              child: LayoutBuilder(
+                builder: (contextSchranke, constraints) {
+                return departures.isNotEmpty ? Column(
+                  children: [
+                    SizedBox(
+                      //height: 10,
+                      height: MediaQuery.of(contextSchranke).size.height*0.005,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          //width: 15,
+                          width: MediaQuery.of(contextSchranke).size.width*0.035,
                         ),
-                      ),
-                      SizedBox(
-                        //width: 100,
-                        //height: 40,
-                        height: MediaQuery.of(context).size.height*0.043,
-                        width: MediaQuery.of(context).size.width*0.23,
-                        child: SegmentedButton(
-                          segments: [
-                            ButtonSegment(
-                              value: 'Lidl',
-                              label:
-                                Text(style: TextStyle(fontSize: 12), 'Lidl'),
-                            ),
-                            ButtonSegment(
-                              value: 'Wald',
-                              label:
-                                Text(style: TextStyle(fontSize: 12), 'Wald'),
-                            ),
-                          ],
-                          selected: {schrankeWahl},
-                          onSelectionChanged: (Set newSelection) {
-                            setState(() {
-                              schrankeWahl = newSelection.first;
-                              schranke = checkSchranke(departures, schrankeWahl); 
-                            });
-                          },
-                          showSelectedIcon: false,
-                        ),
-                      ),    
-                      SizedBox(
-                        //width: 20,
-                        width: MediaQuery.of(context).size.width*0.045,
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        height: 100,
-                        width: 60,
-                        //height: MediaQuery.of(context).size.height*0.107,
-                        //width: MediaQuery.of(context).size.width*0.14,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          color: Color.fromARGB(255, 255, 255, 255),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(5),
-                            color: Color.fromARGB(255, 0, 0, 0),
-                          ),
+                        SizedBox(
+                          //width: 185,
+                          //height: 100,
+                          width: MediaQuery.of(contextSchranke).size.width*0.43,
+                          height: MediaQuery.of(contextSchranke).size.height*0.107,
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
-                                height: 26,
-                                width: 26,
-                                //height: MediaQuery.of(context).size.height*0.028,
-                                //width: MediaQuery.of(context).size.width*0.06,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  color: schrankeRed,
-                                ),
-                              ),
+                              Text(
+                                  style: TextStyle(
+                                    //fontSize: 40,
+                                    fontSize: MediaQuery.of(contextSchranke).size.width*0.093,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  'Schranke'),
+                              Text(
+                                  style: TextStyle(
+                                    height: 0.1,
+                                    //fontSize: 20,
+                                    fontSize: MediaQuery.of(contextSchranke).size.width*0.046,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  schrankeName
+                                  ),
                               SizedBox(
-                                height: 5,
-                                //height: MediaQuery.of(context).size.height*0.005,
-                              ),
-                              Container(
-                                height: 26,
-                                width: 26,
-                                //height: MediaQuery.of(context).size.height*0.028,
-                                //width: MediaQuery.of(context).size.width*0.06,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  color: schrankeGelb,
-                                ),
+                                //height: 15,
+                                height: MediaQuery.of(contextSchranke).size.height*0.016,
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 100,
-                        child: IconButton(
-                          alignment: Alignment.topLeft,
-                          icon: Icon(Icons.info_outline_rounded),
-                          onPressed: () {},
-                          tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit. Aktuell werden nur die Daten der S-Bahn Berlin verarbeitet!',
+                        SizedBox(
+                          //width: 100,
+                          //height: 40,
+                          height: MediaQuery.of(contextSchranke).size.height*0.043,
+                          width: MediaQuery.of(contextSchranke).size.width*0.23,
+                          child: SegmentedButton(
+                            segments: [
+                              ButtonSegment(
+                                value: 'Lidl',
+                                label:
+                                  Text(style: TextStyle(fontSize: 12), 'Lidl'),
+                              ),
+                              ButtonSegment(
+                                value: 'Wald',
+                                label:
+                                  Text(style: TextStyle(fontSize: 12), 'Wald'),
+                              ),
+                            ],
+                            selected: {schrankeWahl},
+                            onSelectionChanged: (Set newSelection) {
+                              setState(() {
+                                schrankeWahl = newSelection.first;
+                                schranke = checkSchranke(departures, schrankeWahl); 
+                              });
+                            },
+                            showSelectedIcon: false,
+                          ),
+                        ),    
+                        SizedBox(
+                          //width: 20,
+                          width: MediaQuery.of(contextSchranke).size.width*0.045,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    //height: 5,
-                    height: MediaQuery.of(context).size.height*0.005,
-                  ),
-                  Text(
-                    textAlign: TextAlign.left,
-                    schrankeTimeTillAction
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width*0.95,
-                    height: 2,
-                    color: Color.fromARGB(255, 50, 50, 50),
-                  ),
-                  SizedBox(
-                    //height: 5,
-                    height: MediaQuery.of(context).size.height*0.005,
-                  ),
-                  SizedBox(
-                    //height: 68,
-                    height: MediaQuery.of(context).size.height*0.058,
-                    child: schrankeTrains.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: schrankeTrains.length,
-                            itemBuilder: (context, index) {
-                              final train = schrankeTrains[index];
-                              return Text(
-                                  '${train.line}  ${train.destination}');
-                            })
-                        : Text('Keine Züge'),
-                  ),
-                ],
-              ):Center(
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          height: 100,
+                          width: 60,
+                          //height: MediaQuery.of(context).size.height*0.107,
+                          //width: MediaQuery.of(context).size.width*0.14,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color.fromARGB(255, 255, 255, 255),
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AnimatedContainer(
+                                  duration: Duration(milliseconds: 500),
+                                  height: 26,
+                                  width: 26,
+                                  //height: MediaQuery.of(context).size.height*0.028,
+                                  //width: MediaQuery.of(context).size.width*0.06,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color: schrankeRed,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                  //height: MediaQuery.of(context).size.height*0.005,
+                                ),
+                                Container(
+                                  height: 26,
+                                  width: 26,
+                                  //height: MediaQuery.of(context).size.height*0.028,
+                                  //width: MediaQuery.of(context).size.width*0.06,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color: schrankeGelb,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 100,
+                          child: IconButton(
+                            alignment: Alignment.topLeft,
+                            icon: Icon(Icons.info_outline_rounded),
+                            onPressed: () {},
+                            tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit. Aktuell werden nur die Daten der S-Bahn Berlin verarbeitet!',
+                          ),
+                        ),
+                      ],
                     ),
-                    'Es konnten keine Daten empfangen werden.'
-                  ),
-                )
+                    SizedBox(
+                      //height: 5,
+                      height: MediaQuery.of(contextSchranke).size.height*0.005,
+                    ),
+                    Text(
+                      textAlign: TextAlign.left,
+                      schrankeTimeTillAction
+                    ),
+                    Container(
+                      width: MediaQuery.of(contextSchranke).size.width*0.95,
+                      height: 2,
+                      color: Color.fromARGB(255, 50, 50, 50),
+                    ),
+                    SizedBox(
+                      //height: 5,
+                      height: MediaQuery.of(contextSchranke).size.height*0.005,
+                    ),
+                    SizedBox(
+                      //height: 68,
+                      height: MediaQuery.of(contextSchranke).size.height*0.058,
+                      child: schrankeTrains.isNotEmpty
+                          ? ListView.builder(
+                              itemCount: schrankeTrains.length,
+                              itemBuilder: (context, index) {
+                                final train = schrankeTrains[index];
+                                return Text(
+                                    '${train.line}  ${train.destination}');
+                              })
+                          : Text('Keine Züge'),
+                    ),
+                  ],
+                ):Center(
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25
+                      ),
+                      'Es konnten keine Daten empfangen werden.'
+                    ),
+                  );
+                }
+              )
             ),
             SizedBox(
               height: 20,
@@ -534,235 +537,239 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   border: Border.all(
                       color: const Color.fromARGB(255, 255, 255, 255)),
                   borderRadius: BorderRadius.circular(20)),
-              child: Column(
-                children: [
-                  SizedBox(
-                    //Überschrift
-                    height: 10,
-                    //height: MediaQuery.of(context).size.height*0.011,
-                  ),
-                  SizedBox(
-                    height: 30,
-                    //height: MediaQuery.of(context).size.height*0.032,
-                    width: MediaQuery.of(context).size.width*0.885,
-                    child: DropdownMenu<Stations>(
-                      width: MediaQuery.of(context).size.width*0.885,
-                      initialSelection: Stations.eichwalde,
-                      controller: TextEditingController(),
-                      requestFocusOnTap: true,
-                      label: const Text('Ausgewählte Haltestelle'),
-                      onSelected: (Stations? val) {
-                        setState(() {
-                          selectedStation = val;
-                        });
-                        fetchAndUpdateData();
-                      },
-                      hintText: selectedStation!.stationName,
-                      //helperText: 'Hello',
-                      //errorText: null,
-                      enableFilter: true,
-                      dropdownMenuEntries: Stations.values
-                          .map<DropdownMenuEntry<Stations>>((Stations station) {
-                        return DropdownMenuEntry<Stations>(
-                          value: station,
-                          label: station.stationName,
-                          style: MenuItemButton.styleFrom(
-                            foregroundColor: Color.fromARGB(255, 0, 0, 0),
-                          ),
-                        );
-                      }).toList(),
-                      menuStyle: MenuStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                              Color.fromARGB(255, 255, 255, 255))),
-                      textStyle: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                      ),
-                      inputDecorationTheme: InputDecorationTheme(
-                        filled: true,
-                        fillColor: Color.fromARGB(255, 240, 240, 230), //Farbe
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(12))),
-                      ),
+              child: LayoutBuilder(
+                builder: (contextDeparture, constraints) {
+                return Column(
+                  children: [
+                    SizedBox(
+                      //Überschrift
+                      height: 10,
+                      //height: MediaQuery.of(context).size.height*0.011,
                     ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                    //height: MediaQuery.of(context).size.height*0.032,
-                  ),
-                  SizedBox(
-                    //height: 305,
-                    height: MediaQuery.of(context).size.height*0.327,
-                    child: departures.isNotEmpty ? ListView.builder(
-                      itemCount: departures.length,
-                      itemBuilder: (context, index) {
-                        final departure = departures[index];
-
-                        Color timecolor = const Color.fromARGB(255, 0, 0, 0);
-                        var delay = (departure.delay) / 60;
-                        if (delay > 0 && delay < 5) {
-                          timecolor = const Color.fromARGB(255, 255, 135, 0);
-                        } else if (delay > 5) {
-                          timecolor = const Color.fromARGB(255, 255, 0, 0);
-                        } else {
-                          timecolor = const Color.fromARGB(255, 0, 0, 0);
-                        }
-
-                        int mincount;
-                        String deptime;
-                        var formattedHour = int.parse(departure.formattedHour);
-                        var formattedMin = int.parse(departure.formattedMin);
-                        if (formattedHour == currentHour) {
-                          mincount = (formattedMin - currentMin);
-                        } else {
-                          mincount = (formattedMin + (60 - currentMin));
-                        }
-                        if (mincount == 0) {
-                          if (delay > 0) {
-                            deptime = 'jetzt (+${delay.round()})';
-                          } else {
-                            deptime = 'jetzt';
-                          }
-                        } else {
-                          if (delay > 0) {
-                            deptime = 'in $mincount min (+${delay.round()})';
-                          } else {
-                            deptime = 'in $mincount min';
-                          }
-                        }
-
-                        TextStyle deststyle;
-                        if (departure.when == 'Fahrt fällt aus') {
-                          deststyle = const TextStyle(
-                            fontSize: 17,
-                            color: Color.fromARGB(255, 255, 0, 0),
-                            decoration: TextDecoration.lineThrough,
-                            decorationColor: Color.fromARGB(255, 255, 0, 0),
-                          );
-                          deptime = 'Fahrt fällt aus';
-                          timecolor = const Color.fromARGB(255, 255, 0, 0);
-                        } else {
-                          deststyle = const TextStyle(
-                            fontSize: 17,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            decoration: TextDecoration.none,
-                          );
-                        }
-
-                        AssetImage lineImage =
-                            const AssetImage('Assets/Bus.png');
-                        SizedBox linelogo;
-                        if (departure.product == 'suburban') {
-                          if (departure.line == 'S46') {
-                            lineImage = const AssetImage('Assets/S46.png');
-                          } else if (departure.line == 'S8') {
-                            lineImage = const AssetImage('Assets/S8.png');
-                          }
-                          linelogo = SizedBox(
-                              //height: MediaQuery.of(context).size.height*0.1,
-                              height: 40,
-                              //width: 40,
-                              width: MediaQuery.of(context).size.width*0.094,
-                              child: Image(image: lineImage));
-                        } else {
-                          linelogo = SizedBox(
-                            height: 60,
-                            //width: 40,
-                            width: MediaQuery.of(context).size.width*0.094,
-                            child: Column(
-                              children: [
-                                Image(
-                                  image: lineImage,
-                                  height: 30,
-                                  //width: 30,
-                                  width: MediaQuery.of(context).size.width*0.07,
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Text(
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  departure.line,
-                                ),
-                              ],
+                    SizedBox(
+                      height: 30,
+                      //height: MediaQuery.of(context).size.height*0.032,
+                      width: MediaQuery.of(contextDeparture).size.width*0.885,
+                      child: DropdownMenu<Stations>(
+                        width: MediaQuery.of(contextDeparture).size.width*0.885,
+                        initialSelection: Stations.eichwalde,
+                        controller: TextEditingController(),
+                        requestFocusOnTap: true,
+                        label: const Text('Ausgewählte Haltestelle'),
+                        onSelected: (Stations? val) {
+                          setState(() {
+                            selectedStation = val;
+                          });
+                          fetchAndUpdateData();
+                        },
+                        hintText: selectedStation!.stationName,
+                        //helperText: 'Hello',
+                        //errorText: null,
+                        enableFilter: true,
+                        dropdownMenuEntries: Stations.values
+                            .map<DropdownMenuEntry<Stations>>((Stations station) {
+                          return DropdownMenuEntry<Stations>(
+                            value: station,
+                            label: station.stationName,
+                            style: MenuItemButton.styleFrom(
+                              foregroundColor: Color.fromARGB(255, 0, 0, 0),
                             ),
                           );
-                        }
-
-                        double tileheight;
-                        int linecount;
-                        if (departure.destination.length > 22) {
-                          linecount = 2;
-                          tileheight = 100;
-                          //tileheight = MediaQuery.of(context).size.height*0.107;
-                        } else {
-                          linecount = 1;
-                          tileheight = 80;
-                          //tileheight = MediaQuery.of(context).size.height*0.086;
-                        }
-
-                        return Center(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width*0.885,
-                            height: tileheight,
-                            child: Card(
-                              child: ListTile(
-                                leading: linelogo, 
-                                title: Text(
-                                    style: deststyle,
-                                    maxLines: linecount,
-                                    departure.destination),
-                                subtitle: Text(
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                      color: timecolor,
+                        }).toList(),
+                        menuStyle: MenuStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                                Color.fromARGB(255, 255, 255, 255))),
+                        textStyle: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          filled: true,
+                          fillColor: Color.fromARGB(255, 240, 240, 230), //Farbe
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(12))),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                      //height: MediaQuery.of(context).size.height*0.032,
+                    ),
+                    SizedBox(
+                      //height: 305,
+                      height: MediaQuery.of(contextDeparture).size.height*0.327,
+                      child: departures.isNotEmpty ? ListView.builder(
+                        itemCount: departures.length,
+                        itemBuilder: (context, index) {
+                          final departure = departures[index];
+                
+                          Color timecolor = const Color.fromARGB(255, 0, 0, 0);
+                          var delay = (departure.delay) / 60;
+                          if (delay > 0 && delay < 5) {
+                            timecolor = const Color.fromARGB(255, 255, 135, 0);
+                          } else if (delay > 5) {
+                            timecolor = const Color.fromARGB(255, 255, 0, 0);
+                          } else {
+                            timecolor = const Color.fromARGB(255, 0, 0, 0);
+                          }
+                
+                          int mincount;
+                          String deptime;
+                          var formattedHour = int.parse(departure.formattedHour);
+                          var formattedMin = int.parse(departure.formattedMin);
+                          if (formattedHour == currentHour) {
+                            mincount = (formattedMin - currentMin);
+                          } else {
+                            mincount = (formattedMin + (60 - currentMin));
+                          }
+                          if (mincount == 0) {
+                            if (delay > 0) {
+                              deptime = 'jetzt (+${delay.round()})';
+                            } else {
+                              deptime = 'jetzt';
+                            }
+                          } else {
+                            if (delay > 0) {
+                              deptime = 'in $mincount min (+${delay.round()})';
+                            } else {
+                              deptime = 'in $mincount min';
+                            }
+                          }
+                
+                          TextStyle deststyle;
+                          if (departure.when == 'Fahrt fällt aus') {
+                            deststyle = const TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 255, 0, 0),
+                              decoration: TextDecoration.lineThrough,
+                              decorationColor: Color.fromARGB(255, 255, 0, 0),
+                            );
+                            deptime = 'Fahrt fällt aus';
+                            timecolor = const Color.fromARGB(255, 255, 0, 0);
+                          } else {
+                            deststyle = const TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              decoration: TextDecoration.none,
+                            );
+                          }
+                
+                          AssetImage lineImage =
+                              const AssetImage('Assets/Bus.png');
+                          SizedBox linelogo;
+                          if (departure.product == 'suburban') {
+                            if (departure.line == 'S46') {
+                              lineImage = const AssetImage('Assets/S46.png');
+                            } else if (departure.line == 'S8') {
+                              lineImage = const AssetImage('Assets/S8.png');
+                            }
+                            linelogo = SizedBox(
+                                //height: MediaQuery.of(context).size.height*0.1,
+                                height: 40,
+                                //width: 40,
+                                width: MediaQuery.of(contextDeparture).size.width*0.094,
+                                child: Image(image: lineImage));
+                          } else {
+                            linelogo = SizedBox(
+                              height: 60,
+                              //width: 40,
+                              width: MediaQuery.of(contextDeparture).size.width*0.094,
+                              child: Column(
+                                children: [
+                                  Image(
+                                    image: lineImage,
+                                    height: 30,
+                                    //width: 30,
+                                    width: MediaQuery.of(contextDeparture).size.width*0.07,
+                                  ),
+                                  const SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                  deptime
-                                ),                                  
-                                trailing: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color:
-                                              Color.fromARGB(255, 0, 0, 0),
-                                        ),
-                                        'Gleis:'),
-                                    Text(
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color:
-                                              Color.fromARGB(255, 0, 0, 0),
-                                        ),
-                                        '${departure.platform}'),
-                                  ],
+                                    departure.line,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                
+                          double tileheight;
+                          int linecount;
+                          if (departure.destination.length > 22) {
+                            linecount = 2;
+                            tileheight = 100;
+                            //tileheight = MediaQuery.of(context).size.height*0.107;
+                          } else {
+                            linecount = 1;
+                            tileheight = 80;
+                            //tileheight = MediaQuery.of(context).size.height*0.086;
+                          }
+                
+                          return Center(
+                            child: SizedBox(
+                              width: MediaQuery.of(contextDeparture).size.width*0.885,
+                              height: tileheight,
+                              child: Card(
+                                child: ListTile(
+                                  leading: linelogo, 
+                                  title: Text(
+                                      style: deststyle,
+                                      maxLines: linecount,
+                                      departure.destination),
+                                  subtitle: Text(
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                        color: timecolor,
+                                      ),
+                                    deptime
+                                  ),                                  
+                                  trailing: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      '${departure.platform}' != "null" ? Text(
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color:
+                                                Color.fromARGB(255, 0, 0, 0),
+                                          ),
+                                          'Gleis:'):SizedBox(),
+                                      '${departure.platform}' != "null" ? Text(
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color:
+                                                Color.fromARGB(255, 0, 0, 0),
+                                          ),
+                                          '${departure.platform}'):SizedBox(),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
+                          );
+                        },
+                      ): Center(
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25
                           ),
-                        );
-                      },
-                    ): Center(
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25
+                          'Es konnten keine Daten empfangen werden.'
                         ),
-                        'Es konnten keine Daten empfangen werden.'
-                      ),
-                    )
-                  ),
-                  Text(//last update text
-                      'Zuletzt aktualisiert: $lastUpdate')
-                ],
+                      )
+                    ),
+                    Text(//last update text
+                        'Zuletzt aktualisiert: $lastUpdate')
+                  ],
+                );
+                },
               ),
             ),
             /*Row(
