@@ -486,24 +486,28 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ),
                     SizedBox(
                       //height: 5,
-                      height: MediaQuery.of(contextSchranke).size.height*0.005,
+                      //height: MediaQuery.of(contextSchranke).size.height*0.005,
+                      height: constraints.maxHeight*0.025,
                     ),
                     Text(
                       textAlign: TextAlign.left,
                       schrankeTimeTillAction
                     ),
                     Container(
-                      width: MediaQuery.of(contextSchranke).size.width*0.95,
+                      //width: MediaQuery.of(contextSchranke).size.width*0.95,
+                      width: constraints.maxWidth,
                       height: 2,
                       color: Color.fromARGB(255, 50, 50, 50),
                     ),
                     SizedBox(
                       //height: 5,
-                      height: MediaQuery.of(contextSchranke).size.height*0.005,
+                      //height: MediaQuery.of(contextSchranke).size.height*0.005,
+                      height: constraints.maxHeight*0.025,
                     ),
                     SizedBox(
                       //height: 68,
-                      height: MediaQuery.of(contextSchranke).size.height*0.058,
+                      //height: MediaQuery.of(contextSchranke).size.height*0.058,
+                      height: constraints.maxHeight*0.275,
                       child: schrankeTrains.isNotEmpty
                           ? ListView.builder(
                               itemCount: schrankeTrains.length,
@@ -600,7 +604,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ),
                     SizedBox(
                       //height: 305,
-                      height: MediaQuery.of(contextDeparture).size.height*0.327,
+                      //height: MediaQuery.of(contextDeparture).size.height*0.327,
+                      height: constraints.maxHeight*0.765,
                       child: departures.isNotEmpty ? ListView.builder(
                         itemCount: departures.length,
                         itemBuilder: (context, index) {

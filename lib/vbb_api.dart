@@ -1,4 +1,6 @@
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 enum Stations {
   eichwalde('S Eichwalde', 900260004),
@@ -9,6 +11,32 @@ enum Stations {
   final String stationName;
   final int stationID;
 }
+
+List departuresKW = [];
+Future<void> dataRegioKW() async {
+  try {
+    final response = await http.get(
+        Uri.parse(
+          'https://v6.vbb.transport.rest/stops/900260001/departures?linesOfStops=false&bus=false&suburban=false&remarks=false&duration=60'),
+      );
+
+      if (response.statusCode == 200) {
+        final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
+        departuresKW = apiResponse.departures;
+      } else {
+        throw Exception('Regio: Failed to load data');
+      }
+    } catch (error) {
+      throw Exception('Regio: Error fetching data: $error');
+    }
+  }
+
+List directionsBerlin = [
+  'Dessau, Hauptbahnhof', 'Nauen, Bahnhof', 'Potsdam, Golm Bhf',
+];
+List directionsCottbus = [
+  'Senftenberg, Bahnhof', 'Vetschau, Bahnhof',
+];
 
 List<Departure> schrankeTrains = [];
 int nextClose = 100;
@@ -22,6 +50,8 @@ bool checkSchranke(List departures, String schrankeOrt) {
   schrankeTrains = [];
   nextClose = 100;
   nextOpen = 0; 
+
+  dataRegioKW();
 
   for (var dep in departures) {
     if (dep.product == 'suburban') {
@@ -64,6 +94,47 @@ bool checkSchranke(List departures, String schrankeOrt) {
     }
   }
     
+  for (var dep in departuresKW) {
+    if (dep.platform == '1') {
+      int mincountSchranke;
+      var formattedHour = int.parse(dep.formattedHour);
+      var formattedMin = int.parse(dep.formattedMin);
+      if (formattedHour == currentHourSchranke) {
+        mincountSchranke = (formattedMin-currentMinSchranke);
+      } else {
+        mincountSchranke = (formattedMin+(60-currentMinSchranke));
+      }
+
+      if (schrankeOrt == 'Lidl') {
+        if (directionsBerlin.contains(dep.destination)) {
+          mincountSchranke = mincountSchranke + 6 ;
+        } else if (directionsCottbus.contains(dep.destination)) {
+          mincountSchranke = mincountSchranke - 6;
+        }
+      } else {
+        if (directionsCottbus.contains(dep.destination)) {
+          mincountSchranke = mincountSchranke - 7;
+        } else if (directionsBerlin.contains(dep.destination)) {
+          mincountSchranke = mincountSchranke + 7;
+        }
+      }
+
+      if (mincountSchranke < nextClose) {
+        nextClose = mincountSchranke;
+      }
+
+      if (mincountSchranke < 2) {
+        if (!schrankeTrains.contains(dep)) {
+          schrankeTrains.add(dep);
+        }
+
+        if (mincountSchranke > nextOpen) {
+          nextOpen = mincountSchranke;
+        }
+      }
+    }
+  }
+
   if (schrankeTrains.isEmpty) {
     return false;
   } else {
