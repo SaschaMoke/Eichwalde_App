@@ -13,7 +13,7 @@ enum Stations {
 List<Departure> schrankeTrains = [];
 int nextClose = 100;
 int nextOpen = 100; 
-//check ausfall
+//check ausfall - evtl. schon automatisch
 bool checkSchranke(List departures, String schrankeOrt) {
   DateTime nowSchranke = DateTime.now();
   var currentHourSchranke = int.parse(DateFormat('HH').format(nowSchranke));

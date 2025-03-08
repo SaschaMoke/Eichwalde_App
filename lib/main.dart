@@ -345,19 +345,23 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   children: [
                     SizedBox(
                       //height: 10,
-                      height: MediaQuery.of(contextSchranke).size.height*0.005,
+                      height: constraints.maxHeight*0.025,
+                      //height: MediaQuery.of(contextSchranke).size.height*0.005,
                     ),
                     Row(
                       children: [
                         SizedBox(
                           //width: 15,
-                          width: MediaQuery.of(contextSchranke).size.width*0.035,
+                          width: constraints.maxWidth*0.038
+                          //width: MediaQuery.of(contextSchranke).size.width*0.035,
                         ),
                         SizedBox(
                           //width: 185,
                           //height: 100,
-                          width: MediaQuery.of(contextSchranke).size.width*0.43,
-                          height: MediaQuery.of(contextSchranke).size.height*0.107,
+                          //width: MediaQuery.of(contextSchranke).size.width*0.43,
+                          //height: MediaQuery.of(contextSchranke).size.height*0.107,
+                          width: constraints.maxWidth*0.465,
+                          height: constraints.maxHeight*0.525,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -377,10 +381,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   schrankeName
-                                  ),
-                              SizedBox(
-                                //height: 15,
-                                height: MediaQuery.of(contextSchranke).size.height*0.016,
                               ),
                             ],
                           ),
@@ -388,8 +388,10 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         SizedBox(
                           //width: 100,
                           //height: 40,
-                          height: MediaQuery.of(contextSchranke).size.height*0.043,
-                          width: MediaQuery.of(contextSchranke).size.width*0.23,
+                          //height: MediaQuery.of(contextSchranke).size.height*0.043,
+                          //width: MediaQuery.of(contextSchranke).size.width*0.23,
+                          height: constraints.maxHeight*0.25,
+                          width: constraints.maxWidth*0.25,
                           child: SegmentedButton(
                             segments: [
                               ButtonSegment(
@@ -415,7 +417,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         ),    
                         SizedBox(
                           //width: 20,
-                          width: MediaQuery.of(contextSchranke).size.width*0.045,
+                          //width: MediaQuery.of(contextSchranke).size.width*0.045,
+                          width: constraints.maxWidth*0.05,
                         ),
                         Container(
                           padding: EdgeInsets.all(10),
