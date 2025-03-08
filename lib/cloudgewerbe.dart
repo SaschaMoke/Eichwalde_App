@@ -26,6 +26,17 @@ class Cloudgewerbe {
 
   }
 
+Future<void> updateGewerbe(String docId, String name, String gewerbeart, String adresse, int tel, String image) async {
+  return await gewerbeCollection.doc(docId).update({
+    'name': name,
+    'gewerbeart': gewerbeart,
+    'adresse': adresse,
+    'tel': tel,
+    'image': image,
+  });
+}
+
+
    Future<void> deleteGewerbe(String docId) async {
     try {
       await gewerbeCollection.doc(docId).delete();

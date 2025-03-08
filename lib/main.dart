@@ -22,7 +22,7 @@ import 'cloudtermine.dart';
 //import 'package:numberpicker/numberpicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 //import 'package:flutter_localizations/flutter_localizations.dart';
@@ -1123,6 +1123,14 @@ class _AdminPageState extends State<AdminPage> {
             onPressed: () {
               Navigator.push(
                 context,
+                MaterialPageRoute(builder: (context) => GewerbeBearbeitenPage()),
+              );
+            },
+            child: Text('Gewerbe bearbeiten')),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
                 MaterialPageRoute(builder: (context) => AdminNewsHinzufuegenPage()),
               );
             },
@@ -1478,6 +1486,147 @@ class _GewerbeLoeschenPageState extends State<GewerbeLoeschenPage> {
   }
 }
 
+class GewerbeBearbeitenPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Gewerbe bearbeiten"),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('Gewerbe').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text("Keine Gewerbe gefunden"));
+          }
+
+          var gewerbeList = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: gewerbeList.length,
+            itemBuilder: (context, index) {
+              var gewerbe = gewerbeList[index];
+              var data = gewerbe.data() as Map<String, dynamic>;
+
+              return Card(
+                margin: EdgeInsets.all(8),
+                child: ListTile(
+                  title: Text(data['name'] ?? "Unbenannt"),
+                  subtitle: Text(data['gewerbeart'] ?? "Keine Art angegeben"),
+                  trailing: IconButton(
+                    icon: Icon(Icons.edit, color: Colors.blue),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GewerbeEditForm(
+                            docId: gewerbe.id,
+                            data: data,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+
+
+class GewerbeEditForm extends StatefulWidget {
+  final String docId;
+  final Map<String, dynamic> data;
+
+  GewerbeEditForm({required this.docId, required this.data});
+
+  @override
+  _GewerbeEditFormState createState() => _GewerbeEditFormState();
+}
+
+class _GewerbeEditFormState extends State<GewerbeEditForm> {
+  late TextEditingController nameController;
+  late TextEditingController artController;
+  late TextEditingController adresseController;
+  late TextEditingController telController;
+  late TextEditingController imageController;
+
+  final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: widget.data['name']);
+    artController = TextEditingController(text: widget.data['gewerbeart']);
+    adresseController = TextEditingController(text: widget.data['adresse']);
+    telController = TextEditingController(text: widget.data['tel'].toString());
+    imageController = TextEditingController(text: widget.data['image']);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    artController.dispose();
+    adresseController.dispose();
+    telController.dispose();
+    imageController.dispose();
+    super.dispose();
+  }
+
+  void _updateGewerbe() {
+    cloudGewerbe.updateGewerbe(
+      widget.docId,
+      nameController.text,
+      artController.text,
+      adresseController.text,
+      int.tryParse(telController.text) ?? 0,
+      imageController.text,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Gewerbe erfolgreich aktualisiert")),
+    );
+
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Gewerbe bearbeiten"),
+        backgroundColor: Colors.green,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(controller: nameController, decoration: InputDecoration(labelText: "Name")),
+            TextField(controller: artController, decoration: InputDecoration(labelText: "Gewerbeart")),
+            TextField(controller: adresseController, decoration: InputDecoration(labelText: "Adresse")),
+            TextField(controller: telController, decoration: InputDecoration(labelText: "Telefon"), keyboardType: TextInputType.number),
+            TextField(controller: imageController, decoration: InputDecoration(labelText: "Bild-URL")),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _updateGewerbe,
+              child: Text("Speichern"),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class GewerbePage extends StatefulWidget {
   @override
   State<GewerbePage> createState() => _GewerbePageState();
@@ -1557,66 +1706,85 @@ class _GewerbePageState extends State<GewerbePage> {
     // List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(150, 200, 150, 1),
-          title: Text(
-            'Gewerbe',
-            style: TextStyle(
-              color: Color.fromRGBO(222, 236, 209, 1),
-              fontSize: 40,
-              //fontWeight: FontWeight.w500,
-              letterSpacing: 4.0,
-            ),
-          ),
-          centerTitle: true,
-        ),
-        body: FutureBuilder(
-            future: cloudGewerbe.getDocId(),
-            builder: (context, snapshot) {
-              return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisExtent: 250,
+        body:  Center(
+        child: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  //width: 25
+                  width: MediaQuery.of(context).size.width*0.06,                
+                ),
+                SizedBox(
+                  //height: 75,
+                  //width: 75,
+                  height: MediaQuery.of(context).size.height*0.08,   
+                  width: MediaQuery.of(context).size.width*0.175,   
+                  child: Image(
+                    image: AssetImage('Assets/wappen_Eichwalde.png'),
                   ),
-                  itemCount: cloudGewerbe.docIDs.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTapDown: (details) {
-                        if (_overlayEntry != null) {
-                          removeOverlay();
-                        } else {
-                          showOverlay(context, cloudGewerbe.docIDs[index],
-                              details.globalPosition, index);
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(0.5),
-                        child: Card(
-                          color: Color.fromARGB(255, 150, 200, 150),
-                          child: Column(children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              width: 150,
-                              height: 120,
-                              child: Getgewerbeimage(
-                                  documentId: cloudGewerbe.docIDs[index]),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            SizedBox(
-                              width: 160,
-                              child: Getgewerbename(
-                                  documentId: cloudGewerbe.docIDs[index]),
-                            ),
-                          ]),
+                ),
+                SizedBox(width: 5),
+                Text(
+                  'Gewerbe',
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height*0.783,
+              child: FutureBuilder(
+              future: cloudGewerbe.getDocId(),
+              builder: (context, snapshot) {
+                return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisExtent: 250,
+                    ),
+                    itemCount: cloudGewerbe.docIDs.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTapDown: (details) {
+                          if (_overlayEntry != null) {
+                            removeOverlay();
+                          } else {
+                            showOverlay(context, cloudGewerbe.docIDs[index],
+                                details.globalPosition, index);
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(0.5),
+                          child: Card(
+                            color: Color.fromARGB(255, 150, 200, 150),
+                            child: Column(children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                width: 150,
+                                height: 120,
+                                child: Getgewerbeimage(
+                                    documentId: cloudGewerbe.docIDs[index]),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              SizedBox(
+                                width: 160,
+                                child: Getgewerbename(
+                                    documentId: cloudGewerbe.docIDs[index]),
+                              ),
+                            ]),
+                          ),
                         ),
-                      ),
-                    );
-                  });
-            })
+                      );
+                    });
+              }),
+            )
         /* GridView.builder(
         itemCount: gewerbes.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( 
@@ -1673,7 +1841,11 @@ class _GewerbePageState extends State<GewerbePage> {
 
             }
            ),*/
-        );
+          ]
+        ),
+        ),
+        ),
+    );
   }
 }
 
@@ -1723,37 +1895,14 @@ class _TerminepageState extends State<Terminepage> {
     }
   }
 
-  void _deleteTermin(String docId) async {
-    try {
-      await cloudTermine.deleteGewerbe(docId);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Termin gelöscht")),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Fehler beim Löschen des Termins")),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Image(
-                    image: AssetImage('Assets/wappen_Eichwalde.png'),
-        ),
-   //     backgroundColor: Color.fromRGBO(150, 200, 150, 1),
-        title: Text(
-                  'Termine',
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
-        ),
-        ),
-        centerTitle: true,
-      ),
-      /*Row(
+      body: Center(
+        child: SafeArea(
+        child: Column(
+          children: [
+            Row(
               children: [
                 SizedBox(
                   //width: 25
@@ -1770,82 +1919,82 @@ class _TerminepageState extends State<Terminepage> {
                 ),
                 SizedBox(width: 5),
                 Text(
-                  'Verkehr',
+                  'Termine',
                   style: TextStyle(
                     fontSize: 50,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
-            ),*/
-      body: Column(
-        children: [
-          TableCalendar(
-            locale: 'de_DE',
-            focusedDay: _focusedDay,
-            firstDay: DateTime.utc(2000, 1, 1),
-            lastDay: DateTime.utc(2100, 12, 31),
-            calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-             headerStyle: HeaderStyle(
-              titleCentered: true,
-              formatButtonVisible: false,
             ),
-            daysOfWeekHeight: 20,
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-            },
-            onFormatChanged: (format) {
-              setState(() {
-                _calendarFormat = format;
-              });
-            },
-          ),
-          Expanded(
-            child: FutureBuilder<QuerySnapshot>(
-              future: cloudTermine.getTermineForDate(_selectedDay).first,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Center(child: Text("Keine Termine an diesem Tag"));
-                }
-                
-                return Column(children: [
-                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Bereits belegte Termine",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView(
-                   key: ValueKey(_selectedDay),
-                  children: snapshot.data!.docs.map((doc) {
-                    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-                    return Card(
-                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      elevation: 4,
-                      child: ListTile(
-                        title: Text('${data['service']}'),
-                        subtitle: Text("Uhrzeit: ${data['time']}"),
-                      ),
-                    );
-                  }).toList(),
+              TableCalendar(
+                locale: 'de_DE',
+                focusedDay: _focusedDay,
+                firstDay: DateTime.utc(2000, 1, 1),
+                lastDay: DateTime.utc(2100, 12, 31),
+                calendarFormat: _calendarFormat,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                 headerStyle: HeaderStyle(
+                  titleCentered: true,
+                  formatButtonVisible: false,
                 ),
-                )
-                ]
-                );
-              },
-            ),
+                daysOfWeekHeight: 20,
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  });
+                },
+                onFormatChanged: (format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
+                },
+              ),
+              Expanded(
+                child: FutureBuilder<QuerySnapshot>(
+                  future: cloudTermine.getTermineForDate(_selectedDay).first,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(child: Text("Keine Termine an diesem Tag"));
+                    }
+                    
+                    return Column(children: [
+                       Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Bereits belegte Termine",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView(
+                       key: ValueKey(_selectedDay),
+                      children: snapshot.data!.docs.map((doc) {
+                        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          
+                        return Card(
+                          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          elevation: 4,
+                          child: ListTile(
+                            title: Text('${data['service']}'),
+                            subtitle: Text("Uhrzeit: ${data['time']}"),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    )
+                    ]
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
