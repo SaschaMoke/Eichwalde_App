@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class Getgewerbename extends StatelessWidget {
+class Getgewerbeimage extends StatelessWidget {
   final String documentId;
   
-  Getgewerbename({required this.documentId});
+  const Getgewerbeimage({super.key, required this.documentId});
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +17,7 @@ class Getgewerbename extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data =
             snapshot.data!.data() as Map<String, dynamic>;
-          return Text(
-            style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(232, 240, 225, 1)
-                    ),
-                  textAlign: TextAlign.center,
-                    '${data['name']}',
+          return Image.network('${data['image']}'
                     );
             
         }

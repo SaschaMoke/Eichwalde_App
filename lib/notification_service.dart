@@ -58,7 +58,7 @@ Future<String> getAPIData() async {
         throw Exception('Failed to load data');        //evtl anzeigen lassen 
       }
     } catch (error) {
-      print('Error fetching data: $error');             //evtl anzeigen lassen
+      throw Exception('Error fetching data: $error');             //evtl anzeigen lassen
     }
   return 
 '''${notificationdepartures[0].line}  ${notificationdepartures[0].destination}  ${notificationdepartures[0].when.substring(11,16)}                    

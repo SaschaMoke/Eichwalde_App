@@ -1,30 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eichwalde_app/Read%20data/getGewerbeName.dart';
-import 'package:eichwalde_app/Read%20data/getGewerbeimage.dart';
-import 'package:eichwalde_app/Read%20data/getGewerbeart.dart';
-import 'package:eichwalde_app/Read%20data/getGewerbeAdresse.dart';
-import 'package:eichwalde_app/Read%20data/getGewerbeTel.dart';
+import 'package:eichwalde_app/Read%20data/get_gewerbe_name.dart';
+import 'package:eichwalde_app/Read%20data/get_gewerbe_image.dart';
+import 'package:eichwalde_app/Read%20data/get_gewerbe_art.dart';
+import 'package:eichwalde_app/Read%20data/get_gewerbe_adresse.dart';
+import 'package:eichwalde_app/Read%20data/get_gewerbe_tel.dart';
 import 'cloudgewerbe.dart';
-//import 'Gewerbecloud.dart';
-import 'package:eichwalde_app/notification_service.dart';
 import 'package:eichwalde_app/vbb_api.dart';
-import 'package:eichwalde_app/settings.dart';
-//import 'package:eichwalde_app/gewerbe_layout_neu.dart';
-import 'Newscloud.dart';
-import 'package:english_words/english_words.dart';
+import 'newscloud.dart';
+import 'cloudtermine.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'cloudtermine.dart';
-//import 'package:numberpicker/numberpicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
+//import 'package:eichwalde_app/notification_service.dart';
+//import 'Gewerbecloud.dart';
+//import 'package:eichwalde_app/settings.dart';
+//import 'package:eichwalde_app/gewerbe_layout_neu.dart';
+
+//import 'package:english_words/english_words.dart';
+//import 'package:numberpicker/numberpicker.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
@@ -32,7 +35,7 @@ void main() async {
 
   if (kIsWeb) {
     await Firebase.initializeApp(
-        options: FirebaseOptions(
+      options: FirebaseOptions(
       apiKey: "AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
       projectId: "eichwalde-app-3527e",
       storageBucket: "eichwalde-app-3527e.firebasestorage.app",
@@ -48,11 +51,11 @@ void main() async {
       messagingSenderId: "684116063569",
       appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
     )*/
-        );
+    );
   }
-  //init notifications
-  NotificationService().initNotification();
-  initializeDateFormatting('de_DE', null); // Deutsch aktivieren
+ 
+  //NotificationService().initNotification();   //init notifications
+  initializeDateFormatting('de_DE', null);      // Deutsch aktivieren
   runApp(const MyApp());
 }
 
@@ -76,25 +79,12 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-  var favorites = <WordPair>[];
 
-  void GetNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
-
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();
-  }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -394,6 +384,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           height: constraints.maxHeight*0.25,
                           width: constraints.maxWidth*0.25,
                           child: SegmentedButton(
+                            direction: Axis.vertical,
                             segments: [
                               ButtonSegment(
                                 value: 'Lidl',
@@ -480,7 +471,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             alignment: Alignment.topLeft,
                             icon: Icon(Icons.info_outline_rounded),
                             onPressed: () {},
-                            tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit. Aktuell werden nur die Daten der S-Bahn Berlin verarbeitet!',
+                            tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit.',
                           ),
                         ),
                       ],
@@ -863,6 +854,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
 }
 
 class Homepage extends StatefulWidget {
+  const Homepage({super.key});
+
   @override
   State<Homepage> createState() => _HomepageState();
 }
@@ -899,14 +892,8 @@ class _HomepageState extends State<Homepage> {
               ),
             ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AdminCheckPage()),
-              );
-            },
-            child: Text('Admin'),
+          SizedBox(
+            height: MediaQuery.of(context).size.height*0.05,
           ),
           SizedBox(
             height:500,
@@ -940,7 +927,7 @@ class _HomepageState extends State<Homepage> {
             return ListView(
           children: snapshot.data!.docs.map((doc) {
             Map<String, dynamic> data = doc.data() as Map<String, dynamic>? ?? {};
-            print("Daten aus Firestore: $data");
+            //print("Daten aus Firestore: $data");
             return Card(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                 child: ExpansionTile(
@@ -1862,6 +1849,8 @@ class _GewerbeLoeschenPageState extends State<GewerbeLoeschenPage> {
 }
 
 class GewerbeBearbeitenPage extends StatelessWidget {
+  const GewerbeBearbeitenPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1921,7 +1910,7 @@ class GewerbeEditForm extends StatefulWidget {
   final String docId;
   final Map<String, dynamic> data;
 
-  GewerbeEditForm({required this.docId, required this.data});
+  const GewerbeEditForm({super.key, required this.docId, required this.data});
 
   @override
   _GewerbeEditFormState createState() => _GewerbeEditFormState();
@@ -2001,6 +1990,8 @@ class _GewerbeEditFormState extends State<GewerbeEditForm> {
 }
 
 class GewerbePage extends StatefulWidget {
+  const GewerbePage({super.key});
+
   @override
   State<GewerbePage> createState() => _GewerbePageState();
 }
@@ -2223,6 +2214,8 @@ class _GewerbePageState extends State<GewerbePage> {
 }
 
 class Terminepage extends StatefulWidget {
+  const Terminepage({super.key});
+
   @override
   _TerminepageState createState() => _TerminepageState();
 }
@@ -2234,14 +2227,14 @@ class _TerminepageState extends State<Terminepage> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   String _selectedService = "Einwohnermeldeamt";
-  List<String> _services = [
+  final List<String> _services = [
     "Einwohnermeldeamt",
     "Abholung Ausweis/Pass",
     "Standesamt",
     "Sachgebiet Bildung und Soziales"
   ];
-  TextEditingController _timeController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   Future<void> _selectTime(BuildContext context) async {
     TimeOfDay? picked = await showTimePicker(

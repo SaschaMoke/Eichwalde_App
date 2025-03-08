@@ -39,7 +39,7 @@ class CloudTermine {
 
     return true; // Termin erfolgreich gespeichert
     } catch (e) {
-      print('Fehler beim Speichern $e');
+      Exception('Fehler beim Speichern $e');
       return false;
   }
   }
@@ -69,7 +69,7 @@ class CloudTermine {
       await termineCollection.doc(docId).delete();
     } catch (e) {
       //print('Fehler beim Löschen: $e');
-      throw e;
+      throw Exception(e);
     }
   }
 }

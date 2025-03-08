@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class GetgewerbeTel extends StatelessWidget {
+class Getgewerbeart extends StatelessWidget {
   final String documentId;
   
-  GetgewerbeTel({required this.documentId});
+  const Getgewerbeart({super.key, required this.documentId});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +19,11 @@ class GetgewerbeTel extends StatelessWidget {
             snapshot.data!.data() as Map<String, dynamic>;
           return Text(
             style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
                   color: Color.fromRGBO(232, 240, 225, 1)
                     ),
                   textAlign: TextAlign.center,
-                    'Telefon: +'+'${data['tel'].toString()}',
+                    '${data['gewerbeart']}',
                     );
             
         }

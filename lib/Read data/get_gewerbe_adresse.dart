@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class GetgewerbeAdresse extends StatelessWidget {
   final String documentId;
   
-  GetgewerbeAdresse({required this.documentId});
+  const GetgewerbeAdresse({super.key, required this.documentId});
 
   @override
   Widget build(BuildContext context) {

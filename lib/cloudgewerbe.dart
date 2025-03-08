@@ -42,7 +42,7 @@ Future<void> updateGewerbe(String docId, String name, String gewerbeart, String 
       await gewerbeCollection.doc(docId).delete();
     } catch (e) {
       //print('Fehler beim Löschen: $e');
-      throw e;
+      throw Exception(e);
     }
   }
 }

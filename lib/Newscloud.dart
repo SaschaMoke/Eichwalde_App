@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart';
 
 class Cloudnews {
   final CollectionReference newsCollection = FirebaseFirestore.instance.collection('News');
@@ -13,8 +13,7 @@ class Cloudnews {
         'timestamp': FieldValue.serverTimestamp(), 
       });
     } catch (e) {
-      print("Fehler beim Hinzufügen der News: $e");
-      throw e;
+      throw Exception(e);
     }
   }
 
@@ -35,8 +34,7 @@ class Cloudnews {
     try {
       await newsCollection.doc(docId).delete();
     } catch (e) {
-      //print('Fehler beim Löschen: $e');
-      throw e;
+      throw Exception(e);
     }
   }
 }
