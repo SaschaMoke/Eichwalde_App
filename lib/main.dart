@@ -607,7 +607,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     SizedBox(
                       //height: 305,
                       //height: MediaQuery.of(contextDeparture).size.height*0.327,
-                      height: constraints.maxHeight*0.765,
+                      height: constraints.maxHeight*0.75,
                       child: departures.isNotEmpty ? ListView.builder(
                         itemCount: departures.length,
                         itemBuilder: (context, index) {
@@ -1705,17 +1705,19 @@ class _GewerbeHinzufuegenPageState extends State<GewerbeHinzufuegenPage> {
   }
 
   Future _addGewerbe() async {
-    String name = nameController.text;
-    String gewerbeart = gewerbeartController.text;
-    String adresse = adresseController.text;
-    int? tel = int.tryParse(telController.text);
-    String image = imageController.text;
+    String name = nameController.text.trim();
+    String gewerbeart = gewerbeartController.text.trim();
+    String? adresse = adresseController.text.trim();
+    int? tel = int.tryParse(telController.text.trim());
+    String image = imageController.text.trim();
+    
+     if (image.isEmpty) {
+      image = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Wappen_Eichwalde.svg/1200px-Wappen_Eichwalde.svg.png";
+    }
 
     if (name.isNotEmpty &&
-        gewerbeart.isNotEmpty &&
-        adresse.isNotEmpty &&
-        tel != null) {
-      await cloudGewerbe.addGewerbe(name, gewerbeart, adresse, tel, image);
+        gewerbeart.isNotEmpty ) {
+      await cloudGewerbe.addGewerbe(name, gewerbeart, adresse, tel ?? 0, image);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Gewerbe erfolgreich hinzugefügt!")),
@@ -1760,6 +1762,12 @@ class _GewerbeHinzufuegenPageState extends State<GewerbeHinzufuegenPage> {
     );
   }
 }
+
+extension on int {
+  Null get isNotEmpty => null;
+}
+
+
 
 class GewerbeLoeschenPage extends StatefulWidget {
   const GewerbeLoeschenPage({super.key});
@@ -2107,7 +2115,7 @@ class _GewerbePageState extends State<GewerbePage> {
               ],
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height*0.783,
+              height: MediaQuery.of(context).size.height*0.78,
               child: FutureBuilder(
               future: cloudGewerbe.getDocId(),
               builder: (context, snapshot) {
