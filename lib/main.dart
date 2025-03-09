@@ -2115,7 +2115,7 @@ class _GewerbePageState extends State<GewerbePage> {
               ],
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height*0.78,
+              height: MediaQuery.of(context).size.height*0.725,
               child: FutureBuilder(
               future: cloudGewerbe.getDocId(),
               builder: (context, snapshot) {
