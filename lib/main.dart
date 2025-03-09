@@ -359,7 +359,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               Text(
                                   style: TextStyle(
                                     //fontSize: 40,
-                                    fontSize: MediaQuery.of(contextSchranke).size.width*0.093,
+                                    //fontSize: MediaQuery.of(contextSchranke).size.width*0.093,
+                                    fontSize: constraints.maxWidth*0.1,
                                     fontWeight: FontWeight.w500,
                                   ),
                                   'Schranke'),
@@ -367,7 +368,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                   style: TextStyle(
                                     height: 0.1,
                                     //fontSize: 20,
-                                    fontSize: MediaQuery.of(contextSchranke).size.width*0.046,
+                                    //fontSize: MediaQuery.of(contextSchranke).size.width*0.046,
+                                    fontSize: constraints.maxWidth*0.05,
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -377,40 +379,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           ),
                         ),
                         SizedBox(
-                          //width: 100,
-                          //height: 40,
-                          //height: MediaQuery.of(contextSchranke).size.height*0.043,
-                          //width: MediaQuery.of(contextSchranke).size.width*0.23,
-                          height: constraints.maxHeight*0.25,
-                          width: constraints.maxWidth*0.25,
-                          child: SegmentedButton(
-                            direction: Axis.vertical,
-                            segments: [
-                              ButtonSegment(
-                                value: 'Lidl',
-                                label:
-                                  Text(style: TextStyle(fontSize: 12), 'Lidl'),
-                              ),
-                              ButtonSegment(
-                                value: 'Wald',
-                                label:
-                                  Text(style: TextStyle(fontSize: 12), 'Wald'),
-                              ),
-                            ],
-                            selected: {schrankeWahl},
-                            onSelectionChanged: (Set newSelection) {
-                              setState(() {
-                                schrankeWahl = newSelection.first;
-                                schranke = checkSchranke(departures, schrankeWahl); 
-                              });
-                            },
-                            showSelectedIcon: false,
-                          ),
-                        ),    
-                        SizedBox(
                           //width: 20,
                           //width: MediaQuery.of(contextSchranke).size.width*0.045,
-                          width: constraints.maxWidth*0.05,
+                          width: constraints.maxWidth*0.17,
                         ),
                         Container(
                           padding: EdgeInsets.all(10),
@@ -466,6 +437,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           ),
                         ),
                         SizedBox(
+                          width: constraints.maxWidth*0.05,
+                        ),
+                        SizedBox(
                           height: 100,
                           child: IconButton(
                             alignment: Alignment.topLeft,
@@ -496,22 +470,55 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       //height: MediaQuery.of(contextSchranke).size.height*0.005,
                       height: constraints.maxHeight*0.025,
                     ),
-                    SizedBox(
-                      //height: 68,
-                      //height: MediaQuery.of(contextSchranke).size.height*0.058,
-                      height: constraints.maxHeight*0.275,
-                      child: schrankeTrains.isNotEmpty
-                          ? ListView.builder(
-                              itemCount: schrankeTrains.length,
-                              itemBuilder: (context, index) {
-                                final train = schrankeTrains[index];
-                                return SizedBox(
-                                  width: context.size!.width*0.9,
-                                  child: Text(
-                                      '${train.line}  ${train.destination}'),
-                                );
-                              })
-                          : Text('Keine Züge'),
+                    Row(
+                      children: [
+                        SizedBox(
+                          //height: 68,
+                          //height: MediaQuery.of(contextSchranke).size.height*0.058,
+                          height: constraints.maxHeight*0.275,
+                          width: constraints.maxWidth*0.625,
+                          child: schrankeTrains.isNotEmpty
+                              ? ListView.builder(
+                                  itemCount: schrankeTrains.length,
+                                  itemBuilder: (context, index) {
+                                    final train = schrankeTrains[index];
+                                    return Text(
+                                      textAlign: TextAlign.center,
+                                      '${train.line}  ${train.destination}'
+                                    );
+                                  })
+                              : Text(
+                                textAlign: TextAlign.center,
+                                'Keine Züge'
+                              ),
+                        ),
+                        SizedBox(
+                          width: constraints.maxWidth*0.025,
+                        ),
+                        SegmentedButton(
+                            //direction: Axis.vertical,
+                            segments: [
+                              ButtonSegment(
+                                value: 'Lidl',
+                                label:
+                                  Text(style: TextStyle(fontSize: 11), 'Lidl'),
+                              ),
+                              ButtonSegment(
+                                value: 'Wald',
+                                label:
+                                  Text(style: TextStyle(fontSize: 11), 'Wald'),
+                              ),
+                            ],
+                            selected: {schrankeWahl},
+                            onSelectionChanged: (Set newSelection) {
+                              setState(() {
+                                schrankeWahl = newSelection.first;
+                                schranke = checkSchranke(departures, schrankeWahl); 
+                              });
+                            },
+                            showSelectedIcon: false,
+                          ),
+                      ],
                     ),
                   ],
                 ):Center(
