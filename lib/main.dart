@@ -22,7 +22,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 //import 'package:eichwalde_app/notification_service.dart';
 //import 'Gewerbecloud.dart';
-//import 'package:eichwalde_app/settings.dart';
 //import 'package:eichwalde_app/gewerbe_layout_neu.dart';
 
 //import 'package:english_words/english_words.dart';
@@ -31,7 +30,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 //import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'Gewerbe/gewerbeseite.dart';
-
+import 'package:eichwalde_app/settings.dart';
 
 
 void main() async {
@@ -114,8 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
         page = Terminepage();
         break;
       case 4:
-        //page = SettingsPage();
-        page = AdminCheckPage();
+        page = SettingsPage();
+        //page = AdminCheckPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');

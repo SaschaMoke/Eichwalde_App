@@ -9,7 +9,7 @@ class Gewerbeseite extends StatefulWidget{
   @override
   State<Gewerbeseite> createState() => _GewerbeseiteState();
 }
-//fontSize auf anderen Geräten
+
 class _GewerbeseiteState extends State<Gewerbeseite> {
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
           )
         ],
       ),
-      body: Center(
+      body: Center(       //evtl Center entfernen
         child: SizedBox(
           width: MediaQuery.of(context).size.width*0.9,
           child: LayoutBuilder(
