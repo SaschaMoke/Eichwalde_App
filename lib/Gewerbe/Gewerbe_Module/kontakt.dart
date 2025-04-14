@@ -49,6 +49,7 @@ class _KontaktState extends State<Kontakt> {
                     //auf Maps öffnen
                   }, 
                   child: Icon(
+                    size: widget.constraints.maxHeight*0.05,
                     color: Color.fromARGB(255, 50, 150, 50),
                     Icons.house_outlined
                   ),
@@ -70,6 +71,7 @@ class _KontaktState extends State<Kontakt> {
                     //in TelefonApp öffnen
                   }, 
                   child: Icon(
+                    size: widget.constraints.maxHeight*0.05,
                     color: Color.fromARGB(255, 50, 150, 50),
                     Icons.phone_outlined
                   ),
@@ -91,6 +93,7 @@ class _KontaktState extends State<Kontakt> {
                     //in Mail App öffnen
                   }, 
                   child: Icon(
+                    size: widget.constraints.maxHeight*0.05,
                     color: Color.fromARGB(255, 50, 150, 50),
                     Icons.mail_outline
                   ),
@@ -112,6 +115,7 @@ class _KontaktState extends State<Kontakt> {
                     //im Browser öffnen
                   }, 
                   child: Icon(
+                    size: widget.constraints.maxHeight*0.05,
                     color: Color.fromARGB(255, 50, 150, 50),
                     Icons.web_outlined
                   ),

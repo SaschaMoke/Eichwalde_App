@@ -53,7 +53,8 @@ class _SocialMediaState extends State<SocialMedia> {
                     
                   }, 
                   child: Image(
-                    height: 50,
+                    //height: 50,
+                    height: widget.constraints.maxHeight*0.07,
                     image: AssetImage('Assets/Facebook_icon.png'),
                   ),
                 ),
@@ -74,7 +75,8 @@ class _SocialMediaState extends State<SocialMedia> {
                     
                   }, 
                   child:Image(
-                    height: 50,
+                    //height: 50,
+                    height: widget.constraints.maxHeight*0.07,
                     image: AssetImage('Assets/Instagram_icon.png'),
                   ),
                 ),

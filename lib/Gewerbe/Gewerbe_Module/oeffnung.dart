@@ -58,22 +58,41 @@ class _OeffnungszeitenState extends State<Oeffnungszeiten> {
             fontSize: widget.constraints.maxWidth*0.04,
             color: widget.leadingImportant ? Color.fromARGB(255, 255, 0, 0):Color.fromARGB(255, 0, 0, 0),
           ),
-          '''${widget.leadingHint}
-'''
+          '''${widget.leadingHint}          
+'''                                           //FORMATIERUNG NICHT ÄNDERN!
         ):SizedBox(),
-        Text(
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: widget.constraints.maxWidth*0.04
-          ),
-          '''Montag: ${widget.monday}
-Dienstag: ${widget.tuesday}
-Mittwoch: ${widget.wednesday}
-Donnerstag: ${widget.thursday}
-Freitag: ${widget.friday}
-Samstag: ${widget.saturday}
-Sonntag: ${widget.sunday}'''
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: widget.constraints.maxWidth*0.04
+              ),
+              '''Montag: 
+Dienstag: 
+Mittwoch: 
+Donnerstag: 
+Freitag: 
+Samstag: 
+Sonntag:'''                                   //FORMATIERUNG NICHT ÄNDERN!
+            ),
+            Text(
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: widget.constraints.maxWidth*0.04
+              ),
+          '''${widget.monday}
+${widget.tuesday}
+${widget.wednesday}
+${widget.thursday}
+${widget.friday}
+${widget.saturday}
+${widget.sunday}'''                           //FORMATIERUNG NICHT ÄNDERN!
+            ),
+          ],
         ),
+        
         widget.trailingHint.isNotEmpty ? Text(
           style: TextStyle(
             fontWeight: FontWeight.w400,

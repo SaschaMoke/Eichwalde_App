@@ -6,7 +6,7 @@ publish_to: 'none'
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
 
-version: 1.0.0+1
+version: 1.0.0+2002
 
 environment:
   sdk: ^3.5.4
