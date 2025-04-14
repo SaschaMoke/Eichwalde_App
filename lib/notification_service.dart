@@ -168,10 +168,10 @@ class NotificationService {
     );
 
     //notificationsPlugin.cancel(id)  <- toggle ding
-    Future<void> cancelAllNotifications() async {
-      await notificationsPlugin.cancelAll();
-    }
+    
   }
-
+  Future<void> cancelAllNotifications() async {
+      await notificationsPlugin.cancelAll();
+  }
 }
 

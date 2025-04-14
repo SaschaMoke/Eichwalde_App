@@ -30,6 +30,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 //import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'Gewerbe/gewerbeseite.dart';
+
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -129,12 +133,14 @@ class _MyHomePageState extends State<MyHomePage> {
           child: NavigationBar(
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             backgroundColor: Color.fromRGBO(150, 200, 150, 1),
+            //backgroundColor: Color.fromARGB(255, 50, 150, 50),      => etwas heller & Text/Icons weiß
             onDestinationSelected: (int index) {
               setState(() {
                 selectedIndex = index;
               });
             },
             indicatorColor: Theme.of(context).colorScheme.primaryContainer,
+            //indicatorColor: Color.fromARGB(255, 150, 250, 100),
             selectedIndex: selectedIndex,
             destinations: const <Widget>[
               NavigationDestination(
@@ -166,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         body: Container(
-          child: page,
+          child: page,                      //=> Eichwalde Logo + Seitenname fest, page als child für unteren Bereich
         ),
       );
     });
@@ -775,8 +781,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         ),
                       )
                     ),
-                    Text(//last update text
-                        'Zuletzt aktualisiert: $lastUpdate')
+                    Text(
+                      'Zuletzt aktualisiert: $lastUpdate'
+                    )
                   ],
                 );
                 },
@@ -951,6 +958,7 @@ class _HomepageState extends State<Homepage> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text("Tippe, um mehr zu lesen"),
+                  shape: Border(),
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -2113,6 +2121,15 @@ class _GewerbePageState extends State<GewerbePage> {
                   ),
                 ),
               ],
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Gewerbeseite()),
+                );
+              },
+              child: Text('Test neue Seite'),              
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height*0.725,
