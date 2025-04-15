@@ -11,44 +11,51 @@ class _SettingsState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, constraints) {
-        return ListView(
-          children: [
-            //Einstellungen
-            SizedBox(height: 10),
-            Row(
+        builder: (context, constraints) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height*0.7,  //ist eig kaka
+            child: ListView(
               children: [
+                //Einstellungen
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: constraints.maxWidth*0.025
+                      ),
+                      'Made with '
+                    ),
+                    Icon(
+                      color: Color.fromARGB(255, 255, 0, 0),
+                      Icons.favorite,
+                      size: constraints.maxWidth*0.05,
+                    ),
+                    Text(
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: constraints.maxWidth*0.025
+                      ),
+                      ' in Eichwalde. Für Eichwalde.'
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
                 Text(
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: constraints.maxWidth*0.1
+                    fontSize: constraints.maxWidth*0.02
                   ),
-                  'Made with '
-                ),
-                Icon(
-                  color: Color.fromARGB(255, 255, 0, 0),
-                  Icons.favorite
-                ),
-                Text(
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: constraints.maxWidth*0.1
-                  ),
-                  'in Eichwalde. Für Eichwalde.'
+                  '''Alle Rechte Vorbehalten. Keine Garantie für Richtigkeit und Aktualität von Angaben.
+Offiziell unterstützt durch die Gemeinde Eichwalde.'''
                 ),
               ],
             ),
-            SizedBox(height: 10),
-            Text(
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: constraints.maxWidth*0.1
-              ),
-              'Alle Rechte Vorbehalten. Keine Garantie für Richtigkeit und Aktualität von Angaben. Offiziell unterstützt durch die Gemeinde Eichwalde.'
-            ),
-          ],
-        );
-      }
-    );
+          );
+        }
+      );
   }
 }

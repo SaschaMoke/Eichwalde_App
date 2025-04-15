@@ -94,6 +94,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 0;
+  String pagename = '';
 
   @override
   Widget build(BuildContext context) {
@@ -101,19 +102,24 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         page = Homepage();
+        pagename = 'Home';
         break;
       case 1:
         page = Verkehrspage();
+        pagename = 'Verkehr';
         break;
       case 2:
         page = GewerbePage();
+        pagename = 'Gewerbe';
         //page = GewerbeLayoutNeu();
         break;
       case 3:
         page = Terminepage();
+        pagename = 'Termine';
         break;
       case 4:
         page = SettingsPage();
+        pagename = 'Einstellungen';
         //page = AdminCheckPage();
         break;
       default:
@@ -165,13 +171,46 @@ class _MyHomePageState extends State<MyHomePage> {
               NavigationDestination(
                 selectedIcon: Icon(Icons.settings),
                 icon: Icon(Icons.settings_outlined),
-                label: 'Admin',
+                label: 'Admin', //=> Einstellungen
               ),
             ],
           ),
         ),
-        body: Container(
-          child: page,                      //=> Eichwalde Logo + Seitenname fest, page als child für unteren Bereich
+        body: SafeArea(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width*0.06,                
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height*0.08,   
+                    width: MediaQuery.of(context).size.width*0.175,   
+                    child: Image(
+                      image: AssetImage('Assets/wappen_Eichwalde.png'),
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    style: TextStyle(
+                      //fontSize: 50,     //Dynam.
+                      fontSize: MediaQuery.of(context).size.width*0.1,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    pagename
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+                //height: MediaQuery.of(context).size.height*0.022,
+              ),
+              Container(
+                child: page
+              )
+            ],
+          ),
         ),
       );
     });
@@ -288,40 +327,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
       schrankeTimeTillAction = 'Nächste Schließung: $nextClose min';
     }
 
-    return Scaffold(
-      body: Center(
-        child: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                SizedBox(
-                  //width: 25
-                  width: MediaQuery.of(context).size.width*0.06,                
-                ),
-                SizedBox(
-                  //height: 75,
-                  //width: 75,
-                  height: MediaQuery.of(context).size.height*0.08,   
-                  width: MediaQuery.of(context).size.width*0.175,   
-                  child: Image(
-                    image: AssetImage('Assets/wappen_Eichwalde.png'),
-                  ),
-                ),
-                SizedBox(width: 5),
-                Text(
-                  'Verkehr',
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              //height: 20,
-              height: MediaQuery.of(context).size.height*0.022,
-            ),
+    return Column(
+      children: [    
             AnimatedContainer(
               //Schrankencontainer
               duration: Duration(milliseconds: 500),
@@ -859,9 +866,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   ],
                 ),
               ),*/
-          ],
-        ),
-      )),
+      ],
     );
   }
 }
@@ -881,33 +886,8 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
+      return Column(
         children: [
-          //const SizedBox(height: 30),
-          Row(
-            children: [
-              const SizedBox(width: 25),
-              const SizedBox(
-                height: 75,
-                width: 75,
-                child: Image(
-                  image: AssetImage('Assets/wappen_Eichwalde.png'),
-                ),
-              ),
-              SizedBox(width: 5),
-              Text(
-                'Eichwalde',
-                style: TextStyle(
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height*0.05,
-          ),
           SizedBox(
             height:500,
             width: MediaQuery.of(context).size.width*0.95,
@@ -975,10 +955,8 @@ class _HomepageState extends State<Homepage> {
         ),
             ),
         ),
-        ],
-        
-         ),
-            );
+      ],
+    );
   }
 }
 
@@ -989,6 +967,7 @@ class AdminCheckPage extends StatefulWidget {
   State<AdminCheckPage> createState() => _AdminCheckPageState();
 }
 
+//CODE FORMATIEREN (aber kommt ja wahrscheinlich auch weg)
 class _AdminCheckPageState extends State<AdminCheckPage> {
   bool obscureText = true;
 
@@ -1003,39 +982,8 @@ class _AdminCheckPageState extends State<AdminCheckPage> {
  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body:Center(
-        child: SafeArea(
-          child: Column(
+    return Column(
             children: [
-              Row(
-                children: [
-                  SizedBox(
-                    //width: 25
-                    width: MediaQuery.of(context).size.width*0.06,                
-                  ),
-                  SizedBox(
-                    //height: 75,
-                    //width: 75,
-                    height: MediaQuery.of(context).size.height*0.08,   
-                    width: MediaQuery.of(context).size.width*0.175,   
-                    child: Image(
-                      image: AssetImage('Assets/wappen_Eichwalde.png'),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    'Admin',
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height*0.1,
-              ),
               Container(
                 height: MediaQuery.of(context).size.height*0.5,
                 width: MediaQuery.of(context).size.width*0.95,
@@ -1095,10 +1043,7 @@ class _AdminCheckPageState extends State<AdminCheckPage> {
                   }
                 ),
               ),
-            ]
-          )
-        ),
-      )
+      ]
     );
   }
 }
@@ -2018,6 +1963,7 @@ class GewerbePage extends StatefulWidget {
   State<GewerbePage> createState() => _GewerbePageState();
 }
 
+//CODE FORMATIEREN
 class _GewerbePageState extends State<GewerbePage> {
   final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
 
@@ -2091,36 +2037,8 @@ class _GewerbePageState extends State<GewerbePage> {
   Widget build(BuildContext context) {
     // List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
 
-    return Scaffold(
-        body:  Center(
-        child: SafeArea(
-        child: Column(
+    return Column(
           children: [
-            Row(
-              children: [
-                SizedBox(
-                  //width: 25
-                  width: MediaQuery.of(context).size.width*0.06,                
-                ),
-                SizedBox(
-                  //height: 75,
-                  //width: 75,
-                  height: MediaQuery.of(context).size.height*0.08,   
-                  width: MediaQuery.of(context).size.width*0.175,   
-                  child: Image(
-                    image: AssetImage('Assets/wappen_Eichwalde.png'),
-                  ),
-                ),
-                SizedBox(width: 5),
-                Text(
-                  'Gewerbe',
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -2236,10 +2154,7 @@ class _GewerbePageState extends State<GewerbePage> {
 
             }
            ),*/
-          ]
-        ),
-        ),
-        ),
+      ]
     );
   }
 }
@@ -2294,106 +2209,79 @@ class _TerminepageState extends State<Terminepage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                SizedBox(
-                  //width: 25
-                  width: MediaQuery.of(context).size.width*0.06,                
-                ),
-                SizedBox(
-                  //height: 75,
-                  //width: 75,
-                  height: MediaQuery.of(context).size.height*0.08,   
-                  width: MediaQuery.of(context).size.width*0.175,   
-                  child: Image(
-                    image: AssetImage('Assets/wappen_Eichwalde.png'),
+    return Column(
+            children: [
+                TableCalendar(
+                  locale: 'de_DE',
+                  focusedDay: _focusedDay,
+                  firstDay: DateTime.utc(2000, 1, 1),
+                  lastDay: DateTime.utc(2100, 12, 31),
+                  calendarFormat: _calendarFormat,
+                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                   headerStyle: HeaderStyle(
+                    titleCentered: true,
+                    formatButtonVisible: false,
                   ),
+                  daysOfWeekHeight: 20,
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                  },
+                  onFormatChanged: (format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  },
                 ),
-                SizedBox(width: 5),
-                Text(
-                  'Termine',
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: FutureBuilder<QuerySnapshot>(
+                    future: cloudTermine.getTermineForDate(_selectedDay).first,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return Center(child: Text("Keine Termine an diesem Tag"));
+                      }
+                      
+                      return Column(children: [
+                         Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Bereits belegte Termine",
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView(
+                         key: ValueKey(_selectedDay),
+                        children: snapshot.data!.docs.map((doc) {
+                          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+            
+                          return Card(
+                            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            elevation: 4,
+                            child: ListTile(
+                              title: Text('${data['service']}'),
+                              subtitle: Text("Uhrzeit: ${data['time']}"),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      )
+                      ]
+                      );
+                    },
                   ),
                 ),
               ],
-            ),
-              TableCalendar(
-                locale: 'de_DE',
-                focusedDay: _focusedDay,
-                firstDay: DateTime.utc(2000, 1, 1),
-                lastDay: DateTime.utc(2100, 12, 31),
-                calendarFormat: _calendarFormat,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                 headerStyle: HeaderStyle(
-                  titleCentered: true,
-                  formatButtonVisible: false,
-                ),
-                daysOfWeekHeight: 20,
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                },
-                onFormatChanged: (format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                },
-              ),
-              Expanded(
-                child: FutureBuilder<QuerySnapshot>(
-                  future: cloudTermine.getTermineForDate(_selectedDay).first,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return Center(child: Text("Keine Termine an diesem Tag"));
-                    }
-                    
-                    return Column(children: [
-                       Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Bereits belegte Termine",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView(
-                       key: ValueKey(_selectedDay),
-                      children: snapshot.data!.docs.map((doc) {
-                        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+            );
           
-                        return Card(
-                          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          elevation: 4,
-                          child: ListTile(
-                            title: Text('${data['service']}'),
-                            subtitle: Text("Uhrzeit: ${data['time']}"),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    )
-                    ]
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
+      //braucht glaube ich das scaffold, aber soll ja eh weg
+
+      /*floatingActionButton: FloatingActionButton(
         onPressed: () {
           _timeController.clear();
           _nameController.clear();
@@ -2467,9 +2355,9 @@ class _TerminepageState extends State<Terminepage> {
         child: Icon(Icons.add),
       ),
     );
+  }*/
   }
 }
-
 
 /*child: LayoutBuilder(
   builder: (context, constraints) {

@@ -21,9 +21,110 @@ class Kontakt extends StatefulWidget {
   State<Kontakt> createState() => _KontaktState();
 }
 
-class _KontaktState extends State<Kontakt> {
+class _KontaktState extends State<Kontakt> {  
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
+    List<Widget> gridTiles = List.empty(growable: true);
+    if (widget.adresse.isNotEmpty) {
+      gridTiles.add(Column(
+        children: [
+          TextButton(
+            onPressed: () {
+              //auf Maps öffnen
+            }, 
+            child: Icon(
+              size: widget.constraints.maxHeight*0.05,
+              color: Color.fromARGB(255, 50, 150, 50),
+              Icons.house_outlined
+            ),
+          ),
+          Text(
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: widget.constraints.maxWidth*0.04
+            ),
+            widget.adresse
+          )
+        ],
+      )
+      );
+    }
+
+    if (widget.telefon.isNotEmpty){
+      gridTiles.add(Column(
+        children: [
+          TextButton(
+            onPressed: () {
+              //in TelefonApp öffnen
+            }, 
+            child: Icon(
+              size: widget.constraints.maxHeight*0.05,
+              color: Color.fromARGB(255, 50, 150, 50),
+              Icons.phone_outlined
+            ),
+          ),
+          Text(
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: widget.constraints.maxWidth*0.04
+            ),
+            widget.telefon
+          )
+        ],
+      )
+      );
+    }
+
+    if (widget.mail.isNotEmpty) {  
+      gridTiles.add(Column(
+        children: [
+          TextButton(
+            onPressed: () {
+              //in Mail App öffnen
+            }, 
+            child: Icon(
+              size: widget.constraints.maxHeight*0.05,
+              color: Color.fromARGB(255, 50, 150, 50),
+              Icons.mail_outline
+            ),
+          ),
+          Text(
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: widget.constraints.maxWidth*0.04
+            ),
+            widget.mail
+          )
+        ],
+      )
+      );
+    }
+
+    if (widget.web.isNotEmpty) {
+      gridTiles.add(Column(
+        children: [
+          TextButton(
+            onPressed: () {
+              //im Browser öffnen
+            }, 
+            child: Icon(
+              size: widget.constraints.maxHeight*0.05,
+              color: Color.fromARGB(255, 50, 150, 50),
+              Icons.web_outlined
+            ),
+          ),
+          Text(
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: widget.constraints.maxWidth*0.04
+            ),
+            widget.web
+          )
+        ],
+      )
+      );
+    }
+
     return ExpansionTile(
       leading: Icon(Icons.phone_outlined), //ICON
       title: Text(
@@ -39,97 +140,13 @@ class _KontaktState extends State<Kontakt> {
       textColor: Color.fromARGB(255, 50, 150, 50),
       iconColor: Color.fromARGB(255, 50, 150, 50),   //hallooooooo
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            widget.adresse.isNotEmpty ? Column(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    //auf Maps öffnen
-                  }, 
-                  child: Icon(
-                    size: widget.constraints.maxHeight*0.05,
-                    color: Color.fromARGB(255, 50, 150, 50),
-                    Icons.house_outlined
-                  ),
-                ),
-                Text(
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: widget.constraints.maxWidth*0.04
-                  ),
-                  widget.adresse
-                )
-              ],
-            ):SizedBox(),
-            SizedBox(width: 20),                //hier 
-            widget.telefon.isNotEmpty ? Column(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    //in TelefonApp öffnen
-                  }, 
-                  child: Icon(
-                    size: widget.constraints.maxHeight*0.05,
-                    color: Color.fromARGB(255, 50, 150, 50),
-                    Icons.phone_outlined
-                  ),
-                ),
-                Text(
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: widget.constraints.maxWidth*0.04
-                  ),
-                  widget.telefon
-                )
-              ],
-            ):SizedBox(),
-            SizedBox(width: 20),
-            widget.mail.isNotEmpty ? Column(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    //in Mail App öffnen
-                  }, 
-                  child: Icon(
-                    size: widget.constraints.maxHeight*0.05,
-                    color: Color.fromARGB(255, 50, 150, 50),
-                    Icons.mail_outline
-                  ),
-                ),
-                Text(
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: widget.constraints.maxWidth*0.04
-                  ),
-                  widget.mail
-                )
-              ],
-            ):SizedBox(),
-            SizedBox(width: 20),
-            widget.web.isNotEmpty ? Column(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    //im Browser öffnen
-                  }, 
-                  child: Icon(
-                    size: widget.constraints.maxHeight*0.05,
-                    color: Color.fromARGB(255, 50, 150, 50),
-                    Icons.web_outlined
-                  ),
-                ),
-                Text(
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: widget.constraints.maxWidth*0.04
-                  ),
-                  widget.web
-                )
-              ],
-            ):SizedBox(),
-          ],
+        SizedBox(
+          height: 400,
+          child: GridView.count(
+            crossAxisCount: 2,
+            childAspectRatio: 1.75,
+            children: gridTiles
+          ),
         ),
       ],
     );
