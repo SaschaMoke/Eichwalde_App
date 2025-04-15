@@ -141,7 +141,7 @@ class _KontaktState extends State<Kontakt> {
       iconColor: Color.fromARGB(255, 50, 150, 50),   //hallooooooo
       children: [
         SizedBox(
-          height: 400,
+          height: (gridTiles.length ~/ 2 + gridTiles.length.remainder(2))*100,
           child: GridView.count(
             crossAxisCount: 2,
             childAspectRatio: 1.75,

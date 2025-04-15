@@ -86,6 +86,8 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                   SocialMedia(
                     instagramName: 'Bertram0815',
                     facebookName: 'Bertram0815',
+                    youtubeName: 'Bertram0815',
+                    youtubeLink: 'bertram',
                     showFacebook: true,
                     showInstagram: true,
                     constraints: constraints

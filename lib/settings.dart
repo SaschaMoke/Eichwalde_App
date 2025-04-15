@@ -23,7 +23,7 @@ class _SettingsState extends State<SettingsPage> {
                   children: [
                     Text(
                       style: TextStyle(
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         fontSize: constraints.maxWidth*0.025
                       ),
                       'Made with '
@@ -35,14 +35,20 @@ class _SettingsState extends State<SettingsPage> {
                     ),
                     Text(
                       style: TextStyle(
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         fontSize: constraints.maxWidth*0.025
                       ),
                       ' in Eichwalde. Für Eichwalde.'
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
+                Image(
+                  //width: constraints.maxWidth*0.01,
+                  height: constraints.maxWidth*0.2,
+                  image: AssetImage('Assets/IconEichwaldeneu2.png')
+                ),
+                SizedBox(height: 5),
                 Text(
                   textAlign: TextAlign.center,
                   style: TextStyle(

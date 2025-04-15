@@ -188,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: MediaQuery.of(context).size.height*0.08,   
                     width: MediaQuery.of(context).size.width*0.175,   
                     child: Image(
-                      image: AssetImage('Assets/wappen_Eichwalde.png'),
+                      image: AssetImage('Assets/IconEichwalde.png'),
                     ),
                   ),
                   SizedBox(width: 5),

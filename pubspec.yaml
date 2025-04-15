@@ -76,6 +76,9 @@ flutter:
     - Assets/image17.png
     - Assets/Facebook_icon.png
     - Assets/Instagram_icon.png
+    - Assets/Youtube_icon.png
+    - Assets/IconEichwalde.png
+    - Assets/IconEichwaldeneu2.png
     
   # To add assets to your application, add an assets section, like this:
   # assets:
