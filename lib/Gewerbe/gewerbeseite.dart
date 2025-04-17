@@ -1,7 +1,10 @@
-import 'package:eichwalde_app/Gewerbe/Gewerbe_Module/kontakt.dart';
-import 'package:eichwalde_app/Gewerbe/Gewerbe_Module/social.dart';
 import 'package:flutter/material.dart';
+
+//module
 import 'Gewerbe_Module/oeffnung.dart';
+import 'Gewerbe_Module/kontakt.dart';
+import 'Gewerbe_Module/social.dart';
+import 'Gewerbe_Module/restaurant.dart';
 
 class Gewerbeseite extends StatefulWidget{
   const Gewerbeseite({super.key});
@@ -9,6 +12,8 @@ class Gewerbeseite extends StatefulWidget{
   @override
   State<Gewerbeseite> createState() => _GewerbeseiteState();
 }
+
+//alle Strings werden durch Firebasewerte ersetzt
 
 class _GewerbeseiteState extends State<Gewerbeseite> {
   @override
@@ -40,11 +45,11 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                       fontWeight: FontWeight.w700,
                       fontSize: constraints.maxWidth*0.1
                     ),
-                    'Bertram GmbH'
+                    'Bertram GmbH' //Gewerbename
                   ),
                   SizedBox(height: 20),
                   ExpansionTile(
-                    leading: Icon(Icons.description_outlined), //evtl.
+                    leading: Icon(Icons.description_outlined),
                     title: Text(
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
@@ -57,10 +62,11 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     childrenPadding: EdgeInsets.all(5),
                     textColor: Color.fromARGB(255, 50, 150, 50),
                     iconColor: Color.fromARGB(255, 50, 150, 50), 
+                    initiallyExpanded: true,
                     children: [
                       Text(
                         style: TextStyle(
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                           fontSize: constraints.maxWidth*0.04
                         ),
                         'Lorem ipsum salami hallo ich bin ein langer Text um das mal ein bisschen zu füllen Bom schalom Schames lalala Moke bom'
@@ -83,22 +89,33 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     trailingHint: 'Bottom text',
                     trailingImportant: true,
                   ),
+                  Kontakt(
+                    adresse: 'Bahnhofstraße 79, Eichwalde',
+                    web: 'https://www.youtube.com/',
+                    telefon: '+69 1234 56789',
+                    mail: 'bertram@gmail.com',
+                    constraints: constraints
+                  ),
                   SocialMedia(
                     instagramName: 'Bertram0815',
                     facebookName: 'Bertram0815',
                     youtubeName: 'Bertram0815',
-                    youtubeLink: 'bertram',
+                    instagramLink: 'https://www.youtube.com/',
+                    facebookLink: 'https://www.youtube.com/',
+                    youtubeLink: 'https://www.youtube.com/',
+                    ////////////entfernen
                     showFacebook: true,
                     showInstagram: true,
+                    ////////////
                     constraints: constraints
                   ),
-                  Kontakt(
-                    adresse: 'Bertramstraße 69',
-                    web: 'bertram-website.de',
+                  Restaurant(
                     telefon: '+69 1234 56789',
-                    mail: 'bertram@gmail.com',
+                    karte: 'https://pane-vino-eichwalde.de/wp-content/uploads/2024/02/Pane-Vino-Eichwalde-Speisekarte.pdf',
+                    orderLink: 'xx',
+                    gewerbeName: 'Bertrams Restaurant GmbH',//Gewerbename
                     constraints: constraints
-                  )
+                  ),  
                 ],
               );
             },

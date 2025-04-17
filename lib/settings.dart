@@ -8,6 +8,10 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsState extends State<SettingsPage> {
+  bool setting1 = false; //=> Einstellungsbools
+  
+  
+  
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -17,6 +21,22 @@ class _SettingsState extends State<SettingsPage> {
             child: ListView(
               children: [
                 //Einstellungen
+                SwitchListTile(
+                  value: setting1, 
+                  onChanged: (bool value) {
+                    setState(() {
+                      setting1 = value;
+                    });
+                  },
+                  secondary: Icon(Icons.face),    //Fronticon
+                  activeColor: Color.fromARGB(255, 80, 175, 50),
+                  inactiveThumbColor: Color.fromARGB(255, 0, 80, 160),
+                  //Design:
+                  tileColor: Color.fromARGB(255, 255, 255, 255),
+                  //title: ,
+                  //subtitle: ,
+                ),
+
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -48,7 +68,7 @@ class _SettingsState extends State<SettingsPage> {
                   height: constraints.maxWidth*0.2,
                   image: AssetImage('Assets/IconEichwaldeneu2.png')
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 10),
                 Text(
                   textAlign: TextAlign.center,
                   style: TextStyle(

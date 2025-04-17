@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 class SocialMedia extends StatefulWidget {
   final String instagramLink;
   final String instagramName;
@@ -8,9 +10,11 @@ class SocialMedia extends StatefulWidget {
   final String youtubeLink;
   final String youtubeName;
 
-  
+  ////////////entfernen
   final bool showInstagram;
   final bool showFacebook;
+  ////////////
+
   final BoxConstraints constraints;
   //... weiteres
   
@@ -22,8 +26,10 @@ class SocialMedia extends StatefulWidget {
     this.facebookName = '',
     this.youtubeLink = '',
     this.youtubeName = '',
+    ////////////entfernen
     this.showInstagram = false,
     this.showFacebook = false,
+    ////////////
     required this.constraints,
   });
   @override
@@ -34,18 +40,36 @@ class _SocialMediaState extends State<SocialMedia> {
   @override
   Widget build(BuildContext context) {
     List<Widget> gridTiles = List.empty(growable: true);
-    
-    if (widget.showFacebook) {
+
+    if (widget.facebookLink.isNotEmpty) {
       gridTiles.add(
         Column(
           children: [
             TextButton(
-              onPressed: () {
-                    
+              onPressed: () async {
+                final Uri url =  Uri.parse(widget.facebookLink);
+                if (!await launchUrl(
+                  url,
+                  mode: LaunchMode.externalApplication,
+                )) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Color.fromARGB(255, 50, 150, 50),
+                    //design
+                    content: Text(
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: widget.constraints.maxWidth*0.04
+                      ),
+                      'Fehler: Externe Anwendung konnte nicht gestartet werden'
+                    )
+                  )
+                );
+              }    
               }, 
               child: Image(
               //height: 50,
-              height: widget.constraints.maxHeight*0.07,
+              height: widget.constraints.maxHeight*0.06,
                 image: AssetImage('Assets/Facebook_icon.png'),
               ),
             ),
@@ -61,17 +85,35 @@ class _SocialMediaState extends State<SocialMedia> {
       );
     }
 
-  if (widget.showInstagram) {
+  if (widget.instagramLink.isNotEmpty) {
       gridTiles.add(
         Column(
           children: [
             TextButton(
-              onPressed: () {
-                    
+              onPressed: () async {
+                 final Uri url =  Uri.parse(widget.instagramLink);
+                if (!await launchUrl(
+                  url,
+                  mode: LaunchMode.externalApplication,
+                )) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Color.fromARGB(255, 50, 150, 50),
+                    //design
+                    content: Text(
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: widget.constraints.maxWidth*0.04
+                      ),
+                      'Fehler: Externe Anwendung konnte nicht gestartet werden'
+                    )
+                  )
+                );
+              }   
               }, 
               child: Image(
               //height: 50,
-              height: widget.constraints.maxHeight*0.07,
+              height: widget.constraints.maxHeight*0.06,
                 image: AssetImage('Assets/Instagram_icon.png'),
               ),
             ),
@@ -92,12 +134,29 @@ class _SocialMediaState extends State<SocialMedia> {
         Column(
           children: [
             TextButton(
-              onPressed: () {
-                    
+              onPressed: () async {
+                final Uri url =  Uri.parse(widget.youtubeLink);
+                if (!await launchUrl(
+                  url,
+                  mode: LaunchMode.externalApplication,
+                )) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Color.fromARGB(255, 50, 150, 50),
+                    //design
+                    content: Text(
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: widget.constraints.maxWidth*0.04
+                      ),
+                      'Fehler: Externe Anwendung konnte nicht gestartet werden'
+                    )
+                  )
+                );
+              }   
               }, 
               child: Image(
-              //height: 50,
-              height: widget.constraints.maxHeight*0.07,
+              height: widget.constraints.maxHeight*0.06,
                 image: AssetImage('Assets/Youtube_icon.png'),
               ),
             ),

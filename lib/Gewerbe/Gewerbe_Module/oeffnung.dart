@@ -54,7 +54,7 @@ class _OeffnungszeitenState extends State<Oeffnungszeiten> {
       children: [
         widget.leadingHint.isNotEmpty ? Text(
           style: TextStyle(
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             fontSize: widget.constraints.maxWidth*0.04,
             color: widget.leadingImportant ? Color.fromARGB(255, 255, 0, 0):Color.fromARGB(255, 0, 0, 0),
           ),
@@ -66,7 +66,7 @@ class _OeffnungszeitenState extends State<Oeffnungszeiten> {
           children: [
             Text(
               style: TextStyle(
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 fontSize: widget.constraints.maxWidth*0.04
               ),
               '''Montag: 
@@ -79,7 +79,7 @@ Sonntag:'''                                   //FORMATIERUNG NICHT ÄNDERN!
             ),
             Text(
               style: TextStyle(
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 fontSize: widget.constraints.maxWidth*0.04
               ),
           '''${widget.monday}
@@ -95,7 +95,7 @@ ${widget.sunday}'''                           //FORMATIERUNG NICHT ÄNDERN!
         
         widget.trailingHint.isNotEmpty ? Text(
           style: TextStyle(
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             fontSize: widget.constraints.maxWidth*0.04,
             color: widget.trailingImportant ? Color.fromARGB(255, 255, 0, 0):Color.fromARGB(255, 0, 0, 0),
           ),
