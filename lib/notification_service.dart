@@ -1,4 +1,4 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+/*import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -160,7 +160,7 @@ class NotificationService {
       body = 'Hi',//await getAPIData(),
       scheduledDate, 
       notificationDetails(), 
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
+      //uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       //Daily repeat (togglebar machen)
       matchDateTimeComponents: DateTimeComponents.time,
@@ -173,5 +173,5 @@ class NotificationService {
   Future<void> cancelAllNotifications() async {
       await notificationsPlugin.cancelAll();
   }
-}
+}*/
 

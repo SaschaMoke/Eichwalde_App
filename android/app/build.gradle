@@ -49,6 +49,9 @@ android {
         implementation 'com.google.firebase:firebase-analytics'
         implementation 'com.google.firebase:firebase-storage'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 flutter {
