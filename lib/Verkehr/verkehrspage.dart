@@ -84,13 +84,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
         //nextOpen, nextClose <= Zeit
 
         //save Widget
-        //String widgetData = schrankeWidget ? 'Öffnung: $nextOpen':'Schließung: $nextClose';
-        String widgetData = 'Hi';
+        String widgetData = schrankeWidget ? 'Öffnung: $nextOpen':'Schließung: $nextClose';
+        //String widgetData = 'Hi';
         await HomeWidget.saveWidgetData(dataKey, widgetData);
 
         //update Widget
         await HomeWidget.updateWidget(
-          //iOSName: iOSWidgetName,
+          iOSName: iOSWidgetName,
           androidName: androidWidgetName,
         );
 
