@@ -3,6 +3,7 @@ package com.example.eichwalde_app
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.util.Log
 import android.widget.RemoteViews
 import es.antonborri.home_widget.HomeWidgetPlugin
 
@@ -21,6 +22,7 @@ class EichwaldeAppHomeWidget : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.eichwalde__app__home_widget).apply {
                 val textFromEichwaldeApp = widgetData.getString("data_from_eichwalde_app", null)
                 setTextViewText(R.id.text_id, textFromEichwaldeApp ?: "Keine Daten verfügbar")
+                Log.d("EichwaldeApp", "Empfangene Daten: $textFromEichwaldeApp")
             }
 
             //update widget
