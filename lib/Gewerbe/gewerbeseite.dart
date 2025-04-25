@@ -13,9 +13,43 @@ class Gewerbeseite extends StatefulWidget{
   State<Gewerbeseite> createState() => _GewerbeseiteState();
 }
 
-//alle Strings werden durch Firebasewerte ersetzt
+//alle Strings werden beim Laden der seite durch die entsprechenden Firebasewerte ersetzt
 
 class _GewerbeseiteState extends State<Gewerbeseite> {
+  //(late, bzw. String?)
+  
+  String gewerbeName = ''; 
+  String gewerbeBeschreibung = '';
+  String gewerbeImage = '';
+
+  bool kontaktModul = true;   //standard = false
+  String kontaktTelefon = '';
+  String kontaktMail = '';
+  String kontaktWeb = '';
+  String kontaktAdresse = '';
+  
+  bool oeffnungsModul = true;   //standard = false
+  String oeffnungsMo = '';
+  String oeffnungsDi = '';
+  String oeffnungsMi = '';
+  String oeffnungsDo = '';
+  String oeffnungsFr = '';
+  String oeffnungsSa = '';
+  String oeffnungsSo = '';
+
+  bool socialModul = true;   //standard = false
+  String socialFacebookName = '';
+  String socialFacebookLink = '';
+  String socialInstagramName = '';
+  String socialInstagramLink = '';
+  String socialYoutubeName = '';
+  String socialYoutubeLink = '';
+
+  bool restaurantModul = true;   //standard = false
+  String restaurantOrderLink = '';
+  String restaurantKarte = '';
+  String restaurantTelefon = '';
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +57,8 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
         title: Text('Hi'),
         actions: [
           IconButton(
-            onPressed: () {}, 
-            icon: Icon(Icons.favorite_outline)
+            onPressed: () {}, //Favoritenoption hier
+            icon: Icon(Icons.favorite_outline)        
           )
         ],
       ),
@@ -37,7 +71,7 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                 children: [
                   SizedBox(height: 20),
                   Image.network(
-                    'https://i.ytimg.com/vi/yzCtDA6tHLo/maxresdefault.jpg'
+                    'https://i.ytimg.com/vi/yzCtDA6tHLo/maxresdefault.jpg'    //GewerbeImage
                   ),
                   SizedBox(height: 20),
                   Text(
@@ -45,7 +79,7 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                       fontWeight: FontWeight.w700,
                       fontSize: constraints.maxWidth*0.1
                     ),
-                    'Bertram GmbH' //Gewerbename
+                    'Bertram GmbH'                                //Gewerbename
                   ),
                   SizedBox(height: 20),
                   ExpansionTile(
@@ -70,12 +104,12 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                           fontSize: constraints.maxWidth*0.04
                         ),
                         'Lorem ipsum salami hallo ich bin ein langer Text um das mal ein bisschen zu füllen Bom schalom Schames lalala Moke bom'
-                      )
+                      )         //Gewerbebeschreibung
                     ],
                   ),
 
-                  //weitere Module hier drunter:
-                  Oeffnungszeiten(
+                  //weitere Module hier drunter (reihenfolge festlegen!!):
+                  oeffnungsModul ? Oeffnungszeiten(
                     monday: '08:00 - 16:00 Uhr', 
                     tuesday: '08:00 - 16:00 Uhr', 
                     wednesday: '08:00 - 16:00 Uhr', 
@@ -88,15 +122,15 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     leadingImportant: true,
                     trailingHint: 'Bottom text',
                     trailingImportant: true,
-                  ),
-                  Kontakt(
+                  ):SizedBox(),
+                  kontaktModul ? Kontakt(
                     adresse: 'Bahnhofstraße 79, Eichwalde',
                     web: 'https://www.youtube.com/',
                     telefon: '+69 1234 56789',
                     mail: 'bertram@gmail.com',
                     constraints: constraints
-                  ),
-                  SocialMedia(
+                  ):SizedBox(),
+                  socialModul ? SocialMedia(
                     instagramName: 'Bertram0815',
                     facebookName: 'Bertram0815',
                     youtubeName: 'Bertram0815',
@@ -108,14 +142,14 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     showInstagram: true,
                     ////////////
                     constraints: constraints
-                  ),
-                  Restaurant(
+                  ):SizedBox(),
+                  restaurantModul ? Restaurant(
                     telefon: '+69 1234 56789',
                     karte: 'https://pane-vino-eichwalde.de/wp-content/uploads/2024/02/Pane-Vino-Eichwalde-Speisekarte.pdf',
                     orderLink: 'xx',
                     gewerbeName: 'Bertrams Restaurant GmbH',//Gewerbename
                     constraints: constraints
-                  ),  
+                  ):SizedBox(),  
                 ],
               );
             },
