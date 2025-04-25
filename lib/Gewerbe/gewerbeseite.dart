@@ -5,6 +5,7 @@ import 'Gewerbe_Module/oeffnung.dart';
 import 'Gewerbe_Module/kontakt.dart';
 import 'Gewerbe_Module/social.dart';
 import 'Gewerbe_Module/restaurant.dart';
+import 'Gewerbe_Module/bilder.dart';
 
 class Gewerbeseite extends StatefulWidget{
   const Gewerbeseite({super.key});
@@ -49,7 +50,15 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
   String restaurantOrderLink = '';
   String restaurantKarte = '';
   String restaurantTelefon = '';
-  
+
+  bool bilderModul = true; //standard = false
+  //nur beispiele
+  String bilderLink1 = '';
+  String bilderLink2 = '';
+  String bilderLink3 = '';
+  String bilderLink4 = '';
+  String bilderLink5 = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,6 +159,13 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     gewerbeName: 'Bertrams Restaurant GmbH',//Gewerbename
                     constraints: constraints
                   ):SizedBox(),  
+                  bilderModul ? Bilder(
+                    image1:'',
+                    image2:'',
+                    image3:'',
+                    image4:'',
+                    constraints: constraints
+                  ):SizedBox(),
                 ],
               );
             },
