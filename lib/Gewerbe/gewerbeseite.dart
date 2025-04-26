@@ -90,6 +90,26 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     ),
                     'Bertram GmbH'                                //Gewerbename
                   ),
+                  Text(
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: constraints.maxWidth*0.05,
+                      fontStyle: FontStyle.italic,
+                      height: constraints.maxWidth*0.0025,
+                    ),
+                    'Comedy'                                //Kategorie
+                  ),
+                  SizedBox(height: 20),
+                  //Quick Actions
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color.fromARGB(255, 82, 174, 50), Color.fromARGB(255, 0, 79, 159)]
+                      ),
+                      borderRadius: BorderRadius.circular(5)
+                    ),
+                    height: 5,
+                  ),
                   SizedBox(height: 20),
                   ExpansionTile(
                     leading: Icon(Icons.description_outlined),
@@ -164,6 +184,18 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     image2:'',
                     image3:'',
                     image4:'',
+                    imageLinks: [
+                      'https://image.stern.de/33801218/t/SL/v1/w1440/r1.3333/-/bild-person-der-woche--olaf-scholz.jpg',
+                      'https://www.br.de/puls/amthor-memes-102~_v-img__16__9__l_-1dc0e8f74459dd04c91a0d45af4972b9069f1135.jpg?version=0cab2',
+                      'https://www.rheinpfalz.de/cms_media/module_img/11740/5870071_1_org_5faa040070584568.webp',
+                      'https://www.merkur.de/assets/images/27/25/27025125-markus-soeder-hat-am-montag-beim-gillamoos-fruehschoppen-die-konkurrenz-ins-visier-genommen-3pe9.jpg',
+                    ],
+                    imageCaptions: [
+                      'Bertram', 
+                      'Sascha Moke', 
+                      'Bom', 
+                      'Was zur Hölle mache ich hier eigentlich'
+                    ],
                     constraints: constraints
                   ):SizedBox(),
                 ],
