@@ -101,6 +101,38 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                   ),
                   SizedBox(height: 20),
                   //Quick Actions
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          ShaderMask(
+                            blendMode: BlendMode.srcIn,
+                            shaderCallback: (bounds) => LinearGradient(
+                                colors: [Color.fromARGB(255, 82, 174, 50), Color.fromARGB(255, 0, 79, 159)]
+                            ).createShader(
+                              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                            ),
+                            child:IconButton(
+                              onPressed: () {
+                                
+                              }, 
+                              iconSize: constraints.maxWidth*0.1,
+                              icon: Icon(Icons.nfc),
+                            ),
+                          ),
+                          Text(
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: constraints.maxWidth*0.045,
+                            ),
+                            'Hi'
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(

@@ -81,9 +81,9 @@ class _BilderState extends State<Bilder> {
         SizedBox(
           height: 250,
           child: CarouselView.weighted(
-            flexWeights: [2,5,2],
+            flexWeights: [1,7,1],
             itemSnapping: true,
-            
+            backgroundColor: Color.fromARGB(255, 50, 150, 50),
             children: images,
               /*widget.image1.isNotEmpty ? Image.network(widget.image1):SizedBox(),
               widget.image2.isNotEmpty ? Image.network(widget.image2):SizedBox(),
