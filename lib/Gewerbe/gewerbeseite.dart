@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
+
 //module
 import 'Gewerbe_Module/oeffnung.dart';
 import 'Gewerbe_Module/kontakt.dart';
@@ -108,9 +110,7 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                         children: [
                           ShaderMask(
                             blendMode: BlendMode.srcIn,
-                            shaderCallback: (bounds) => LinearGradient(
-                                colors: [Color.fromARGB(255, 82, 174, 50), Color.fromARGB(255, 0, 79, 159)]
-                            ).createShader(
+                            shaderCallback: (bounds) => eichwaldeGradient.createShader(
                               Rect.fromLTWH(0, 0, bounds.width, bounds.height),
                             ),
                             child:IconButton(
@@ -133,15 +133,7 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color.fromARGB(255, 82, 174, 50), Color.fromARGB(255, 0, 79, 159)]
-                      ),
-                      borderRadius: BorderRadius.circular(5)
-                    ),
-                    height: 5,
-                  ),
+                  EichwaldeGradientBar(),
                   SizedBox(height: 20),
                   ExpansionTile(
                     leading: Icon(Icons.description_outlined),
@@ -155,8 +147,8 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     shape: const Border(),
                     tilePadding: EdgeInsets.all(1),
                     childrenPadding: EdgeInsets.all(5),
-                    textColor: Color.fromARGB(255, 50, 150, 50),
-                    iconColor: Color.fromARGB(255, 50, 150, 50), 
+                    textColor: eichwaldeGreen,
+                    iconColor: eichwaldeGreen,
                     initiallyExpanded: true,
                     children: [
                       Text(

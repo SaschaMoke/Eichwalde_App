@@ -1,3 +1,5 @@
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
+
 import 'package:flutter/material.dart';
 
 import 'Tools/pdf_viewer.dart';
@@ -46,7 +48,7 @@ class _RestaurantState extends State<Restaurant> {
             }, 
             child: Icon(
               size: widget.constraints.maxHeight*0.06,
-              color: Color.fromARGB(255, 50, 150, 50),
+              color: eichwaldeGreen,
               Icons.food_bank_outlined
             ),
           ),
@@ -76,7 +78,7 @@ class _RestaurantState extends State<Restaurant> {
             }, 
             child: Icon(
               size: widget.constraints.maxHeight*0.06,
-              color: Color.fromARGB(255, 50, 150, 50),
+              color: eichwaldeGreen,
               Icons.phone_outlined
             ),
           ),
@@ -101,7 +103,7 @@ class _RestaurantState extends State<Restaurant> {
             }, 
             child: Icon(
               size: widget.constraints.maxHeight*0.06,
-              color: Color.fromARGB(255, 50, 150, 50),
+              color: eichwaldeGreen,
               Icons.attach_money_outlined
             ),
           ),
@@ -130,8 +132,8 @@ class _RestaurantState extends State<Restaurant> {
       shape: const Border(),
       tilePadding: EdgeInsets.all(1),
       childrenPadding: EdgeInsets.all(5),
-      textColor: Color.fromARGB(255, 50, 150, 50),
-      iconColor: Color.fromARGB(255, 50, 150, 50),   //hallooooooo
+      textColor: eichwaldeGreen,
+      iconColor: eichwaldeGreen,  
       children: [
         SizedBox(
           height: (gridTiles.length ~/ 2 + gridTiles.length.remainder(2))*100,

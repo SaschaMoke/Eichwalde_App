@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 //File Imports:
 import 'Gewerbe/gewerbeseite.dart';
 import 'package:eichwalde_app/settings.dart';
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eichwalde_app/Read%20data/get_gewerbe_name.dart';
@@ -101,12 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 0;
   String pagename = '';
 
-  //Home Widget:
-  String appGroupId = "group.eichwaldeApp";
-  String iOSWidgetName = "Eichwalde_App_HomeWidget";
-  String androidWidgetName = "Eichwalde_App_HomeWidget";
-  String dataKey = "data_from_eichwalde_app";
-
   @override
   Widget build(BuildContext context) {
     Widget page;
@@ -149,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: NavigationBar(
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             backgroundColor: Color.fromRGBO(150, 200, 150, 1),
-            //backgroundColor: Color.fromARGB(255, 50, 150, 50),      => etwas heller & Text/Icons weiß
+            //backgroundColor: eichwaldeGreen,    => etwas heller & Text/Icons weiß
             onDestinationSelected: (int index) {
               setState(() {
                 selectedIndex = index;
@@ -205,7 +200,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(width: 5),
                   Text(
                     style: TextStyle(
-                      //fontSize: 50,     //Dynam.
                       fontSize: MediaQuery.of(context).size.width*0.1,
                       fontWeight: FontWeight.bold,
                     ),
@@ -215,7 +209,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SizedBox(
                 height: 20,
-                //height: MediaQuery.of(context).size.height*0.022,
               ),
               Container(
                 child: page

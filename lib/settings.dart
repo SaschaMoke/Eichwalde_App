@@ -1,3 +1,5 @@
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
+
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -29,8 +31,8 @@ class _SettingsState extends State<SettingsPage> {
                     });
                   },
                   secondary: Icon(Icons.face),    //Fronticon
-                  activeColor: Color.fromARGB(255, 80, 175, 50),
-                  inactiveThumbColor: Color.fromARGB(255, 0, 80, 160),
+                  activeColor: eichwaldeGradientGreen,
+                  inactiveThumbColor: eichwaldeGradientBlue,
                   //Design:
                   tileColor: Color.fromARGB(255, 255, 255, 255),
                   //title: ,

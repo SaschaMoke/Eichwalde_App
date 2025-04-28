@@ -1,3 +1,5 @@
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -54,7 +56,7 @@ class _SocialMediaState extends State<SocialMedia> {
                 )) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    backgroundColor: Color.fromARGB(255, 50, 150, 50),
+                    backgroundColor: eichwaldeGreen,
                     //design
                     content: Text(
                       style: TextStyle(
@@ -98,7 +100,7 @@ class _SocialMediaState extends State<SocialMedia> {
                 )) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    backgroundColor: Color.fromARGB(255, 50, 150, 50),
+                    backgroundColor: eichwaldeGreen,
                     //design
                     content: Text(
                       style: TextStyle(
@@ -142,7 +144,7 @@ class _SocialMediaState extends State<SocialMedia> {
                 )) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    backgroundColor: Color.fromARGB(255, 50, 150, 50),
+                    backgroundColor: eichwaldeGreen,
                     //design
                     content: Text(
                       style: TextStyle(
@@ -184,8 +186,8 @@ class _SocialMediaState extends State<SocialMedia> {
       shape: const Border(),
       tilePadding: EdgeInsets.all(1),
       childrenPadding: EdgeInsets.all(5),
-      textColor: Color.fromARGB(255, 50, 150, 50),
-      iconColor: Color.fromARGB(255, 50, 150, 50),   //hallooooooo
+      textColor: eichwaldeGreen,
+      iconColor: eichwaldeGreen,
       children: [
         SizedBox(
           height: (gridTiles.length ~/ 2 + gridTiles.length.remainder(2))*100,

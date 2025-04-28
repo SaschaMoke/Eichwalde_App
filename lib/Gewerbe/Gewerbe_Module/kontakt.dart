@@ -1,3 +1,5 @@
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -39,7 +41,7 @@ class _KontaktState extends State<Kontakt> {
             }, 
             child: Icon(
               size: widget.constraints.maxHeight*0.06,
-              color: Color.fromARGB(255, 50, 150, 50),
+              color: eichwaldeGreen,
               Icons.house_outlined
             ),
           ),
@@ -71,7 +73,7 @@ class _KontaktState extends State<Kontakt> {
             }, 
             child: Icon(
               size: widget.constraints.maxHeight*0.06,
-              color: Color.fromARGB(255, 50, 150, 50),
+              color: eichwaldeGreen,
               Icons.phone_outlined
             ),
           ),
@@ -101,7 +103,7 @@ class _KontaktState extends State<Kontakt> {
             }, 
             child: Icon(
               size: widget.constraints.maxHeight*0.06,
-              color: Color.fromARGB(255, 50, 150, 50),
+              color: eichwaldeGreen,
               Icons.mail_outline
             ),
           ),
@@ -134,7 +136,7 @@ class _KontaktState extends State<Kontakt> {
             }, 
             child: Icon(
               size: widget.constraints.maxHeight*0.06,
-              color: Color.fromARGB(255, 50, 150, 50),
+              color: eichwaldeGreen,
               Icons.web_outlined
             ),
           ),
@@ -178,8 +180,8 @@ class _KontaktState extends State<Kontakt> {
       shape: const Border(),
       tilePadding: EdgeInsets.all(1),
       childrenPadding: EdgeInsets.all(5),
-      textColor: Color.fromARGB(255, 50, 150, 50),
-      iconColor: Color.fromARGB(255, 50, 150, 50),   //hallooooooo
+      textColor: eichwaldeGreen,
+      iconColor: eichwaldeGreen,
       children: [
         SizedBox(
           height: (gridTiles.length ~/ 2 + gridTiles.length.remainder(2))*tileHeight,

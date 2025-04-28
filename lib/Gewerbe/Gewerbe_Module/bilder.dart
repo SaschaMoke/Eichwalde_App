@@ -1,3 +1,5 @@
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
+
 import 'package:flutter/material.dart';
 
 class Bilder extends StatefulWidget {
@@ -75,8 +77,8 @@ class _BilderState extends State<Bilder> {
       shape: const Border(),
       tilePadding: EdgeInsets.all(1),
       childrenPadding: EdgeInsets.all(5),
-      textColor: Color.fromARGB(255, 50, 150, 50),
-      iconColor: Color.fromARGB(255, 50, 150, 50),   //hallooooooo
+      textColor: eichwaldeGreen,
+      iconColor: eichwaldeGreen,
       children: [
         SizedBox(
           height: 250,

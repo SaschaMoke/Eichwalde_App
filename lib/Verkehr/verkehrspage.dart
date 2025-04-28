@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
 import 'package:eichwalde_app/Verkehr/vbb_api.dart';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -172,7 +174,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         }, 
                         icon: Icon(Icons.swap_horiz_rounded),
                         iconSize: constraints.maxWidth*0.08,
-                        color: Color.fromARGB(255, 50, 150, 50),
+                        color: eichwaldeGreen,
                         tooltip: 'Wechseln Sie zwischen der Schranke Friedensstraße und Waldstraße.',
                       ),
                     ),
@@ -182,7 +184,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         onPressed: () {},
                         icon: Icon(Icons.info_outline_rounded),
                         iconSize: constraints.maxWidth*0.08,
-                        color: Color.fromARGB(255, 50, 150, 50),
+                        color: eichwaldeGreen,
                         tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit.',
                       ),
                     ),
@@ -360,15 +362,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color.fromARGB(255, 82, 174, 50), Color.fromARGB(255, 0, 79, 159)]
-                    ),
-                    borderRadius: BorderRadius.circular(5)
-                  ),
-                  height: 5,
-                ),
+                EichwaldeGradientBar(),
                 SizedBox(
                   height: 10,
                 ),
