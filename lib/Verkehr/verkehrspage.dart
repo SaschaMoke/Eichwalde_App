@@ -100,7 +100,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
         throw Exception('Failed to load data');
       }
     } catch (error) {
-      throw Exception('Error fetching data: $error');
+      //throw Exception('Error fetching data: $error');
     }
   }
 
@@ -131,10 +131,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
     }
 
     String schrankeTimeTillAction;
+    String schrankeTextAction;
     if (schranke) {
-      schrankeTimeTillAction = 'Nächste Öffnung: $nextOpen min';
+      //schrankeTimeTillAction = 'Nächste Öffnung: $nextOpen min';
+      schrankeTimeTillAction = '$nextOpen';
+      schrankeTextAction = 'Nächste Öffnung: ';
     } else {
-      schrankeTimeTillAction = 'Nächste Schließung: $nextClose min';
+      //schrankeTimeTillAction = 'Nächste Schließung: $nextClose min';
+      schrankeTimeTillAction = '$nextClose';
+      schrankeTextAction = 'Nächste Schließung:';
     }
 
     return SizedBox(
@@ -190,6 +195,25 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ),
                   ],
                 ), 
+                Row(
+                  children: [
+                    SizedBox(
+                      width: constraints.maxWidth*0.025,
+                    ),
+                    Text(
+                      style: TextStyle(
+                        height: 0.5,
+                        fontSize: constraints.maxWidth*0.05,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      'Ort: $schrankeName'
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
                 AnimatedContainer(//Schrankencontainer
                   duration: Duration(milliseconds: 500),
                   height: 225,
@@ -209,24 +233,61 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             height: constraints.maxHeight*0.025,
                           ),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
                                 width: constraints.maxWidth*0.038
                               ),
                               SizedBox(
-                                width: constraints.maxWidth*0.465,
-                                height: constraints.maxHeight*0.525,
+                                width: constraints.maxWidth*0.59,
+                                height: constraints.maxHeight*0.6,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
+                                  children: [ 
+                                    SizedBox(
+                                      height: constraints.maxWidth*0.015,
+                                    ),
                                     Text(
-                                        style: TextStyle(
-                                          height: 0.1,
-                                          fontSize: constraints.maxWidth*0.05,
-                                          fontStyle: FontStyle.italic,
-                                          fontWeight: FontWeight.w500,
+                                      style: TextStyle(
+                                        //height: constraints.maxWidth*0.0015,
+                                        fontSize: constraints.maxWidth*0.05,
+                                        fontStyle: FontStyle.italic,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      schrankeTextAction,
+                                    ),
+                                    SizedBox(
+                                      height: constraints.maxWidth*0.005,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                            style: TextStyle(
+                                              fontSize: constraints.maxWidth*0.125,
+                                              fontStyle: FontStyle.italic,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            schrankeTimeTillAction
                                         ),
-                                        schrankeName
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Column(
+                                          children: [
+                                            SizedBox(
+                                              height: constraints.maxWidth*0.035,
+                                            ),
+                                            Text(
+                                                style: TextStyle(
+                                                  fontSize: constraints.maxWidth*0.075,
+                                                  fontStyle: FontStyle.italic,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                'min'
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -234,60 +295,60 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               SizedBox(
                                 width: constraints.maxWidth*0.17,
                               ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                height: 100,
-                                width: 60,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 2,
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    height: constraints.maxWidth*0.0325
                                   ),
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 2,
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    height: 100,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color.fromARGB(255, 255, 255, 255),
                                     ),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 26,
-                                        width: 26,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(14),
-                                          color: schrankeRed,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 2,
                                         ),
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Color.fromARGB(255, 0, 0, 0),
                                       ),
-                                      SizedBox(
-                                        height: 5,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          AnimatedContainer(
+                                            duration: Duration(milliseconds: 500),
+                                            height: 26,
+                                            width: 26,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(14),
+                                              color: schrankeRed,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Container(
+                                            height: 26,
+                                            width: 26,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(14),
+                                              color: schrankeGelb,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Container(
-                                        height: 26,
-                                        width: 26,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(14),
-                                          color: schrankeGelb,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
-                          ),
-                          SizedBox(
-                            height: constraints.maxHeight*0.025,
-                          ),
-                          Text(
-                            textAlign: TextAlign.left,
-                            schrankeTimeTillAction
                           ),
                           Container(
                             width: constraints.maxWidth,
@@ -297,53 +358,21 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           SizedBox(
                             height: constraints.maxHeight*0.025,
                           ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                height: constraints.maxHeight*0.275,
-                                width: constraints.maxWidth*0.625,
-                                child: schrankeTrains.isNotEmpty
-                                    ? ListView.builder(
-                                        itemCount: schrankeTrains.length,
-                                        itemBuilder: (context, index) {
-                                          final train = schrankeTrains[index];
-                                          return Text(
-                                            textAlign: TextAlign.center,
-                                            '${train.line}  ${train.destination}'
-                                          );
-                                        })
-                                    : Text(
-                                      textAlign: TextAlign.center,
-                                      'Keine Züge'
-                                    ),
-                              ),
-                              /*SizedBox(
-                                width: constraints.maxWidth*0.025,
-                              ),
-                              SegmentedButton(
-                                  //direction: Axis.vertical,
-                                  segments: [
-                                    ButtonSegment(
-                                      value: 'Lidl',
-                                      label:
-                                        Text(style: TextStyle(fontSize: 11), 'Lidl'),
-                                    ),
-                                    ButtonSegment(
-                                      value: 'Wald',
-                                      label:
-                                        Text(style: TextStyle(fontSize: 11), 'Wald'),
-                                    ),
-                                  ],
-                                  selected: {schrankeWahl},
-                                  onSelectionChanged: (Set newSelection) {
-                                    setState(() {
-                                      schrankeWahl = newSelection.first;
-                                      schranke = checkSchranke(departures, schrankeWahl); 
-                                    });
-                                  },
-                                  showSelectedIcon: false,
-                                ),*/
-                            ],
+                          SizedBox(
+                            height: constraints.maxHeight*0.275,
+                            width: constraints.maxWidth*0.95,
+                            child: schrankeTrains.isNotEmpty ? ListView.builder(
+                              itemCount: schrankeTrains.length,
+                              itemBuilder: (context, index) {
+                                final train = schrankeTrains[index];
+                                return Text(
+                                  textAlign: TextAlign.center,
+                                  '${train.line}  ${train.destination}'
+                                );
+                              }):Text(
+                                textAlign: TextAlign.center,
+                                'Keine Züge'
+                            ),
                           ),
                         ],
                       ):Center(
@@ -380,14 +409,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ),
                   ],
                 ),   
-                Container(
+                Container(//Abfahrtencontainer
                   height: 400,
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 150, 200, 150),
                     border: Border.all(
                       color: const Color.fromARGB(255, 255, 255, 255)
                     ),
-                    borderRadius: BorderRadius.circular(20)
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: LayoutBuilder(
                     builder: (contextDeparture, constraintsDepartures) {
@@ -405,7 +434,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               initialSelection: Stations.eichwalde,
                               controller: TextEditingController(),
                               requestFocusOnTap: true,
-                              label: const Text('Ausgewählte Haltestelle'),
+                              label: Text('Haltestelle: ${selectedStation!.stationName}'),//const Text('Ausgewählte Haltestelle'),
                               onSelected: (Stations? val) {
                                 setState(() {
                                   selectedStation = val;

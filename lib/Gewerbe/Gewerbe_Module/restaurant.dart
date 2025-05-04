@@ -31,94 +31,102 @@ class _RestaurantState extends State<Restaurant> {
   Widget build(BuildContext context) { 
     List<Widget> gridTiles = List.empty(growable: true);
     if (widget.karte.isNotEmpty) {
-      gridTiles.add(Column(
-        children: [
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(
-                  builder: (_) => PDFViewer(
-                    constraints: widget.constraints, 
-                    url: widget.karte, 
-                    title: widget.gewerbeName,
-                  ),
-                )
-              );
-            }, 
-            child: Icon(
-              size: widget.constraints.maxHeight*0.06,
-              color: eichwaldeGreen,
-              Icons.food_bank_outlined
+      gridTiles.add(SizedBox(
+        width: widget.constraints.maxWidth*0.45,
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (_) => PDFViewer(
+                      constraints: widget.constraints, 
+                      url: widget.karte, 
+                      title: widget.gewerbeName,
+                    ),
+                  )
+                );
+              }, 
+              child: Icon(
+                size: widget.constraints.maxHeight*0.06,
+                color: eichwaldeGreen,
+                Icons.food_bank_outlined
+              ),
             ),
-          ),
-          Text(
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: widget.constraints.maxWidth*0.04
-            ),
-            'Speisekarte'
-          )
-        ],
+            Text(
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: widget.constraints.maxWidth*0.04
+              ),
+              'Speisekarte'
+            )
+          ],
+        ),
       )
       );
     }
 
     if (widget.telefon.isNotEmpty){
-      gridTiles.add(Column(
-        children: [
-          TextButton(
-            onPressed: () async {
-              launchLink(
-                widget.telefon, 
-                'tel', 
-                context, 
-                widget.constraints
-              );
-            }, 
-            child: Icon(
-              size: widget.constraints.maxHeight*0.06,
-              color: eichwaldeGreen,
-              Icons.phone_outlined
+      gridTiles.add(SizedBox(
+        width: widget.constraints.maxWidth*0.45,
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () async {
+                launchLink(
+                  widget.telefon, 
+                  'tel', 
+                  context, 
+                  widget.constraints
+                );
+              }, 
+              child: Icon(
+                size: widget.constraints.maxHeight*0.06,
+                color: eichwaldeGreen,
+                Icons.phone_outlined
+              ),
             ),
-          ),
-          Text(
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: widget.constraints.maxWidth*0.04
-            ),
-            widget.telefon
-          )
-        ],
+            Text(
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: widget.constraints.maxWidth*0.04
+              ),
+              widget.telefon
+            )
+          ],
+        ),
       )
       );
     }
 
     if (widget.orderLink.isNotEmpty) {  
-      gridTiles.add(Column(
-        children: [
-          TextButton(
-            onPressed: () {
-              //widget.orderLink öffnen
-            }, 
-            child: Icon(
-              size: widget.constraints.maxHeight*0.06,
-              color: eichwaldeGreen,
-              Icons.attach_money_outlined
+      gridTiles.add(SizedBox(
+        width: widget.constraints.maxWidth*0.45,
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () {
+                //widget.orderLink öffnen
+              }, 
+              child: Icon(
+                size: widget.constraints.maxHeight*0.06,
+                color: eichwaldeGreen,
+                Icons.attach_money_outlined
+              ),
             ),
-          ),
-          Text(
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: widget.constraints.maxWidth*0.04
-            ),
-            'Bestellen'
-          )
-        ],
+            Text(
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: widget.constraints.maxWidth*0.04
+              ),
+              'Bestellen'
+            )
+          ],
+        ),
       )
       );
     }
-
     
     return ExpansionTile(
       leading: Icon(Icons.food_bank_outlined), //ICON
@@ -135,7 +143,13 @@ class _RestaurantState extends State<Restaurant> {
       textColor: eichwaldeGreen,
       iconColor: eichwaldeGreen,  
       children: [
-        SizedBox(
+        Wrap(
+          alignment: WrapAlignment.center,
+          runSpacing: 10,
+          children: gridTiles,
+        )
+        
+        /*SizedBox(
           height: (gridTiles.length ~/ 2 + gridTiles.length.remainder(2))*100,
           child: GridView.count(
             crossAxisCount: 2,
@@ -143,7 +157,7 @@ class _RestaurantState extends State<Restaurant> {
             
             children: gridTiles
           ),
-        ),
+        ),*/
       ],
     );
   }

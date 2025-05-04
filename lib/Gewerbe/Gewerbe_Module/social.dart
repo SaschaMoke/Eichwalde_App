@@ -45,131 +45,140 @@ class _SocialMediaState extends State<SocialMedia> {
 
     if (widget.facebookLink.isNotEmpty) {
       gridTiles.add(
-        Column(
-          children: [
-            TextButton(
-              onPressed: () async {
-                final Uri url =  Uri.parse(widget.facebookLink);
-                if (!await launchUrl(
-                  url,
-                  mode: LaunchMode.externalApplication,
-                )) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: eichwaldeGreen,
-                    //design
-                    content: Text(
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: widget.constraints.maxWidth*0.04
-                      ),
-                      'Fehler: Externe Anwendung konnte nicht gestartet werden'
+        SizedBox(
+          width: widget.constraints.maxWidth*0.45,
+          child: Column(
+            children: [
+              TextButton(
+                onPressed: () async {
+                  final Uri url =  Uri.parse(widget.facebookLink);
+                  if (!await launchUrl(
+                    url,
+                    mode: LaunchMode.externalApplication,
+                  )) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: eichwaldeGreen,
+                      //design
+                      content: Text(
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: widget.constraints.maxWidth*0.04
+                        ),
+                        'Fehler: Externe Anwendung konnte nicht gestartet werden'
+                      )
                     )
-                  )
-                );
-              }    
-              }, 
-              child: Image(
-              //height: 50,
-              height: widget.constraints.maxHeight*0.06,
-                image: AssetImage('Assets/Facebook_icon.png'),
+                  );
+                }    
+                }, 
+                child: Image(
+                //height: 50,
+                height: widget.constraints.maxHeight*0.06,
+                  image: AssetImage('Assets/Facebook_icon.png'),
+                ),
               ),
-            ),
-            Text(
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: widget.constraints.maxWidth*0.04
-              ),
-              widget.facebookName
-            )
-          ]
+              Text(
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: widget.constraints.maxWidth*0.04
+                ),
+                widget.facebookName
+              )
+            ]
+          ),
         )
       );
     }
 
   if (widget.instagramLink.isNotEmpty) {
       gridTiles.add(
-        Column(
-          children: [
-            TextButton(
-              onPressed: () async {
-                 final Uri url =  Uri.parse(widget.instagramLink);
-                if (!await launchUrl(
-                  url,
-                  mode: LaunchMode.externalApplication,
-                )) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: eichwaldeGreen,
-                    //design
-                    content: Text(
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: widget.constraints.maxWidth*0.04
-                      ),
-                      'Fehler: Externe Anwendung konnte nicht gestartet werden'
+        SizedBox(
+          width: widget.constraints.maxWidth*0.45,
+          child: Column(
+            children: [
+              TextButton(
+                onPressed: () async {
+                   final Uri url =  Uri.parse(widget.instagramLink);
+                  if (!await launchUrl(
+                    url,
+                    mode: LaunchMode.externalApplication,
+                  )) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: eichwaldeGreen,
+                      //design
+                      content: Text(
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: widget.constraints.maxWidth*0.04
+                        ),
+                        'Fehler: Externe Anwendung konnte nicht gestartet werden'
+                      )
                     )
-                  )
-                );
-              }   
-              }, 
-              child: Image(
-              //height: 50,
-              height: widget.constraints.maxHeight*0.06,
-                image: AssetImage('Assets/Instagram_icon.png'),
+                  );
+                }   
+                }, 
+                child: Image(
+                //height: 50,
+                height: widget.constraints.maxHeight*0.06,
+                  image: AssetImage('Assets/Instagram_icon.png'),
+                ),
               ),
-            ),
-            Text(
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: widget.constraints.maxWidth*0.04
-              ),
-              widget.instagramName
-            )
-          ]
+              Text(
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: widget.constraints.maxWidth*0.04
+                ),
+                widget.instagramName
+              )
+            ]
+          ),
         )
       );
     }
 
     if (widget.youtubeLink.isNotEmpty) {
       gridTiles.add(
-        Column(
-          children: [
-            TextButton(
-              onPressed: () async {
-                final Uri url =  Uri.parse(widget.youtubeLink);
-                if (!await launchUrl(
-                  url,
-                  mode: LaunchMode.externalApplication,
-                )) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: eichwaldeGreen,
-                    //design
-                    content: Text(
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: widget.constraints.maxWidth*0.04
-                      ),
-                      'Fehler: Externe Anwendung konnte nicht gestartet werden'
+        SizedBox(
+          width: widget.constraints.maxWidth*0.45,
+          child: Column(
+            children: [
+              TextButton(
+                onPressed: () async {
+                  final Uri url =  Uri.parse(widget.youtubeLink);
+                  if (!await launchUrl(
+                    url,
+                    mode: LaunchMode.externalApplication,
+                  )) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: eichwaldeGreen,
+                      //design
+                      content: Text(
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: widget.constraints.maxWidth*0.04
+                        ),
+                        'Fehler: Externe Anwendung konnte nicht gestartet werden'
+                      )
                     )
-                  )
-                );
-              }   
-              }, 
-              child: Image(
-              height: widget.constraints.maxHeight*0.06,
-                image: AssetImage('Assets/Youtube_icon.png'),
+                  );
+                }   
+                }, 
+                child: Image(
+                height: widget.constraints.maxHeight*0.06,
+                  image: AssetImage('Assets/Youtube_icon.png'),
+                ),
               ),
-            ),
-            Text(
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: widget.constraints.maxWidth*0.04
-              ),
-              widget.youtubeName
-            )
-          ]
+              Text(
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: widget.constraints.maxWidth*0.04
+                ),
+                widget.youtubeName
+              )
+            ]
+          ),
         )
       );
     }
@@ -189,14 +198,20 @@ class _SocialMediaState extends State<SocialMedia> {
       textColor: eichwaldeGreen,
       iconColor: eichwaldeGreen,
       children: [
-        SizedBox(
+        Wrap(
+          alignment: WrapAlignment.center,
+          runSpacing: 10,
+          children: gridTiles,
+        )
+        
+        /*SizedBox(
           height: (gridTiles.length ~/ 2 + gridTiles.length.remainder(2))*100,
           child: GridView.count(
             crossAxisCount: 2,
             childAspectRatio: 1.75,
             children: gridTiles
           ),
-        ),
+        ),*/
       ],
     );
   }

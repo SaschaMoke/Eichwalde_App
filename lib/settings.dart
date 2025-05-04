@@ -20,9 +20,27 @@ class _SettingsState extends State<SettingsPage> {
         builder: (context, constraints) {
           return SizedBox(
             height: MediaQuery.of(context).size.height*0.7,  //ist eig kaka
+            width: constraints.maxWidth*0.95,
             child: ListView(
               children: [
                 //Einstellungen
+                Text(
+                  style: TextStyle(
+                    fontSize: constraints.maxWidth*0.09,
+                    fontWeight: FontWeight.w500,
+                  ),
+                'Überschrift'
+                ), 
+                Text(
+                  style: TextStyle(
+                    height: 0.5,
+                    fontSize: constraints.maxWidth*0.05,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  'Kleine Überschrift'
+                ),
+                SizedBox(height: 10),
                 SwitchListTile(
                   value: setting1, 
                   onChanged: (bool value) {
@@ -38,7 +56,9 @@ class _SettingsState extends State<SettingsPage> {
                   //title: ,
                   //subtitle: ,
                 ),
-
+                SizedBox(height: 10),
+                EichwaldeGradientBar(),
+                //Unten
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -33,139 +33,137 @@ class _KontaktState extends State<Kontakt> {
   Widget build(BuildContext context) { 
     List<Widget> gridTiles = List.empty(growable: true);
     if (widget.adresse.isNotEmpty) {
-      gridTiles.add(Column(
-        children: [
-          TextButton(
-            onPressed: () {
-              MapsLauncher.launchQuery(widget.adresse);
-            }, 
-            child: Icon(
-              size: widget.constraints.maxHeight*0.06,
-              color: eichwaldeGreen,
-              Icons.house_outlined
+      gridTiles.add(SizedBox(
+        width: widget.constraints.maxWidth*0.45,
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () {
+                MapsLauncher.launchQuery(widget.adresse);
+              }, 
+              child: Icon(
+                size: widget.constraints.maxHeight*0.06,
+                color: eichwaldeGreen,
+                Icons.house_outlined
+              ),
             ),
-          ),
-          Text(
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: widget.constraints.maxWidth*0.04
-            ),
-            maxLines: 3,
-            textAlign: TextAlign.center,
-            widget.adresse
-          )
-        ],
+            Text(
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: widget.constraints.maxWidth*0.04
+              ),
+              maxLines: 3,
+              textAlign: TextAlign.center,
+              widget.adresse
+            )
+          ],
+        ),
       )
       );
     }
 
     if (widget.telefon.isNotEmpty){
-      gridTiles.add(Column(
-        children: [
-          TextButton(
-            onPressed: () async {
-              launchLink(
-                widget.telefon, 
-                'tel', 
-                context, 
-                widget.constraints
-              );
-            }, 
-            child: Icon(
-              size: widget.constraints.maxHeight*0.06,
-              color: eichwaldeGreen,
-              Icons.phone_outlined
+      gridTiles.add(SizedBox(
+        width: widget.constraints.maxWidth*0.45,
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () async {
+                launchLink(
+                  widget.telefon, 
+                  'tel', 
+                  context, 
+                  widget.constraints
+                );
+              }, 
+              child: Icon(
+                size: widget.constraints.maxHeight*0.06,
+                color: eichwaldeGreen,
+                Icons.phone_outlined
+              ),
             ),
-          ),
-          Text(
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: widget.constraints.maxWidth*0.04
-            ),
-            widget.telefon
-          )
-        ],
+            Text(
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: widget.constraints.maxWidth*0.04
+              ),
+              widget.telefon
+            )
+          ],
+        ),
       )
       );
     }
 
     if (widget.mail.isNotEmpty) {  
-      gridTiles.add(Column(
-        children: [
-          TextButton(
-            onPressed: () async {
-              launchLink(
-                widget.mail, 
-                'mailto', 
-                context, 
-                widget.constraints
-              );
-            }, 
-            child: Icon(
-              size: widget.constraints.maxHeight*0.06,
-              color: eichwaldeGreen,
-              Icons.mail_outline
+      gridTiles.add(SizedBox(
+        width: widget.constraints.maxWidth*0.45,
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () async {
+                launchLink(
+                  widget.mail, 
+                  'mailto', 
+                  context, 
+                  widget.constraints
+                );
+              }, 
+              child: Icon(
+                size: widget.constraints.maxHeight*0.06,
+                color: eichwaldeGreen,
+                Icons.mail_outline
+              ),
             ),
-          ),
-          Text(
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: widget.constraints.maxWidth*0.04
-            ),
-            maxLines: 3,
-            textAlign: TextAlign.center,
-            widget.mail
-          )
-        ],
+            Text(
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: widget.constraints.maxWidth*0.04
+              ),
+              maxLines: 3,
+              textAlign: TextAlign.center,
+              widget.mail
+            )
+          ],
+        ),
       )
       );
     }
 
     if (widget.web.isNotEmpty) {
-      gridTiles.add(Column(
-        children: [
-          TextButton(
-            onPressed: () async {
-              final Uri url =  Uri.parse(widget.web);
-              if (!await launchUrl(
-                url,
-                mode: LaunchMode.externalApplication,
-              )) {
-                showErrorBar(widget.constraints, context);
-              }
-            }, 
-            child: Icon(
-              size: widget.constraints.maxHeight*0.06,
-              color: eichwaldeGreen,
-              Icons.web_outlined
+      gridTiles.add(SizedBox(
+        width: widget.constraints.maxWidth*0.45,
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () async {
+                final Uri url =  Uri.parse(widget.web);
+                if (!await launchUrl(
+                  url,
+                  mode: LaunchMode.externalApplication,
+                )) {
+                  showErrorBar(widget.constraints, context);
+                }
+              }, 
+              child: Icon(
+                size: widget.constraints.maxHeight*0.06,
+                color: eichwaldeGreen,
+                Icons.web_outlined
+              ),
             ),
-          ),
-          Text(
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: widget.constraints.maxWidth*0.04
-            ),
-            maxLines: 3,
-            textAlign: TextAlign.center,
-            widget.web
-          )
-        ],
+            Text(
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: widget.constraints.maxWidth*0.04
+              ),
+              maxLines: 3,
+              textAlign: TextAlign.center,
+              widget.web
+            )
+          ],
+        ),
       )
       );
-    }
-
-    double tileRatio;
-    double tileHeight;
-    //!!!!!!!!!!nicht nur Adresse beachten!!!!!!
-    if (widget.adresse.length > 30) {
-      tileRatio = 1.25;
-      tileHeight = 150;
-    } else if (widget.adresse.length > 16) {
-      tileRatio = 1.5;
-      tileHeight = 125;
-    } else {
-      tileRatio = 1.75;
-      tileHeight = 100;
     }
 
     return ExpansionTile(
@@ -183,14 +181,11 @@ class _KontaktState extends State<Kontakt> {
       textColor: eichwaldeGreen,
       iconColor: eichwaldeGreen,
       children: [
-        SizedBox(
-          height: (gridTiles.length ~/ 2 + gridTiles.length.remainder(2))*tileHeight,
-          child: GridView.count(
-            crossAxisCount: 2,
-            childAspectRatio: tileRatio,
-            children: gridTiles
-          ),
-        ),
+        Wrap(
+          alignment: WrapAlignment.center,
+          runSpacing: 10,
+          children: gridTiles,
+        )
       ],
     );
   }

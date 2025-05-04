@@ -136,21 +136,31 @@ class _MyHomePageState extends State<MyHomePage> {
       return Scaffold(
         bottomNavigationBar: NavigationBarTheme(
           data: const NavigationBarThemeData(
-              labelTextStyle: WidgetStatePropertyAll(
-            TextStyle(
-              color: Colors.black,
+            labelTextStyle: WidgetStatePropertyAll(
+              TextStyle(
+                color: Colors.black,
+              ),
             ),
-          )),
+          ),
           child: NavigationBar(
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             backgroundColor: Color.fromRGBO(150, 200, 150, 1),
             //backgroundColor: eichwaldeGreen,    => etwas heller & Text/Icons weiß
+            //backgroundColor: Colors.grey[50],
             onDestinationSelected: (int index) {
               setState(() {
                 selectedIndex = index;
               });
             },
             indicatorColor: Theme.of(context).colorScheme.primaryContainer,
+            //indicatorColor: Colors.grey[50],
+            /*indicatorShape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: eichwaldeGreen,
+                width: 2.5,
+              ),
+              borderRadius: BorderRadius.circular(16)
+            ),*/
             //indicatorColor: Color.fromARGB(255, 150, 250, 100),
             selectedIndex: selectedIndex,
             destinations: const <Widget>[
