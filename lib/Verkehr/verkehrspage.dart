@@ -18,6 +18,7 @@ class Verkehrspage extends StatefulWidget {
 
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
+  List<TripStationsResponse> tripStations = [];
   String lastUpdate = '';
   Timer? timer;
   int? selectedindex;
@@ -35,7 +36,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   String appGroupId = "group.eichwaldeApp";
   String iOSWidgetName = "EichwaldeAppHomeWidget";
   String androidWidgetName = "EichwaldeAppHomeWidget";
-  String dataKey = "data_from_eichwalde_app";
+  String dataKey = "rom_eichwalde_app";
 
   @override
   void initState() {
@@ -79,6 +80,19 @@ class _VerkehrspageState extends State<Verkehrspage> {
           return aTime.compareTo(bTime);
         });
 
+        //tripStations:
+        tripStations = [];
+        for (var element in departures) {
+          final responseStops = await http.get(
+          Uri.parse(
+            'https://v6.vbb.transport.rest/trips/${element.tripID}?stopovers=true&remarks=false&polyline=false&language=en'),
+          );
+          final apiResponseStops = TripStationsResponse.fromJson(jsonDecode(responseStops.body));
+          tripStations.add(
+            apiResponseStops,
+          );
+        }
+        
         schranke = checkSchranke(departures, schrankeWahl);
 
         //Widget Stuff
@@ -423,7 +437,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       return Column(
                         children: [
                           SizedBox(
-                            //Überschrift
                             height: 10,
                           ),
                           SizedBox(
@@ -573,7 +586,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                   );
                                 }
                       
-                                double tileheight;
+                                /*double tileheight;
                                 int linecount;
                                 if (departure.destination.length > 22) {
                                   linecount = 2;
@@ -581,18 +594,18 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                 } else {
                                   linecount = 1;
                                   tileheight = 80;
-                                }
-                      
+                                }*/
+
                                 return Center(
                                   child: SizedBox(
                                     width: constraintsDepartures.maxWidth*0.95,
-                                    height: tileheight,
+                                    //height: tileheight,
                                     child: Card(
-                                      child: ListTile(
+                                      child: ExpansionTile(
                                         leading: linelogo, 
                                         title: Text(
                                             style: deststyle,
-                                            maxLines: linecount,
+                                            //maxLines: linecount,
                                             departure.destination),
                                         subtitle: Text(
                                           style: TextStyle(
@@ -601,28 +614,64 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                             ),
                                           deptime
                                         ),                                  
-                                        trailing: Column(
+                                        trailing: '${departure.platform}' != "null" ? Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            '${departure.platform}' != "null" ? Text(
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  color:
-                                                      Color.fromARGB(255, 0, 0, 0),
-                                                ),
-                                                'Gleis:'):SizedBox(),
-                                            '${departure.platform}' != "null" ? Text(
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  color:
-                                                      Color.fromARGB(255, 0, 0, 0),
-                                                ),
-                                                '${departure.platform}'):SizedBox(),
+                                            Text(
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color:Color.fromARGB(255, 0, 0, 0),
+                                              ),
+                                              'Gleis:'
+                                            ),
+                                            Text(
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color:Color.fromARGB(255, 0, 0, 0),
+                                              ),
+                                              '${departure.platform}'
+                                            ),
                                           ],
-                                        ),
+                                        ):SizedBox(),
+                                        shape: Border(),
+                                        /*onExpansionChanged: (value) {
+                                          if (value) {
+                                            getTripStations(departure.tripID);
+                                          } else {
+                                            tripStations = [];
+                                          }
+                                        },*/
+                                        children: [
+                                          /*SizedBox(
+                                            height: 200,
+                                            child: LayoutBuilder(
+                                              builder:(context, constraints) {
+                                                final List<Widget> tripStationsWidgets = [];
+                                                final tripStops = tripStations.firstWhere((element) => departure.tripID == element.tripID,);
+                                                for (var element in tripStops.stops) {
+                                                  tripStationsWidgets.add(
+                                                    Text(element.stopName)
+                                                  );
+                                                }
+                                                return Column(
+                                                  children: tripStationsWidgets,
+                                                );
+                                              },
+                                            ),
+
+
+                                            /*child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (context, index) {
+                                                final tripStops = tripStations.firstWhere((element) => departure.tripID == element.tripID,);
+                                                return Text(tripStops.stops[index].stopName);
+                                              }
+                                            ),*/
+                                          ),*/
+                                        ],
                                       ),
                                     ),
                                   ),
