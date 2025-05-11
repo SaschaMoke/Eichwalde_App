@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Namer App',
+        title: 'Eichwalde',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
@@ -101,31 +101,43 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 0;
   String pagename = '';
+  Color indicatorColor = eichwaldeGradientGreen;
+  Color indicatorColorLight = Color.fromARGB(100, 80, 175, 50);
 
   @override
   Widget build(BuildContext context) {
-    Widget page;
+    Widget page = Homepage();
     switch (selectedIndex) {
       case 0:
         page = Homepage();
         pagename = 'Home';
+        indicatorColor = eichwaldeGradientGreen;
+        indicatorColorLight = Color.fromARGB(100, 80, 175, 50);
         break;
       case 1:
         page = Verkehrspage();
         pagename = 'Verkehr';
+        indicatorColor = Color.fromARGB(255, 60, 150, 80);
+        indicatorColorLight = Color.fromARGB(100, 60, 150, 80);
         break;
       case 2:
         page = GewerbePage();
         pagename = 'Gewerbe';
+        indicatorColor = Color.fromARGB(255, 35, 120, 110);
+        indicatorColorLight = Color.fromARGB(100, 35, 120, 110);
         //page = GewerbeLayoutNeu();
         break;
       case 3:
-        page = Terminepage();
+        //page = Terminepage();
         pagename = 'Termine';
+        indicatorColor = Color.fromARGB(255, 20, 100, 130);
+        indicatorColorLight = Color.fromARGB(100, 20, 100, 130);
         break;
       case 4:
         page = SettingsPage();
         pagename = 'Einstellungen';
+        indicatorColor = eichwaldeGradientBlue;
+        indicatorColorLight = Color.fromARGB(100, 0, 80, 160);
         //page = AdminCheckPage();
         break;
       default:
@@ -144,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           child: NavigationBar(
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-            backgroundColor: Color.fromRGBO(150, 200, 150, 1),
+            //backgroundColor: Color.fromRGBO(150, 200, 150, 1),
             //backgroundColor: eichwaldeGreen,    => etwas heller & Text/Icons weiß
             //backgroundColor: Colors.grey[50],
             onDestinationSelected: (int index) {
@@ -152,16 +164,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 selectedIndex = index;
               });
             },
-            indicatorColor: Theme.of(context).colorScheme.primaryContainer,
-            //indicatorColor: Colors.grey[50],
-            /*indicatorShape: RoundedRectangleBorder(
+            indicatorColor: indicatorColorLight,
+            indicatorShape: RoundedRectangleBorder(
               side: BorderSide(
-                color: eichwaldeGreen,
+                color: indicatorColor,
                 width: 2.5,
               ),
               borderRadius: BorderRadius.circular(16)
-            ),*/
-            //indicatorColor: Color.fromARGB(255, 150, 250, 100),
+            ),
             selectedIndex: selectedIndex,
             destinations: const <Widget>[
               NavigationDestination(

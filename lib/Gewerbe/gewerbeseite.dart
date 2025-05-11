@@ -222,6 +222,17 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     ],
                     constraints: constraints
                   ):SizedBox(),
+
+                  //SizedBox(height: 10),
+                  Text(
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: constraints.maxWidth*0.03
+                    ),
+                    '''Alle Angaben ohne Gewähr. Keine Garantie für Aktualität und Richtigkeit.'''
+                  ),
+                  SizedBox(height: 10),
                 ],
               );
             },
