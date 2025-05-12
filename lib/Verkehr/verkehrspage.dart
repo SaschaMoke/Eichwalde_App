@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
 import 'package:eichwalde_app/Verkehr/vbb_api.dart';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:home_widget/home_widget.dart';
 
 class Verkehrspage extends StatefulWidget {
@@ -18,7 +18,6 @@ class Verkehrspage extends StatefulWidget {
 
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
-  List<TripStationsResponse> tripStations = [];
   String lastUpdate = '';
   Timer? timer;
   int? selectedindex;
@@ -79,19 +78,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
           }
           return aTime.compareTo(bTime);
         });
-
-        //tripStations:
-        tripStations = [];
-        for (var element in departures) {
-          final responseStops = await http.get(
-          Uri.parse(
-            'https://v6.vbb.transport.rest/trips/${element.tripID}?stopovers=true&remarks=false&polyline=false&language=en'),
-          );
-          final apiResponseStops = TripStationsResponse.fromJson(jsonDecode(responseStops.body));
-          tripStations.add(
-            apiResponseStops,
-          );
-        }
         
         schranke = checkSchranke(departures, schrankeWahl);
 
@@ -545,8 +531,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                   );
                                 }
                       
-                                AssetImage lineImage =
-                                    const AssetImage('Assets/Bus.png');
+                                AssetImage lineImage = const AssetImage('Assets/Bus.png');
                                 SizedBox linelogo;
                                 if (departure.product == 'suburban') {
                                   if (departure.line == 'S46') {
@@ -571,9 +556,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                           //width: 30,
                                           width: MediaQuery.of(contextDeparture).size.width*0.07,
                                         ),
-                                        const SizedBox(
-                                          height: 2,
-                                        ),
                                         Text(
                                           style: const TextStyle(
                                             fontSize: 16,
@@ -585,33 +567,22 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     ),
                                   );
                                 }
-                      
-                                /*double tileheight;
-                                int linecount;
-                                if (departure.destination.length > 22) {
-                                  linecount = 2;
-                                  tileheight = 100;
-                                } else {
-                                  linecount = 1;
-                                  tileheight = 80;
-                                }*/
 
                                 return Center(
                                   child: SizedBox(
                                     width: constraintsDepartures.maxWidth*0.95,
-                                    //height: tileheight,
                                     child: Card(
-                                      child: ExpansionTile(
+                                      child: ListTile(
                                         leading: linelogo, 
                                         title: Text(
                                             style: deststyle,
-                                            //maxLines: linecount,
                                             departure.destination),
                                         subtitle: Text(
                                           style: TextStyle(
                                             fontSize: 15,
-                                              color: timecolor,
-                                            ),
+                                            color: timecolor,
+                                            fontStyle: FontStyle.italic,
+                                          ),
                                           deptime
                                         ),                                  
                                         trailing: '${departure.platform}' != "null" ? Column(
@@ -637,41 +608,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                           ],
                                         ):SizedBox(),
                                         shape: Border(),
-                                        /*onExpansionChanged: (value) {
-                                          if (value) {
-                                            getTripStations(departure.tripID);
-                                          } else {
-                                            tripStations = [];
-                                          }
-                                        },*/
-                                        children: [
-                                          /*SizedBox(
-                                            height: 200,
-                                            child: LayoutBuilder(
-                                              builder:(context, constraints) {
-                                                final List<Widget> tripStationsWidgets = [];
-                                                final tripStops = tripStations.firstWhere((element) => departure.tripID == element.tripID,);
-                                                for (var element in tripStops.stops) {
-                                                  tripStationsWidgets.add(
-                                                    Text(element.stopName)
-                                                  );
-                                                }
-                                                return Column(
-                                                  children: tripStationsWidgets,
-                                                );
-                                              },
-                                            ),
-
-
-                                            /*child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemBuilder: (context, index) {
-                                                final tripStops = tripStations.firstWhere((element) => departure.tripID == element.tripID,);
-                                                return Text(tripStops.stops[index].stopName);
-                                              }
-                                            ),*/
-                                          ),*/
-                                        ],
                                       ),
                                     ),
                                   ),

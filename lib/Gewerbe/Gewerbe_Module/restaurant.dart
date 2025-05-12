@@ -148,16 +148,6 @@ class _RestaurantState extends State<Restaurant> {
           runSpacing: 10,
           children: gridTiles,
         )
-        
-        /*SizedBox(
-          height: (gridTiles.length ~/ 2 + gridTiles.length.remainder(2))*100,
-          child: GridView.count(
-            crossAxisCount: 2,
-            childAspectRatio: 1.75,
-            
-            children: gridTiles
-          ),
-        ),*/
       ],
     );
   }

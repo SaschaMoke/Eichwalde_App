@@ -12,51 +12,6 @@ enum Stations {
   final int stationID;
 }
 
-//Fahrtverlauf
-
-class TripStations {
-  final String stopName;
-  final String? whenArrival;
-  final String? plannedWhenArrival;
-  final String? whenDeparture;
-  final String plannedWhenDeparture;
-
-  TripStations({
-    required this.stopName,
-    this.whenArrival,
-    this.plannedWhenArrival,
-    this.whenDeparture,
-    this.plannedWhenDeparture = '',
-  });
-
-  factory TripStations.fromJson(Map<String, dynamic> json) {
-    return TripStations(
-      stopName: json['stop']['name'],
-      whenArrival: json['arrival'] ?? 'Start',
-      plannedWhenArrival: json['plannedArrival'] ?? 'Start',
-      whenDeparture: json['departure'] ?? 'Ende',
-      plannedWhenDeparture: json['plannedDeparture'] ?? 'Ende',
-    );
-  }
-}
-
-class TripStationsResponse {
-  final List<TripStations> stops;
-  final String tripID;
-
-  const TripStationsResponse({
-    required this.stops,
-    required this.tripID,
-  });
-  
-  factory TripStationsResponse.fromJson(Map<String, dynamic> json) {
-    return TripStationsResponse(
-      stops: List.from(json['trip']['stopovers'].map((x) => TripStations.fromJson(x)),),
-      tripID: json['trip']['id'],
-    );
-  }
-}
-
 //KW (für Schranke)
 
 List departuresKW = [];

@@ -12,11 +12,6 @@ class SocialMedia extends StatefulWidget {
   final String youtubeLink;
   final String youtubeName;
 
-  ////////////entfernen
-  final bool showInstagram;
-  final bool showFacebook;
-  ////////////
-
   final BoxConstraints constraints;
   //... weiteres
   
@@ -28,10 +23,7 @@ class SocialMedia extends StatefulWidget {
     this.facebookName = '',
     this.youtubeLink = '',
     this.youtubeName = '',
-    ////////////entfernen
-    this.showInstagram = false,
-    this.showFacebook = false,
-    ////////////
+
     required this.constraints,
   });
   @override
@@ -203,15 +195,6 @@ class _SocialMediaState extends State<SocialMedia> {
           runSpacing: 10,
           children: gridTiles,
         )
-        
-        /*SizedBox(
-          height: (gridTiles.length ~/ 2 + gridTiles.length.remainder(2))*100,
-          child: GridView.count(
-            crossAxisCount: 2,
-            childAspectRatio: 1.75,
-            children: gridTiles
-          ),
-        ),*/
       ],
     );
   }

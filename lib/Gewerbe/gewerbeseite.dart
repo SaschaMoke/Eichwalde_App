@@ -195,10 +195,6 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     instagramLink: 'https://www.youtube.com/',
                     facebookLink: 'https://www.youtube.com/',
                     youtubeLink: 'https://www.youtube.com/',
-                    ////////////entfernen
-                    showFacebook: true,
-                    showInstagram: true,
-                    ////////////
                     constraints: constraints
                   ):SizedBox(),
                   restaurantModul ? Restaurant(
