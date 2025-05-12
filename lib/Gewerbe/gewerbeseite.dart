@@ -10,7 +10,12 @@ import 'Gewerbe_Module/restaurant.dart';
 import 'Gewerbe_Module/bilder.dart';
 
 class Gewerbeseite extends StatefulWidget{
-  const Gewerbeseite({super.key});
+  //final String documentId;
+  
+  const Gewerbeseite({
+    //required this.documentId,
+    super.key
+  });
 
   @override
   State<Gewerbeseite> createState() => _GewerbeseiteState();
