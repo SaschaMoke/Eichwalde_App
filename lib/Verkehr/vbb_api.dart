@@ -12,6 +12,26 @@ enum Stations {
   final int stationID;
 }
 
+class Remarks {
+  final String? remarkID;
+  final String remarkContent;
+  final String remarkType;
+  
+  const Remarks({
+    this.remarkID,
+    required this.remarkContent,
+    required this.remarkType,
+  });
+
+  factory Remarks.fromJson(Map<String, dynamic> json) {
+    return Remarks(
+      remarkID: json['id'] ?? 'x',
+      remarkContent: json['text'],
+      remarkType: json['type'] ,
+    );
+  }
+}
+
 //KW (für Schranke)
 
 List departuresKW = [];
@@ -153,6 +173,7 @@ class Departure {
   final String line;
   final String product;
   final String tripID;
+  final List remarks;
 
   Departure({
     required this.destination,
@@ -163,6 +184,7 @@ class Departure {
     this.line = 'Unbekannt',
     this.product = 'Unbekannt',
     this.tripID = 'Unbekannt',
+    this.remarks = const [],
   });
   
   @override
@@ -185,6 +207,7 @@ class Departure {
       line: json['line']['name'],
       product: json['line']['product'],
       tripID: json['tripId'],
+      remarks: json['remarks']
     );
   }
   String get formattedHour {

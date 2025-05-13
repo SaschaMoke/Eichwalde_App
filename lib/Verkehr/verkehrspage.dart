@@ -18,6 +18,7 @@ class Verkehrspage extends StatefulWidget {
 
 class _VerkehrspageState extends State<Verkehrspage> {
   List departures = [];
+  List<Remarks> remarks = [];
   String lastUpdate = '';
   Timer? timer;
   int? selectedindex;
@@ -57,7 +58,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
     try {
       final response = await http.get(
         Uri.parse(
-          'https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=false&duration=60'),
+          'https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=true&duration=60'),
         //Uri.parse('https://v6.vbb.transport.rest/stops/900192001/departures?linesOfStops=false&remarks=false&duration=60'),       Schöneweide als Test
       );
 
@@ -80,6 +81,20 @@ class _VerkehrspageState extends State<Verkehrspage> {
         });
         
         schranke = checkSchranke(departures, schrankeWahl);
+
+        //Icon Attention, Layout, Dopplung entfernen
+        remarks = [];
+        for (var element in departures) {
+          List<Remarks> departureRemarks = [];
+          departureRemarks = List.from(element.remarks.map((x) => Remarks.fromJson(x)),);
+          for (var remark in departureRemarks) {
+            if (remark.remarkType == "warning") {
+              if (!remarks.contains(remark)) {
+                remarks.add(remark);
+              }
+            }
+          }
+        }
 
         //Widget Stuff
         schrankeWidget = checkSchranke(departures, 'Lidl'); //<= settingSchrankeWidget      <= Design rot/grün
@@ -409,6 +424,20 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ),
                   ],
                 ),   
+                
+                //hier DropdownMenu
+                SizedBox(
+                  height: 150,
+                  child: ListView.builder(
+                    itemCount: remarks.length,
+                    itemBuilder: (context, index) {
+                      final remark = remarks[index];
+
+                      return Text(remark.remarkContent);
+                    },
+                  ),
+                ),
+                
                 Container(//Abfahrtencontainer
                   height: 400,
                   decoration: BoxDecoration(
