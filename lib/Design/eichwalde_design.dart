@@ -21,5 +21,18 @@ class EichwaldeGradientBar extends StatelessWidget {
   }
 } 
 
-
-
+//Borders
+InputBorder textFeldNormalBorder = OutlineInputBorder(
+  borderRadius: BorderRadius.circular(10),
+  borderSide: BorderSide(
+    width: 1.5,
+    color: Color.fromARGB(255, 100, 100, 100),
+  )
+);
+InputBorder textFeldfocusBorder = OutlineInputBorder(
+  borderRadius: BorderRadius.circular(10),
+  borderSide: BorderSide(
+    width: 2,
+    color: Color.fromARGB(255, 50, 150, 50)
+  )
+);

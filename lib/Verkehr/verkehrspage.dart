@@ -96,6 +96,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
           }
         }
 
+        remarks.add(Remarks(
+          remarkContent: 'WALLAH KRISE', 
+          remarkType: 'warning'
+        ));
+        remarks.add(Remarks(
+          remarkContent: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 
+          remarkType: 'warning'
+        ));
+
         //Widget Stuff
         schrankeWidget = checkSchranke(departures, 'Lidl'); //<= settingSchrankeWidget      <= Design rot/grün
         //nextOpen, nextClose <= Zeit
@@ -407,6 +416,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   height: 20,
                 ),
                 EichwaldeGradientBar(),
+                //Abfahrtenbereich
                 SizedBox(
                   height: 10,
                 ),
@@ -424,20 +434,140 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ),
                   ],
                 ),   
-                
-                //hier DropdownMenu
+                Align(
+                  child: DropdownMenu<Stations>(
+                    width: constraints.maxWidth*0.99,
+                    initialSelection: Stations.eichwalde,
+                    controller: TextEditingController(),
+                    requestFocusOnTap: true,
+                    label: Text('Haltestelle: ${selectedStation!.stationName}'),//const Text('Ausgewählte Haltestelle'),
+                    onSelected: (Stations? val) {
+                      setState(() {
+                        selectedStation = val;
+                      });
+                      fetchAndUpdateData();
+                    },
+                    hintText: selectedStation!.stationName,
+                    //helperText: 'Hello',
+                    //errorText: null,
+                    enableFilter: true,
+                    dropdownMenuEntries: Stations.values.map<DropdownMenuEntry<Stations>>((Stations station) {
+                      return DropdownMenuEntry<Stations>(
+                        value: station,
+                        label: station.stationName,
+                        style: MenuItemButton.styleFrom(
+                          foregroundColor: Color.fromARGB(255, 0, 0, 0),
+                          overlayColor: eichwaldeGreen,
+                        ),
+                      );
+                    }).toList(),
+                    menuStyle: MenuStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(
+                            width: 2,
+                            color: Color.fromARGB(255, 50, 150, 50)
+                          ),
+                        ),
+                      ),
+                    ),
+                    textStyle: TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    inputDecorationTheme: InputDecorationTheme(
+                      border: textFeldNormalBorder,
+                      enabledBorder: textFeldNormalBorder,
+                      focusedBorder: textFeldfocusBorder,
+                      //filled: true,
+                      //fillColor: Color.fromARGB(255, 240, 240, 230), //Farbe
+                    ),
+                  ),
+                ),
                 SizedBox(
-                  height: 150,
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 100,
                   child: ListView.builder(
                     itemCount: remarks.length,
                     itemBuilder: (context, index) {
                       final remark = remarks[index];
 
-                      return Text(remark.remarkContent);
+                      return Card(
+                        surfaceTintColor: Color.fromARGB(255, 255, 255, 0),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: constraints.maxWidth*0.15,
+                              height: 75,
+                              child: Icon(
+                                size: constraints.maxWidth*0.1,
+                                Icons.warning_amber_rounded
+                              )
+                            ),
+                            SizedBox(
+                              width: constraints.maxWidth*0.65,
+                              child: Text(
+                               '${remark.remarkContent.substring(0,remark.remarkContent.length < 50 ? remark.remarkContent.length:50)}...'
+                              )
+                            ),
+                            SizedBox(
+                              width: constraints.maxWidth*0.15,
+                              height: 50,
+                              child: IconButton(
+                                icon: Icon(
+                                  size: constraints.maxWidth*0.075,
+                                  Icons.more_horiz_rounded
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context, 
+                                    builder: (context) => AlertDialog(
+                                      title: Row(
+                                        children: [
+                                          Icon(
+                                            size: constraints.maxWidth*0.15,
+                                            Icons.warning_amber_rounded
+                                          ),
+                                          Text(
+                                            style: TextStyle(
+                                              fontSize: constraints.maxWidth*0.075,
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                            'Störung'
+                                          ),
+                                          SizedBox(
+                                            width: constraints.maxWidth*0.14,
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: Icon(
+                                              size: constraints.maxWidth*0.1,
+                                              Icons.close_rounded
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      titlePadding: EdgeInsets.all(10),
+                                      content: Text(remark.remarkContent),
+                                      surfaceTintColor: Color.fromARGB(255, 255, 255, 0),
+                                    )
+                                  );
+                                },
+                              )
+                            ),
+                          ],
+                        )
+                      );
                     },
                   ),
                 ),
-                
+                SizedBox(
+                  height: 10,
+                ),
                 Container(//Abfahrtencontainer
                   height: 400,
                   decoration: BoxDecoration(
@@ -453,54 +583,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         children: [
                           SizedBox(
                             height: 10,
-                          ),
-                          SizedBox(
-                            height: 30,
-                            width: constraintsDepartures.maxWidth*0.95,
-                            child: DropdownMenu<Stations>(
-                              width: constraintsDepartures.maxWidth*0.95,
-                              initialSelection: Stations.eichwalde,
-                              controller: TextEditingController(),
-                              requestFocusOnTap: true,
-                              label: Text('Haltestelle: ${selectedStation!.stationName}'),//const Text('Ausgewählte Haltestelle'),
-                              onSelected: (Stations? val) {
-                                setState(() {
-                                  selectedStation = val;
-                                });
-                                fetchAndUpdateData();
-                              },
-                              hintText: selectedStation!.stationName,
-                              //helperText: 'Hello',
-                              //errorText: null,
-                              enableFilter: true,
-                              dropdownMenuEntries: Stations.values.map<DropdownMenuEntry<Stations>>((Stations station) {
-                                return DropdownMenuEntry<Stations>(
-                                  value: station,
-                                  label: station.stationName,
-                                  style: MenuItemButton.styleFrom(
-                                    foregroundColor: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                );
-                              }).toList(),
-                              menuStyle: MenuStyle(
-                                backgroundColor: WidgetStatePropertyAll(
-                                Color.fromARGB(255, 255, 255, 255)
-                                )
-                              ),
-                              textStyle: TextStyle(
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              inputDecorationTheme: InputDecorationTheme(
-                                filled: true,
-                                fillColor: Color.fromARGB(255, 240, 240, 230), //Farbe
-                                border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(Radius.circular(12))
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 35,
                           ),
                           SizedBox(
                             height: constraintsDepartures.maxHeight*0.75,//pixelwert
