@@ -481,7 +481,79 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
                       return Card(
                         surfaceTintColor: const Color.fromARGB(255, 255, 255, 0),
-                        child: Row(
+                        child: ListTile(
+                          leading: Icon(
+                            size: constraints.maxWidth*0.1,
+                            Icons.warning_amber_rounded
+                          ),
+                          title: Text(
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: constraints.maxWidth*0.055
+                            ),
+                            'Störung'
+                          ),
+                          subtitle: Text(
+                            style: TextStyle(
+                              fontSize: constraints.maxWidth*0.035,
+                              height: 1,
+                            ),
+                            '${remark.remarkContent.substring(0,remark.remarkContent.length < 20 ? remark.remarkContent.length:20)}...'
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(
+                              size: constraints.maxWidth*0.075,
+                              Icons.more_horiz_rounded
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context, 
+                                builder: (context) => AlertDialog(
+                                  title: SizedBox(
+                                    width: constraints.maxWidth*0.75,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          size: constraints.maxWidth*0.15,
+                                          Icons.warning_amber_rounded
+                                        ),
+                                        Text(
+                                          style: TextStyle(
+                                            fontSize: constraints.maxWidth*0.075,
+                                            fontWeight: FontWeight.bold
+                                          ),
+                                          'Störung'
+                                        ),
+                                        SizedBox(
+                                          width: constraints.maxWidth*0.175,
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          icon: Icon(
+                                            size: constraints.maxWidth*0.1,
+                                            Icons.close_rounded
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  titlePadding: const EdgeInsets.all(10),
+                                  content: SizedBox(
+                                    width: constraints.maxWidth*0.75,
+                                    child: Text(
+                                      remark.remarkContent
+                                    )
+                                  ),
+                                  surfaceTintColor: const Color.fromARGB(255, 255, 255, 0),
+                                )
+                              );
+                            },
+                          ),
+                        )
+                        
+                        /*Row(
                           children: [
                             SizedBox(
                               width: constraints.maxWidth*0.15,
@@ -525,7 +597,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                               'Störung'
                                             ),
                                             SizedBox(
-                                              width: constraints.maxWidth*0.2,
+                                              width: constraints.maxWidth*0.175,
                                             ),
                                             IconButton(
                                               onPressed: () {
@@ -553,7 +625,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               )
                             ),
                           ],
-                        )
+                        )*/
+
                       );
                     },
                   ),
@@ -580,24 +653,22 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               itemBuilder: (context, index) {
                                 final departure = departures[index];
                       
-                                Color timecolor = const Color.fromARGB(255, 0, 0, 0);
+                                //Color timecolor = const Color.fromARGB(255, 0, 0, 0);
                                 var delay = (departure.delay) / 60;
-                                if (delay > 0 && delay < 5) {
+                                /*if (delay > 0 && delay < 5) {
                                   timecolor = const Color.fromARGB(255, 255, 135, 0);
                                 } else if (delay > 5) {
                                   timecolor = const Color.fromARGB(255, 255, 0, 0);
                                 } else {
                                   timecolor = const Color.fromARGB(255, 0, 0, 0);
-                                }
+                                }*/
                       
                                 int mincount;
                                 String deptime;
-                                var formattedHour = int.parse(departure.formattedHour);
-                                var formattedMin = int.parse(departure.formattedMin);
-                                if (formattedHour == currentHour) {
-                                  mincount = (formattedMin - currentMin);
+                                if (int.parse(departure.formattedHour) == currentHour) {
+                                  mincount = (int.parse(departure.formattedMin) - currentMin);
                                 } else {
-                                  mincount = (formattedMin + (60 - currentMin));
+                                  mincount = (int.parse(departure.formattedMin) + (60 - currentMin));
                                 }
                                 if (mincount == 0) {
                                   if (delay > 0) {
@@ -622,7 +693,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     decorationColor: Color.fromARGB(255, 255, 0, 0),
                                   );
                                   deptime = 'Fahrt fällt aus';
-                                  timecolor = const Color.fromARGB(255, 255, 0, 0);
+                                  //timecolor = const Color.fromARGB(255, 255, 0, 0);
                                 } else {
                                   deststyle = const TextStyle(
                                     fontSize: 17,
@@ -640,20 +711,19 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     lineImage = const AssetImage('Assets/S8.png');
                                   }
                                   linelogo = SizedBox(
-                                      height: 40,
-                                      width: MediaQuery.of(contextDeparture).size.width*0.094,
-                                      child: Image(image: lineImage));
+                                    height: 40,
+                                    width: MediaQuery.of(contextDeparture).size.width*0.094,
+                                    child: Image(image: lineImage)
+                                  );
                                 } else {
                                   linelogo = SizedBox(
                                     height: 60,
-                                    //width: 40,
                                     width: MediaQuery.of(contextDeparture).size.width*0.094,
                                     child: Column(
                                       children: [
                                         Image(
                                           image: lineImage,
                                           height: 30,
-                                          //width: 30,
                                           width: MediaQuery.of(contextDeparture).size.width*0.07,
                                         ),
                                         Text(
@@ -675,12 +745,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                       child: ListTile(
                                         leading: linelogo, 
                                         title: Text(
-                                            style: deststyle,
-                                            departure.destination),
+                                          style: deststyle,
+                                          departure.destination
+                                        ),
                                         subtitle: Text(
                                           style: TextStyle(
                                             fontSize: 15,
-                                            color: timecolor,
+                                            color: delay > 0 && delay < 5 ? const Color.fromARGB(255, 255, 135, 0): 
+                                                  delay > 5 || departure.when == 'Fahrt fällt aus' ? const Color.fromARGB(255, 255, 0, 0): const Color.fromARGB(255, 0, 0, 0),
+                                            //color: timecolor,
                                             fontStyle: FontStyle.italic,
                                           ),
                                           deptime
@@ -694,14 +767,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                             Text(
                                               style: TextStyle(
                                                 fontSize: 15,
-                                                color:Color.fromARGB(255, 0, 0, 0),
+                                                color:const Color.fromARGB(255, 0, 0, 0),
                                               ),
                                               'Gleis:'
                                             ),
                                             Text(
                                               style: TextStyle(
                                                 fontSize: 15,
-                                                color:Color.fromARGB(255, 0, 0, 0),
+                                                color:const Color.fromARGB(255, 0, 0, 0),
                                               ),
                                               '${departure.platform}'
                                             ),
