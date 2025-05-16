@@ -201,7 +201,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           });
                           schranke = checkSchranke(departures, schrankeWahl); 
                         }, 
-                        icon: Icon(Icons.swap_horiz_rounded),
+                        icon: const Icon(Icons.swap_horiz_rounded),
                         iconSize: constraints.maxWidth*0.08,
                         color: eichwaldeGreen,
                         tooltip: 'Wechseln Sie zwischen der Schranke Friedensstraße und Waldstraße.',
@@ -211,7 +211,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       width: constraints.maxWidth*0.125,
                       child: IconButton(
                         onPressed: () {},
-                        icon: Icon(Icons.info_outline_rounded),
+                        icon: const Icon(Icons.info_outline_rounded),
                         iconSize: constraints.maxWidth*0.08,
                         color: eichwaldeGreen,
                         tooltip: 'Der Status der Schranke ist eine Berechnung aus Abfahrtszeiten. Keine Garantie für Richtigkeit.',
@@ -235,11 +235,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 15),
                 AnimatedContainer(//Schrankencontainer
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                   height: 225,
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -273,7 +271,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     ),
                                     Text(
                                       style: TextStyle(
-                                        //height: constraints.maxWidth*0.0015,
                                         fontSize: constraints.maxWidth*0.05,
                                         fontStyle: FontStyle.italic,
                                         fontWeight: FontWeight.w500,
@@ -293,9 +290,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                             ),
                                             schrankeTimeTillAction
                                         ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
+                                        const SizedBox(width: 5),
                                         Column(
                                           children: [
                                             SizedBox(
@@ -325,7 +320,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     height: constraints.maxWidth*0.0325
                                   ),
                                   Container(
-                                    padding: EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(10),
                                     height: 100,
                                     width: 60,
                                     decoration: BoxDecoration(
@@ -333,7 +328,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(10),
-                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      color: const Color.fromARGB(255, 255, 255, 255),
                                     ),
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -341,13 +336,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                           width: 2,
                                         ),
                                         borderRadius: BorderRadius.circular(5),
-                                        color: Color.fromARGB(255, 0, 0, 0),
+                                        color: const Color.fromARGB(255, 0, 0, 0),
                                       ),
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           AnimatedContainer(
-                                            duration: Duration(milliseconds: 500),
+                                            duration: const Duration(milliseconds: 500),
                                             height: 26,
                                             width: 26,
                                             decoration: BoxDecoration(
@@ -355,9 +350,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                               color: schrankeRed,
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
+                                          const SizedBox(height: 5),
                                           Container(
                                             height: 26,
                                             width: 26,
@@ -377,7 +370,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           Container(
                             width: constraints.maxWidth,
                             height: 2,
-                            color: Color.fromARGB(255, 50, 50, 50),
+                            color: const Color.fromARGB(255, 50, 50, 50),
                           ),
                           SizedBox(
                             height: constraints.maxHeight*0.025,
@@ -393,14 +386,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                   textAlign: TextAlign.center,
                                   '${train.line}  ${train.destination}'
                                 );
-                              }):Text(
+                              }):const Text(
                                 textAlign: TextAlign.center,
                                 'Keine Züge'
                             ),
                           ),
                         ],
                       ):Center(
-                          child: Text(
+                          child: const Text(
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -412,14 +405,10 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       }
                     )
                   ),
-                SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 EichwaldeGradientBar(),
                 //Abfahrtenbereich
-                SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     SizedBox(
@@ -456,7 +445,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         value: station,
                         label: station.stationName,
                         style: MenuItemButton.styleFrom(
-                          foregroundColor: Color.fromARGB(255, 0, 0, 0),
+                          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                           overlayColor: eichwaldeGreen,
                         ),
                       );
@@ -467,26 +456,22 @@ class _VerkehrspageState extends State<Verkehrspage> {
                           borderRadius: BorderRadius.circular(10),
                           side: BorderSide(
                             width: 2,
-                            color: Color.fromARGB(255, 50, 150, 50)
+                            color: eichwaldeGreen,
                           ),
                         ),
                       ),
                     ),
                     textStyle: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: const Color.fromARGB(255, 0, 0, 0),
                     ),
                     inputDecorationTheme: InputDecorationTheme(
                       border: textFeldNormalBorder,
                       enabledBorder: textFeldNormalBorder,
                       focusedBorder: textFeldfocusBorder,
-                      //filled: true,
-                      //fillColor: Color.fromARGB(255, 240, 240, 230), //Farbe
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 SizedBox(
                   height: 100,
                   child: ListView.builder(
@@ -495,7 +480,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       final remark = remarks[index];
 
                       return Card(
-                        surfaceTintColor: Color.fromARGB(255, 255, 255, 0),
+                        surfaceTintColor: const Color.fromARGB(255, 255, 255, 0),
                         child: Row(
                           children: [
                             SizedBox(
@@ -524,36 +509,44 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                   showDialog(
                                     context: context, 
                                     builder: (context) => AlertDialog(
-                                      title: Row(
-                                        children: [
-                                          Icon(
-                                            size: constraints.maxWidth*0.15,
-                                            Icons.warning_amber_rounded
-                                          ),
-                                          Text(
-                                            style: TextStyle(
-                                              fontSize: constraints.maxWidth*0.075,
-                                              fontWeight: FontWeight.bold
+                                      title: SizedBox(
+                                        width: constraints.maxWidth*0.75,
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              size: constraints.maxWidth*0.15,
+                                              Icons.warning_amber_rounded
                                             ),
-                                            'Störung'
-                                          ),
-                                          SizedBox(
-                                            width: constraints.maxWidth*0.14,
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            icon: Icon(
-                                              size: constraints.maxWidth*0.1,
-                                              Icons.close_rounded
+                                            Text(
+                                              style: TextStyle(
+                                                fontSize: constraints.maxWidth*0.075,
+                                                fontWeight: FontWeight.bold
+                                              ),
+                                              'Störung'
                                             ),
-                                          )
-                                        ],
+                                            SizedBox(
+                                              width: constraints.maxWidth*0.2,
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              icon: Icon(
+                                                size: constraints.maxWidth*0.1,
+                                                Icons.close_rounded
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      titlePadding: EdgeInsets.all(10),
-                                      content: Text(remark.remarkContent),
-                                      surfaceTintColor: Color.fromARGB(255, 255, 255, 0),
+                                      titlePadding: const EdgeInsets.all(10),
+                                      content: SizedBox(
+                                        width: constraints.maxWidth*0.75,
+                                        child: Text(
+                                          remark.remarkContent
+                                        )
+                                      ),
+                                      surfaceTintColor: const Color.fromARGB(255, 255, 255, 0),
                                     )
                                   );
                                 },
@@ -565,9 +558,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     },
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 Container(//Abfahrtencontainer
                   height: 400,
                   decoration: BoxDecoration(
@@ -581,9 +572,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     builder: (contextDeparture, constraintsDepartures) {
                       return Column(
                         children: [
-                          SizedBox(
-                            height: 10,
-                          ),
+                          const SizedBox(height: 10),
                           SizedBox(
                             height: constraintsDepartures.maxHeight*0.75,//pixelwert
                             child: departures.isNotEmpty ? ListView.builder(

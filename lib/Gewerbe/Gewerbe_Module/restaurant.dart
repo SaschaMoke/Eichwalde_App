@@ -138,8 +138,8 @@ class _RestaurantState extends State<Restaurant> {
         'Bestellen'
       ),
       shape: const Border(),
-      tilePadding: EdgeInsets.all(1),
-      childrenPadding: EdgeInsets.all(5),
+      tilePadding: const EdgeInsets.all(1),
+      childrenPadding: const EdgeInsets.all(5),
       textColor: eichwaldeGreen,
       iconColor: eichwaldeGreen,  
       children: [

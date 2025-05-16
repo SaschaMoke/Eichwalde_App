@@ -13,8 +13,8 @@ class Oeffnungszeiten extends StatefulWidget {
   final BoxConstraints constraints;
   final String leadingHint;
   final String trailingHint;
-  final bool leadingImportant;
-  final bool trailingImportant;
+  final String leadingImportant;
+  final String trailingImportant;
   //... weiteres
   
   const Oeffnungszeiten({
@@ -29,8 +29,8 @@ class Oeffnungszeiten extends StatefulWidget {
     required this.constraints,
     this.leadingHint = '',
     this.trailingHint = '',
-    this.leadingImportant = false,
-    this.trailingImportant = false,
+    this.leadingImportant = 'false',
+    this.trailingImportant = 'false',
   });
   @override
   State<Oeffnungszeiten> createState() => _OeffnungszeitenState();
@@ -40,7 +40,7 @@ class _OeffnungszeitenState extends State<Oeffnungszeiten> {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      leading: Icon(Icons.timelapse_outlined), 
+      leading: const Icon(Icons.timelapse_outlined), 
       title: Text(
         style: TextStyle(
           fontWeight: FontWeight.w600,
@@ -49,8 +49,8 @@ class _OeffnungszeitenState extends State<Oeffnungszeiten> {
         'Öffnungszeiten'
       ),
       shape: const Border(),
-      tilePadding: EdgeInsets.all(1),
-      childrenPadding: EdgeInsets.all(5),
+      tilePadding: const EdgeInsets.all(1),
+      childrenPadding: const EdgeInsets.all(5),
       textColor: eichwaldeGreen,
       iconColor: eichwaldeGreen,
       children: [
@@ -58,7 +58,7 @@ class _OeffnungszeitenState extends State<Oeffnungszeiten> {
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: widget.constraints.maxWidth*0.04,
-            color: widget.leadingImportant ? Color.fromARGB(255, 255, 0, 0):Color.fromARGB(255, 0, 0, 0),
+            color: widget.leadingImportant == 'true' ? Color.fromARGB(255, 255, 0, 0):Color.fromARGB(255, 0, 0, 0),
           ),
           '''${widget.leadingHint}          
 '''                                           //FORMATIERUNG NICHT ÄNDERN!
@@ -99,11 +99,11 @@ ${widget.sunday}'''                           //FORMATIERUNG NICHT ÄNDERN!
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: widget.constraints.maxWidth*0.04,
-            color: widget.trailingImportant ? Color.fromARGB(255, 255, 0, 0):Color.fromARGB(255, 0, 0, 0),
+            color: widget.trailingImportant == 'true' ? Color.fromARGB(255, 255, 0, 0):Color.fromARGB(255, 0, 0, 0),
           ),
           '''
 
-${widget.trailingHint}'''
+${widget.trailingHint}'''//FORMATIERUNG NICHT ÄNDERN!
         ):SizedBox(),
       ],
     );

@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 0;
   String pagename = '';
   Color indicatorColor = eichwaldeGradientGreen;
-  Color indicatorColorLight = Color.fromARGB(100, 80, 175, 50);
+  Color indicatorColorLight = const Color.fromARGB(100, 80, 175, 50);
 
   @override
   Widget build(BuildContext context) {
@@ -112,32 +112,32 @@ class _MyHomePageState extends State<MyHomePage> {
         page = Homepage();
         pagename = 'Home';
         indicatorColor = eichwaldeGradientGreen;
-        indicatorColorLight = Color.fromARGB(100, 80, 175, 50);
+        indicatorColorLight = const Color.fromARGB(100, 80, 175, 50);
         break;
       case 1:
         page = Verkehrspage();
         pagename = 'Verkehr';
-        indicatorColor = Color.fromARGB(255, 60, 150, 80);
-        indicatorColorLight = Color.fromARGB(100, 60, 150, 80);
+        indicatorColor = const Color.fromARGB(255, 60, 150, 80);
+        indicatorColorLight = const Color.fromARGB(100, 60, 150, 80);
         break;
       case 2:
         page = GewerbePage();
         pagename = 'Gewerbe';
-        indicatorColor = Color.fromARGB(255, 35, 120, 110);
-        indicatorColorLight = Color.fromARGB(100, 35, 120, 110);
+        indicatorColor = const Color.fromARGB(255, 35, 120, 110);
+        indicatorColorLight = const Color.fromARGB(100, 35, 120, 110);
         //page = GewerbeLayoutNeu();
         break;
       case 3:
         //page = Terminepage();
         pagename = 'Termine';
-        indicatorColor = Color.fromARGB(255, 20, 100, 130);
-        indicatorColorLight = Color.fromARGB(100, 20, 100, 130);
+        indicatorColor = const Color.fromARGB(255, 20, 100, 130);
+        indicatorColorLight = const Color.fromARGB(100, 20, 100, 130);
         break;
       case 4:
         page = SettingsPage();
         pagename = 'Einstellungen';
         indicatorColor = eichwaldeGradientBlue;
-        indicatorColorLight = Color.fromARGB(100, 0, 80, 160);
+        indicatorColorLight = const Color.fromARGB(100, 0, 80, 160);
         //page = AdminCheckPage();
         break;
       default:
@@ -214,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: MediaQuery.of(context).size.height*0.08,   
                     width: MediaQuery.of(context).size.width*0.175,   
                     child: Image(
-                      image: AssetImage('Assets/IconEichwalde.png'),
+                      image: const AssetImage('Assets/IconEichwalde.png'),
                     ),
                   ),
                   SizedBox(width: 5),
@@ -227,9 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Container(
                 child: page
               )
@@ -1406,7 +1404,6 @@ class _GewerbePageState extends State<GewerbePage> {
   @override
   Widget build(BuildContext context) {
     // List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
-
     return Column(
           children: [
             ElevatedButton(

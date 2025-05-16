@@ -70,11 +70,13 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hi'),
+        title: const Text('Hi'),
         actions: [
           IconButton(
-            onPressed: () {}, //Favoritenoption hier
-            icon: Icon(Icons.favorite_outline)        
+            onPressed: () {
+              
+            }, //Favoritenoption hier
+            icon: const Icon(Icons.favorite_outline)        
           )
         ],
       ),
@@ -85,11 +87,11 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
             builder: (context, constraints) {
               return ListView(
                 children: [
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Image.network(
                     'https://i.ytimg.com/vi/yzCtDA6tHLo/maxresdefault.jpg'    //GewerbeImage
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
@@ -106,42 +108,11 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     ),
                     'Comedy'                                //Kategorie
                   ),
-                  SizedBox(height: 20),
-                  //Quick Actions
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          ShaderMask(
-                            blendMode: BlendMode.srcIn,
-                            shaderCallback: (bounds) => eichwaldeGradient.createShader(
-                              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-                            ),
-                            child:IconButton(
-                              onPressed: () {
-                                
-                              }, 
-                              iconSize: constraints.maxWidth*0.1,
-                              icon: Icon(Icons.nfc),
-                            ),
-                          ),
-                          Text(
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: constraints.maxWidth*0.045,
-                            ),
-                            'Hi'
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   EichwaldeGradientBar(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ExpansionTile(
-                    leading: Icon(Icons.description_outlined),
+                    leading: const Icon(Icons.description_outlined),
                     title: Text(
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
@@ -150,8 +121,8 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                       'Beschreibung'
                     ),
                     shape: const Border(),
-                    tilePadding: EdgeInsets.all(1),
-                    childrenPadding: EdgeInsets.all(5),
+                    tilePadding: const EdgeInsets.all(1),
+                    childrenPadding: const EdgeInsets.all(5),
                     textColor: eichwaldeGreen,
                     iconColor: eichwaldeGreen,
                     initiallyExpanded: true,
@@ -177,9 +148,9 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     sunday: 'Geschlossen', 
                     constraints: constraints,
                     leadingHint: 'Abweichende Öffnungszeiten durch Osterferien',
-                    leadingImportant: true,
+                    leadingImportant: 'true',
                     trailingHint: 'Bottom text',
-                    trailingImportant: true,
+                    trailingImportant: 'true',
                   ):SizedBox(),
                   kontaktModul ? Kontakt(
                     adresse: 'Bahnhofstraße 79, Eichwalde',
@@ -223,8 +194,6 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     ],
                     constraints: constraints
                   ):SizedBox(),
-
-                  //SizedBox(height: 10),
                   Text(
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -233,7 +202,7 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     ),
                     '''Alle Angaben ohne Gewähr. Keine Garantie für Aktualität und Richtigkeit.'''
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                 ],
               );
             },
@@ -241,10 +210,5 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
         ),
       ),
     );
-    
-    //return SafeArea(
-      
-      //child: child
-    //);
   }
 }

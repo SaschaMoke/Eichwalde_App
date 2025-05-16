@@ -167,7 +167,7 @@ class _KontaktState extends State<Kontakt> {
     }
 
     return ExpansionTile(
-      leading: Icon(Icons.phone_outlined), //ICON
+      leading: const Icon(Icons.phone_outlined), 
       title: Text(
         style: TextStyle(
           fontWeight: FontWeight.w600,
@@ -176,8 +176,8 @@ class _KontaktState extends State<Kontakt> {
         'Kontakt'
       ),
       shape: const Border(),
-      tilePadding: EdgeInsets.all(1),
-      childrenPadding: EdgeInsets.all(5),
+      tilePadding: const EdgeInsets.all(1),
+      childrenPadding: const EdgeInsets.all(5),
       textColor: eichwaldeGreen,
       iconColor: eichwaldeGreen,
       children: [

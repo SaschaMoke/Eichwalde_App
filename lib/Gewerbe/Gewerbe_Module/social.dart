@@ -51,7 +51,6 @@ class _SocialMediaState extends State<SocialMedia> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: eichwaldeGreen,
-                      //design
                       content: Text(
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
@@ -64,9 +63,8 @@ class _SocialMediaState extends State<SocialMedia> {
                 }    
                 }, 
                 child: Image(
-                //height: 50,
                 height: widget.constraints.maxHeight*0.06,
-                  image: AssetImage('Assets/Facebook_icon.png'),
+                  image: const AssetImage('Assets/Facebook_icon.png'),
                 ),
               ),
               Text(
@@ -98,7 +96,6 @@ class _SocialMediaState extends State<SocialMedia> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: eichwaldeGreen,
-                      //design
                       content: Text(
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
@@ -111,9 +108,8 @@ class _SocialMediaState extends State<SocialMedia> {
                 }   
                 }, 
                 child: Image(
-                //height: 50,
-                height: widget.constraints.maxHeight*0.06,
-                  image: AssetImage('Assets/Instagram_icon.png'),
+                  height: widget.constraints.maxHeight*0.06,
+                  image: const AssetImage('Assets/Instagram_icon.png'),
                 ),
               ),
               Text(
@@ -145,7 +141,6 @@ class _SocialMediaState extends State<SocialMedia> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: eichwaldeGreen,
-                      //design
                       content: Text(
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
@@ -158,8 +153,8 @@ class _SocialMediaState extends State<SocialMedia> {
                 }   
                 }, 
                 child: Image(
-                height: widget.constraints.maxHeight*0.06,
-                  image: AssetImage('Assets/Youtube_icon.png'),
+                  height: widget.constraints.maxHeight*0.06,
+                  image: const AssetImage('Assets/Youtube_icon.png'),
                 ),
               ),
               Text(
@@ -176,7 +171,7 @@ class _SocialMediaState extends State<SocialMedia> {
     }
 
     return ExpansionTile(
-      leading: Icon(Icons.facebook_outlined), //ICON
+      leading: const Icon(Icons.facebook_outlined),
       title: Text(
         style: TextStyle(
           fontWeight: FontWeight.w600,
@@ -185,8 +180,8 @@ class _SocialMediaState extends State<SocialMedia> {
         'Soziale Medien'
       ),
       shape: const Border(),
-      tilePadding: EdgeInsets.all(1),
-      childrenPadding: EdgeInsets.all(5),
+      tilePadding: const EdgeInsets.all(1),
+      childrenPadding: const EdgeInsets.all(5),
       textColor: eichwaldeGreen,
       iconColor: eichwaldeGreen,
       children: [

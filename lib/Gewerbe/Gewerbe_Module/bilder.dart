@@ -66,7 +66,7 @@ class _BilderState extends State<Bilder> {
       imgCount = imgCount+1;
     }
     return ExpansionTile(
-      leading: Icon(Icons.image), //ICON
+      leading: const Icon(Icons.image),
       title: Text(
         style: TextStyle(
           fontWeight: FontWeight.w600,
@@ -75,8 +75,8 @@ class _BilderState extends State<Bilder> {
         'Galerie / Bilder!!!!!'
       ),
       shape: const Border(),
-      tilePadding: EdgeInsets.all(1),
-      childrenPadding: EdgeInsets.all(5),
+      tilePadding: const EdgeInsets.all(1),
+      childrenPadding: const EdgeInsets.all(5),
       textColor: eichwaldeGreen,
       iconColor: eichwaldeGreen,
       children: [
@@ -85,7 +85,7 @@ class _BilderState extends State<Bilder> {
           child: CarouselView.weighted(
             flexWeights: [1,7,1],
             itemSnapping: true,
-            backgroundColor: Color.fromARGB(255, 50, 150, 50),
+            backgroundColor: eichwaldeGreen,
             children: images,
               /*widget.image1.isNotEmpty ? Image.network(widget.image1):SizedBox(),
               widget.image2.isNotEmpty ? Image.network(widget.image2):SizedBox(),
