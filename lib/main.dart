@@ -65,6 +65,7 @@ void main() async {
  
   //NotificationService().initNotification();   //init notifications
   initializeDateFormatting('de_DE', null);      // Deutsch aktivieren
+  loadSettings();
   runApp(const MyApp());
 }
 

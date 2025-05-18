@@ -1,3 +1,4 @@
+import 'package:eichwalde_app/settings.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -22,7 +23,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   String lastUpdate = '';
   Timer? timer;
   int? selectedindex;
-  Stations? selectedStation = Stations.eichwalde;
+  Stations? selectedStation = Settings.standardAbfahrt == 'eichwalde' ? Stations.eichwalde:Settings.standardAbfahrt == 'friedenstr' ? Stations.friedenstr:Stations.schmockwitz;
   bool schranke = false;
   bool schrankeWidget = false;
   String schrankeWahl = 'Lidl';
@@ -426,7 +427,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 Align(
                   child: DropdownMenu<Stations>(
                     width: constraints.maxWidth*0.99,
-                    initialSelection: Stations.eichwalde,
+                    initialSelection: selectedStation,
                     controller: TextEditingController(),
                     requestFocusOnTap: true,
                     label: Text('Haltestelle: ${selectedStation!.stationName}'),//const Text('Ausgewählte Haltestelle'),

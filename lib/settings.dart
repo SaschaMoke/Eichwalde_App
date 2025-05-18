@@ -1,6 +1,25 @@
+import 'package:eichwalde_app/Verkehr/vbb_api.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
 
-import 'package:flutter/material.dart';
+class Settings {
+  static String standardSchranke = '';
+  static String standardAbfahrt = '';
+}
+
+Future<void> loadSettings() async {
+  final prefs = await SharedPreferences.getInstance();
+  Settings.standardSchranke = prefs.getString('schrankeStandard') ?? 'Lidl';
+  Settings.standardAbfahrt = prefs.getString('abfahrtStandard') ?? '';
+}
+
+Future<void> saveSettings() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('schrankeStandard', Settings.standardSchranke);
+  await prefs.setString('abfahrtStandard', Settings.standardAbfahrt);
+}
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -12,8 +31,6 @@ class SettingsPage extends StatefulWidget {
 class _SettingsState extends State<SettingsPage> {
   bool setting1 = false; //=> Einstellungsbools
   
-  
-  
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -23,6 +40,95 @@ class _SettingsState extends State<SettingsPage> {
             width: constraints.maxWidth*0.95,
             child: ListView(
               children: [
+                Text(
+                  style: TextStyle(
+                    fontSize: constraints.maxWidth*0.09,
+                    fontWeight: FontWeight.w500,
+                  ),
+                'Verkehr'
+                ), 
+                Text(
+                  style: TextStyle(
+                    height: 0.5,
+                    fontSize: constraints.maxWidth*0.05,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  'Standardauswahl Schranke'
+                ),
+                const SizedBox(height: 10),
+
+                Text(
+                  style: TextStyle(
+                    height: 0.5,
+                    fontSize: constraints.maxWidth*0.05,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  'Standardauswahl Abfahrten'
+                ),
+                const SizedBox(height: 10),
+                DropdownMenu(
+                  dropdownMenuEntries: [
+                    DropdownMenuEntry(
+                      value: 'eichwalde', 
+                      label: 'S Eichwalde',
+                      style: MenuItemButton.styleFrom(
+                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        overlayColor: eichwaldeGreen,
+                      ),
+                    ),
+                    DropdownMenuEntry(
+                      value: 'friedenstr', 
+                      label: 'Eichwalde, Friedenstr.',
+                      style: MenuItemButton.styleFrom(
+                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        overlayColor: eichwaldeGreen,
+                      ),
+                    ),
+                    DropdownMenuEntry(
+                      value: 'schmockwitz', 
+                      label: 'Eichwalde, Schmöckwitzer Str.',
+                      style: MenuItemButton.styleFrom(
+                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        overlayColor: eichwaldeGreen,
+                      ),
+                    ),
+                  ],
+                  width: constraints.maxWidth*0.99,
+                  initialSelection: Settings.standardAbfahrt == 'eichwalde' ? 'eichwalde':Settings.standardAbfahrt == 'friedenstr' ? 'friedenstr':'schmockwitz',
+                  controller: TextEditingController(),
+                  requestFocusOnTap: true,
+                  //label: Text(Settings.standardAbfahrt == 'eichwalde' ? Stations.eichwalde.stationName:Settings.standardAbfahrt == 'friedenstr' ? Stations.friedenstr.stationName:Stations.schmockwitz.stationName),
+                  onSelected: (String? val) {
+                    setState(() {
+                      Settings.standardAbfahrt = val!;
+                    });
+                    saveSettings();
+                  },
+                  hintText: Settings.standardAbfahrt == 'eichwalde' ? Stations.eichwalde.stationName:Settings.standardAbfahrt == 'friedenstr' ? Stations.friedenstr.stationName:Stations.schmockwitz.stationName,
+                  enableFilter: true,
+                  menuStyle: MenuStyle(
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: BorderSide(
+                          width: 2,
+                          color: eichwaldeGreen,
+                        ),
+                      ),
+                    ),
+                  ),
+                  textStyle: TextStyle(
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                  ),
+                  inputDecorationTheme: InputDecorationTheme(
+                    border: textFeldNormalBorder,
+                    enabledBorder: textFeldNormalBorder,
+                    focusedBorder: textFeldfocusBorder,
+                  ),
+                ),
+                
                 //Einstellungen
                 Text(
                   style: TextStyle(
@@ -40,7 +146,7 @@ class _SettingsState extends State<SettingsPage> {
                   ),
                   'Kleine Überschrift'
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 SwitchListTile(
                   value: setting1, 
                   onChanged: (bool value) {
@@ -56,10 +162,10 @@ class _SettingsState extends State<SettingsPage> {
                   //title: ,
                   //subtitle: ,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 EichwaldeGradientBar(),
                 //Unten
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -71,7 +177,7 @@ class _SettingsState extends State<SettingsPage> {
                       'Made with '
                     ),
                     Icon(
-                      color: Color.fromARGB(255, 255, 0, 0),
+                      color: const Color.fromARGB(255, 255, 0, 0),
                       Icons.favorite,
                       size: constraints.maxWidth*0.05,
                     ),
@@ -88,7 +194,7 @@ class _SettingsState extends State<SettingsPage> {
                 Image(
                   //width: constraints.maxWidth*0.01,
                   height: constraints.maxWidth*0.2,
-                  image: AssetImage('Assets/IconEichwaldeneu2.png')
+                  image: const AssetImage('Assets/IconEichwaldeneu2.png')
                 ),
                 SizedBox(height: 10),
                 Text(
