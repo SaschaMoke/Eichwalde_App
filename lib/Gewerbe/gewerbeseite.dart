@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
 
 //module
@@ -10,10 +12,10 @@ import 'Gewerbe_Module/restaurant.dart';
 import 'Gewerbe_Module/bilder.dart';
 
 class Gewerbeseite extends StatefulWidget{
-  //final String documentId;
+  final String documentId;
   
   const Gewerbeseite({
-    //required this.documentId,
+    required this.documentId,
     super.key
   });
 
@@ -21,22 +23,23 @@ class Gewerbeseite extends StatefulWidget{
   State<Gewerbeseite> createState() => _GewerbeseiteState();
 }
 
-//alle Strings werden beim Laden der seite durch die entsprechenden Firebasewerte ersetzt
-
 class _GewerbeseiteState extends State<Gewerbeseite> {
-  //(late, bzw. String?)
+  String loadError = '';
   
   String gewerbeName = ''; 
   String gewerbeBeschreibung = '';
   String gewerbeImage = '';
+  String gewerbeKat = '';
 
   bool kontaktModul = true;   //standard = false
+  String kontaktActive = 'false';
   String kontaktTelefon = '';
   String kontaktMail = '';
   String kontaktWeb = '';
   String kontaktAdresse = '';
   
   bool oeffnungsModul = true;   //standard = false
+  String oeffnungActive = 'false';
   String oeffnungsMo = '';
   String oeffnungsDi = '';
   String oeffnungsMi = '';
@@ -44,8 +47,13 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
   String oeffnungsFr = '';
   String oeffnungsSa = '';
   String oeffnungsSo = '';
+  String oeffnungLeading = '';
+  String oeffnungTrailing = '';
+  String oeffnungLeadingImportant = 'false';
+  String oeffnungTrailingImportant = 'false';
 
   bool socialModul = true;   //standard = false
+  String socialActive = 'false';
   String socialFacebookName = '';
   String socialFacebookLink = '';
   String socialInstagramName = '';
@@ -53,18 +61,81 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
   String socialYoutubeName = '';
   String socialYoutubeLink = '';
 
-  bool restaurantModul = true;   //standard = false
+  bool restaurantModul = false;   //standard = false
+  String restaurantActive = 'false';
   String restaurantOrderLink = '';
   String restaurantKarte = '';
   String restaurantTelefon = '';
 
   bool bilderModul = true; //standard = false
+  String bilderActive = 'false';
   //nur beispiele
   String bilderLink1 = '';
   String bilderLink2 = '';
   String bilderLink3 = '';
   String bilderLink4 = '';
   String bilderLink5 = '';
+
+  Future<void> loadData(String docId) async {
+    try {
+      final docSnapshot = await FirebaseFirestore.instance.collection('Gewerbe2').doc(docId).get();
+      final data = docSnapshot.data();
+
+      print(data);
+      if (data != null) {
+        gewerbeName = data['name'];
+        gewerbeBeschreibung = data['beschreibung'];
+        gewerbeImage = data['bild'];
+        gewerbeKat = data['kategorie'];
+
+        bilderActive = data['oeffnung']['active'];
+        oeffnungsMo = data['oeffnung']['mo'];
+        oeffnungsDi = data['oeffnung']['di'];
+        oeffnungsMi = data['oeffnung']['mi'];
+        oeffnungsDo = data['oeffnung']['do'];
+        oeffnungsFr = data['oeffnung']['fr'];
+        oeffnungsSa = data['oeffnung']['sa'];
+        oeffnungsSo = data['oeffnung']['so'];       
+        oeffnungLeading = data['oeffnung']['textOben']['text'];
+        oeffnungLeadingImportant = data['oeffnung']['textOben']['important'];
+        oeffnungTrailing = data['oeffnung']['textUnten']['text'];
+        oeffnungTrailingImportant = data['oeffnung']['textUnten']['important'];
+
+        bilderActive = data['kontakt']['active'];
+        kontaktAdresse = data['kontakt']['adresse'];
+        kontaktMail = data['kontakt']['mail'];
+        kontaktTelefon = data['kontakt']['tel'];
+        kontaktWeb = data['kontakt']['web'];
+
+        bilderActive = data['social']['active'];
+        socialFacebookLink = data['social']['facebookLink'];
+        socialFacebookName = data['social']['facebookName'];
+        socialInstagramLink = data['social']['instagramLink'];
+        socialInstagramName = data['social']['instagramName'];
+        socialYoutubeLink = data['social']['youtubeLink'];
+        socialYoutubeName = data['social']['youtubeName'];
+
+        bilderActive = data['galerie']['active'];
+        bilderLink1 = data['galerie']['bild1'];
+        bilderLink2 = data['galerie']['bild2'];
+        bilderLink3 = data['galerie']['bild3'];
+        bilderLink4 = data['galerie']['bild4'];
+        bilderLink5 = data['galerie']['bild5'];
+
+        loadError = '';
+      } else {
+        loadError = 'hehe';
+      }
+    } catch(e) {
+      print('Loading Error : $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadData(widget.documentId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,11 +156,14 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
           width: MediaQuery.of(context).size.width*0.9,
           child: LayoutBuilder(
             builder: (context, constraints) {
-              return ListView(
+              //loadData(widget.documentId);
+              return loadError.isEmpty ? ListView(
                 children: [
                   const SizedBox(height: 20),
                   Image.network(
-                    'https://i.ytimg.com/vi/yzCtDA6tHLo/maxresdefault.jpg'    //GewerbeImage
+                    //'https://i.ytimg.com/vi/yzCtDA6tHLo/maxresdefault.jpg'    //GewerbeImage
+                    //gewerbeData!['bild'] ?? AssetImage('Assets/IconEichwalde.png'),
+                    gewerbeImage,
                   ),
                   const SizedBox(height: 20),
                   Text(
@@ -97,7 +171,9 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                       fontWeight: FontWeight.w700,
                       fontSize: constraints.maxWidth*0.1
                     ),
-                    'Bertram GmbH'                                //Gewerbename
+                    //'Bertram GmbH'                                //Gewerbename
+                    //gewerbeData!['name'] ?? '',
+                    gewerbeName,
                   ),
                   Text(
                     style: TextStyle(
@@ -106,7 +182,9 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                       fontStyle: FontStyle.italic,
                       height: constraints.maxWidth*0.0025,
                     ),
-                    'Comedy'                                //Kategorie
+                    //'Comedy',                                //Kategorie
+                    //gewerbeData!['kategorie'] ?? '',    
+                    gewerbeKat, 
                   ),
                   const SizedBox(height: 20),
                   EichwaldeGradientBar(),
@@ -132,13 +210,73 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                           fontWeight: FontWeight.w500,
                           fontSize: constraints.maxWidth*0.04
                         ),
-                        'Lorem ipsum salami hallo ich bin ein langer Text um das mal ein bisschen zu füllen Bom schalom Schames lalala Moke bom'
+                        //'Lorem ipsum salami hallo ich bin ein langer Text um das mal ein bisschen zu füllen Bom schalom Schames lalala Moke bom'
+                        //gewerbeData!['beschreibung'] ?? 'Keine Beschreibung angegeben',
+                        gewerbeBeschreibung,
                       )         //Gewerbebeschreibung
                     ],
                   ),
 
+                  oeffnungActive == 'true' ? Oeffnungszeiten(
+                    monday: oeffnungsMo,
+                    tuesday: oeffnungsDi,
+                    wednesday: oeffnungsMi,
+                    thursday: oeffnungsDo,
+                    friday: oeffnungsFr,
+                    saturday: oeffnungsSa,
+                    sunday: oeffnungsSo,
+                    constraints: constraints,
+                    leadingHint: oeffnungLeading,
+                    leadingImportant: oeffnungLeadingImportant,
+                    trailingHint: oeffnungTrailing,
+                    trailingImportant: oeffnungTrailingImportant,
+                  ):SizedBox(),
+                  kontaktActive == 'true' ? Kontakt(
+                    adresse: kontaktAdresse,
+                    web: kontaktWeb,
+                    telefon: kontaktTelefon,
+                    mail: kontaktMail,
+                    constraints: constraints
+                  ):SizedBox(),
+                  socialActive == 'true' ? SocialMedia(
+                    instagramName: socialInstagramName,
+                    facebookName: socialFacebookName,
+                    youtubeName: socialYoutubeName,
+                    instagramLink: socialInstagramLink,
+                    facebookLink: socialFacebookLink,
+                    youtubeLink: socialYoutubeLink,
+                    constraints: constraints
+                  ):SizedBox(),
+                  restaurantModul ? Restaurant(                 //gewerbeData!['restaurant']['active'] == 'true'
+                    telefon: '+69 1234 56789',
+                    karte: 'https://pane-vino-eichwalde.de/wp-content/uploads/2024/02/Pane-Vino-Eichwalde-Speisekarte.pdf',
+                    orderLink: 'xx',
+                    gewerbeName: 'Bertrams Restaurant GmbH',//Gewerbename
+                    constraints: constraints
+                  ):SizedBox(),  
+                  bilderActive == 'true' ? Bilder(
+                    image1:'',
+                    image2:'',
+                    image3:'',
+                    image4:'',
+                    imageLinks: [
+                      bilderLink1,
+                      bilderLink2,
+                      bilderLink3,
+                      bilderLink4,
+                      bilderLink5,
+                    ],
+                    imageCaptions: [
+                      'Bertram', 
+                      'Sascha Moke', 
+                      'Bom', 
+                      'Was zur Hölle mache ich hier eigentlich'
+                    ],
+                    constraints: constraints
+                  ):SizedBox(),
+
                   //weitere Module hier drunter (reihenfolge festlegen!!):
-                  oeffnungsModul ? Oeffnungszeiten(
+                  /*oeffnungsModul ? Oeffnungszeiten(
                     monday: '08:00 - 16:00 Uhr', 
                     tuesday: '08:00 - 16:00 Uhr', 
                     wednesday: '08:00 - 16:00 Uhr', 
@@ -193,7 +331,7 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                       'Was zur Hölle mache ich hier eigentlich'
                     ],
                     constraints: constraints
-                  ):SizedBox(),
+                  ):SizedBox(),*/
                   Text(
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -204,6 +342,8 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                   ),
                   const SizedBox(height: 10),
                 ],
+              ):Text(
+                'Es konnten keine Daten geladen werden!'
               );
             },
           ),

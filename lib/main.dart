@@ -1411,7 +1411,7 @@ class _GewerbePageState extends State<GewerbePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Gewerbeseite()),
+                  MaterialPageRoute(builder: (context) => Gewerbeseite(documentId:'oXZDRgQtFI13dAo2MMkN')),
                 );
               },
               child: Text('Test neue Seite'),              
