@@ -1,14 +1,16 @@
-import 'package:eichwalde_app/settings.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:flutter/gestures.dart';
 
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
 import 'package:eichwalde_app/Verkehr/vbb_api.dart';
+import 'package:eichwalde_app/settings.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:home_widget/home_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Verkehrspage extends StatefulWidget {
   const Verkehrspage({super.key});
@@ -26,7 +28,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   Stations? selectedStation = Settings.standardAbfahrt == 'eichwalde' ? Stations.eichwalde:Settings.standardAbfahrt == 'friedenstr' ? Stations.friedenstr:Stations.schmockwitz;
   bool schranke = false;
   bool schrankeWidget = false;
-  String schrankeWahl = 'Lidl';
+  String schrankeWahl = Settings.standardSchranke;
   final updateFormatTime = DateFormat('HH:mm:ss');
   final updateFormatDate = DateFormat('dd.MM.yyyy');
 
@@ -44,9 +46,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
     super.initState();
     HomeWidget.setAppGroupId(appGroupId);
     fetchAndUpdateData();
-    timer = Timer.periodic(
-      const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
-    selectedStation = Stations.eichwalde;
+    timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
   }
 
   @override
@@ -83,7 +83,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
         
         schranke = checkSchranke(departures, schrankeWahl);
 
-        //Icon Attention, Layout, Dopplung entfernen
+        //Dopplung entfernen
         remarks = [];
         for (var element in departures) {
           List<Remarks> departureRemarks = [];
@@ -97,14 +97,18 @@ class _VerkehrspageState extends State<Verkehrspage> {
           }
         }
 
-        remarks.add(Remarks(
+        /*remarks.add(Remarks(
           remarkContent: 'WALLAH KRISE', 
-          remarkType: 'warning'
+          remarkType: 'warning',
+          remarkSummary: 'Hinweis,
         ));
         remarks.add(Remarks(
           remarkContent: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 
           remarkType: 'warning'
-        ));
+          remarkSummary: 'Hinweis,
+        ));*/
+
+        //-----------------------------//
 
         //Widget Stuff
         schrankeWidget = checkSchranke(departures, 'Lidl'); //<= settingSchrankeWidget      <= Design rot/grün
@@ -158,11 +162,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
     String schrankeTimeTillAction;
     String schrankeTextAction;
     if (schranke) {
-      //schrankeTimeTillAction = 'Nächste Öffnung: $nextOpen min';
       schrankeTimeTillAction = '$nextOpen';
       schrankeTextAction = 'Nächste Öffnung: ';
     } else {
-      //schrankeTimeTillAction = 'Nächste Schließung: $nextClose min';
       schrankeTimeTillAction = '$nextClose';
       schrankeTextAction = 'Nächste Schließung:';
     }
@@ -430,16 +432,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     initialSelection: selectedStation,
                     controller: TextEditingController(),
                     requestFocusOnTap: true,
-                    label: Text('Haltestelle: ${selectedStation!.stationName}'),//const Text('Ausgewählte Haltestelle'),
                     onSelected: (Stations? val) {
                       setState(() {
                         selectedStation = val;
                       });
                       fetchAndUpdateData();
                     },
-                    hintText: selectedStation!.stationName,
-                    //helperText: 'Hello',
-                    //errorText: null,
+                    hintText: selectedStation?.stationName,
                     enableFilter: true,
                     dropdownMenuEntries: Stations.values.map<DropdownMenuEntry<Stations>>((Stations station) {
                       return DropdownMenuEntry<Stations>(
@@ -479,7 +478,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     itemCount: remarks.length,
                     itemBuilder: (context, index) {
                       final remark = remarks[index];
-
+                      final List<String> subStrings = remark.remarkContent.split('<a href="');
+                      subStrings[1] = subStrings[1].replaceAll('" target="_blank" rel="noopener">Information</a>', '');
+                      
                       return Card(
                         surfaceTintColor: const Color.fromARGB(255, 255, 255, 0),
                         child: ListTile(
@@ -492,7 +493,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               fontWeight: FontWeight.w500,
                               fontSize: constraints.maxWidth*0.055
                             ),
-                            'Störung'
+                            remark.remarkSummary!.replaceAll('.', ''),
                           ),
                           subtitle: Text(
                             style: TextStyle(
@@ -540,12 +541,36 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                       ],
                                     ),
                                   ),
-                                  titlePadding: const EdgeInsets.all(10),
+                                  titlePadding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                                   content: SizedBox(
                                     width: constraints.maxWidth*0.75,
-                                    child: Text(
-                                      remark.remarkContent
-                                    )
+                                    child: RichText(
+                                      text: TextSpan(
+                                        text: subStrings[0],
+                                          style: TextStyle(
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: 'Mehr Informationen',
+                                            style: TextStyle(
+                                              color: eichwaldeGreen,
+                                              decoration: TextDecoration.underline,
+                                            ),
+                                            recognizer: TapGestureRecognizer()..onTap = () async {
+                                              final Uri url =  Uri.parse(subStrings[1]);
+                                              await launchUrl(
+                                                url,
+                                                mode: LaunchMode.externalApplication,
+                                              );
+                                            },
+                                          ),
+                                        ]
+                                      )
+                                    ),
+                                    //child: Text(
+                                      //remark.remarkContent
+                                    //)
                                   ),
                                   surfaceTintColor: const Color.fromARGB(255, 255, 255, 0),
                                 )
@@ -798,89 +823,17 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               ),
                             )
                           ),
-                          Text(
-                            style: TextStyle(
-                              fontSize: constraintsDepartures.maxWidth*0.035,
-                            ),
-                            'Zuletzt aktualisiert: $lastUpdate'
-                          )
-                        ],
-                      );
-                      },
-                    ),
-                  ),
-
-                  /*Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            fetchAndUpdateData();
-                  
-                            NotificationService().showNotification(
-                              title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
-                              body: 
-                  '''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
-                  ${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
-                  ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
-                            );
-                          }, 
-                          child: const Text('Send Notification')
-                        ),
-                  
-                    //scheduled Notification
-                    //id muss fortlaufend gespeichert werden (entspricht anzahl an timern)
-                    //zudem müssen die timer gespeichert bleiben
-                        ElevatedButton(
-                          onPressed: () {
-                            fetchAndUpdateData();
-                  
-                            NotificationService().scheduleNotification(
-                              title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
-                              body: 
-                  '''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
-                  ${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
-                  ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
-                              hour: currentPickedHour,
-                              minute: currentPickedMinute,
-                            );
-                          }, 
-                          child: const Text('Schedule Notification')
-                        ),
+                        Text(
+                          style: TextStyle(
+                            fontSize: constraintsDepartures.maxWidth*0.035,
+                          ),
+                          'Zuletzt aktualisiert: $lastUpdate'
+                        )
                       ],
-                    ),
-                    Container(
-                      width: 400,
-                      height: 110,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 150, 200, 150),
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 255, 255, 255)
-                        ),
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Row(
-                        children: [
-                          NumberPicker(
-                            infiniteLoop: true,
-                            minValue: 0, 
-                            maxValue: 23, 
-                            value: currentPickedHour, //aktuelle Zeit?
-                            onChanged: (value) => setState(() => currentPickedHour = value)
-                          ),
-                          NumberPicker(
-                            infiniteLoop: true,
-                            minValue: 0, 
-                            maxValue: 59, 
-                            value: currentPickedMinute, //aktuelle Zeit?
-                            onChanged: (value) => setState(() => currentPickedMinute = value)
-                          ),
-                          ElevatedButton(
-                            onPressed: () => Overlay.of(context).insert(scheduleAlarmOverlay),
-                            child: const Text('Overlay test'))
-                        ],
-                      ),
-                    ),*/
+                    );
+                  },
+                ),
+              ),
             ],
           );
         },

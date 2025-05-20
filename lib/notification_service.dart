@@ -175,3 +175,79 @@ class NotificationService {
   }
 }*/
 
+
+
+
+//Aus verkehrspage:
+
+/*Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            fetchAndUpdateData();
+                  
+                            NotificationService().showNotification(
+                              title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
+                              body: 
+                  '''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
+                  ${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
+                  ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
+                            );
+                          }, 
+                          child: const Text('Send Notification')
+                        ),
+                  
+                    //scheduled Notification
+                    //id muss fortlaufend gespeichert werden (entspricht anzahl an timern)
+                    //zudem müssen die timer gespeichert bleiben
+                        ElevatedButton(
+                          onPressed: () {
+                            fetchAndUpdateData();
+                  
+                            NotificationService().scheduleNotification(
+                              title: "Nächste Abfahrten in Eichwalde:",  //dynmaisch!
+                              body: 
+                  '''${departures[0].line}  ${departures[0].destination}  ${departures[0].when.substring(11,16)}                    
+                  ${departures[1].line}  ${departures[1].destination}  ${departures[1].when.substring(11,16)}
+                  ${departures[2].line}  ${departures[2].destination}  ${departures[2].when.substring(11,16)}''',
+                              hour: currentPickedHour,
+                              minute: currentPickedMinute,
+                            );
+                          }, 
+                          child: const Text('Schedule Notification')
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: 400,
+                      height: 110,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 150, 200, 150),
+                        border: Border.all(
+                          color: const Color.fromARGB(255, 255, 255, 255)
+                        ),
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Row(
+                        children: [
+                          NumberPicker(
+                            infiniteLoop: true,
+                            minValue: 0, 
+                            maxValue: 23, 
+                            value: currentPickedHour, //aktuelle Zeit?
+                            onChanged: (value) => setState(() => currentPickedHour = value)
+                          ),
+                          NumberPicker(
+                            infiniteLoop: true,
+                            minValue: 0, 
+                            maxValue: 59, 
+                            value: currentPickedMinute, //aktuelle Zeit?
+                            onChanged: (value) => setState(() => currentPickedMinute = value)
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Overlay.of(context).insert(scheduleAlarmOverlay),
+                            child: const Text('Overlay test'))
+                        ],
+                      ),
+                    ),*/

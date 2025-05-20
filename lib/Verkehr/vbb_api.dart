@@ -16,20 +16,41 @@ class Remarks {
   final String? remarkID;
   final String remarkContent;
   final String remarkType;
+  final String? remarkSummary;
   
   const Remarks({
     this.remarkID,
     required this.remarkContent,
     required this.remarkType,
+    this.remarkSummary,
   });
 
   factory Remarks.fromJson(Map<String, dynamic> json) {
     return Remarks(
       remarkID: json['id'] ?? 'x',
       remarkContent: json['text'],
-      remarkType: json['type'] ,
+      remarkType: json['type'],
+      remarkSummary: json['summary'] ?? 'Hinweis',
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Remarks &&
+      remarkID == other.remarkID;
+        //remarkContent == other.remarkContent &&
+        //remarkType == other.remarkType &&
+        //remarkSummary == other.remarkSummary;  
+  }
+
+
+    
+  @override
+  int get hashCode =>
+      remarkID.hashCode;
+      //remarkContent.hashCode ^
+      //remarkType.hashCode ^
+      //remarkSummary.hashCode;
 }
 
 //KW (für Schranke)

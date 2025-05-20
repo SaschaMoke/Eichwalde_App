@@ -88,7 +88,7 @@ class _SocialMediaState extends State<SocialMedia> {
             children: [
               TextButton(
                 onPressed: () async {
-                   final Uri url =  Uri.parse(widget.instagramLink);
+                  final Uri url =  Uri.parse(widget.instagramLink);
                   if (!await launchUrl(
                     url,
                     mode: LaunchMode.externalApplication,
