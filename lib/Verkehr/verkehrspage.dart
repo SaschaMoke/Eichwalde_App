@@ -58,9 +58,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
   Future<void> fetchAndUpdateData() async {
     try {
       final response = await http.get(
-        Uri.parse(
-          'https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=true&duration=60'),
-        //Uri.parse('https://v6.vbb.transport.rest/stops/900192001/departures?linesOfStops=false&remarks=false&duration=60'),       Schöneweide als Test
+        Uri.parse('https://v6.vbb.transport.rest/stops/${selectedStation?.stationID}/departures?linesOfStops=false&remarks=true&duration=60'),
+        //Uri.parse('https://v6.vbb.transport.rest/stops/900192001/departures?bus=false&tram=false&linesOfStops=false&remarks=true&duration=60'),       //Schöneweide als Test
       );
 
       if (response.statusCode == 200) {
@@ -98,14 +97,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
         }
 
         /*remarks.add(Remarks(
-          remarkContent: 'WALLAH KRISE', 
+          remarkContent: 'WALLAH KRISE\n<a href="https://www.youtube.com" target=', 
           remarkType: 'warning',
-          remarkSummary: 'Hinweis,
+          remarkSummary: 'Hinweis',
         ));
         remarks.add(Remarks(
-          remarkContent: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 
-          remarkType: 'warning'
-          remarkSummary: 'Hinweis,
+          remarkContent: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n<a href="https://www.youtube.com" target=', 
+          remarkType: 'warning',
+          remarkSummary: 'Hinweis',
         ));*/
 
         //-----------------------------//
@@ -473,13 +472,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
-                  height: 100,
+                  height: remarks.length > 1 ? 100:remarks.length == 1 ? 70:0,
                   child: ListView.builder(
                     itemCount: remarks.length,
                     itemBuilder: (context, index) {
                       final remark = remarks[index];
                       final List<String> subStrings = remark.remarkContent.split('<a href="');
-                      subStrings[1] = subStrings[1].replaceAll('" target="_blank" rel="noopener">Information</a>', '');
+                      subStrings[1] = subStrings[1].replaceRange(subStrings[1].indexOf('" target='), null, ''); 
+                      //Unsicher, ob das stabil funktioniert. Braucht eventuell nochmal überarbeitung
                       
                       return Card(
                         surfaceTintColor: const Color.fromARGB(255, 255, 255, 0),
@@ -657,11 +657,12 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     },
                   ),
                 ),
-                const SizedBox(height: 10),
+                if (remarks.isNotEmpty) const SizedBox(height: 10),
                 Container(//Abfahrtencontainer
                   height: 400,
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 150, 200, 150),
+                    //color: eichwaldeGreen,
+                    gradient: LinearGradient(colors: [Color.fromARGB(100, 80, 175, 50), Color.fromARGB(100, 0, 80, 160)]),
                     border: Border.all(
                       color: const Color.fromARGB(255, 255, 255, 255)
                     ),
@@ -785,10 +786,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                           deptime
                                         ),                                  
                                         trailing: '${departure.platform}' != "null" ? Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Text(
                                               style: TextStyle(
@@ -823,17 +822,20 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               ),
                             )
                           ),
-                        Text(
-                          style: TextStyle(
-                            fontSize: constraintsDepartures.maxWidth*0.035,
-                          ),
-                          'Zuletzt aktualisiert: $lastUpdate'
-                        )
                       ],
                     );
                   },
                 ),
               ),
+              const SizedBox(height: 10),
+              Text(
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: constraints.maxWidth*0.035,
+                  fontWeight: FontWeight.w500,
+                ),
+                'Zuletzt aktualisiert: $lastUpdate'
+              )
             ],
           );
         },
