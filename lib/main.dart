@@ -1419,23 +1419,21 @@ class _GewerbePageState extends State<GewerbePage> {
             SizedBox(
               height: MediaQuery.of(context).size.height*0.725,
               child: FutureBuilder(
-              future: cloudGewerbe.getDocId(),
+              future: cloudGewerbe.getDocID(),
               builder: (context, snapshot) {
                 return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       mainAxisExtent: 250,
                     ),
-                    itemCount: cloudGewerbe.docIDs.length,
+                    itemCount: cloudGewerbe.gewerbeListe.length,
                     itemBuilder: (context, index) {
+                      final gewerbe = cloudGewerbe.gewerbeListe[index];
                       return GestureDetector(
-                        onTapDown: (details) {
-                          if (_overlayEntry != null) {
-                            removeOverlay();
-                          } else {
-                            showOverlay(context, cloudGewerbe.docIDs[index],
-                                details.globalPosition, index);
-                          }
+                        onTap:() {Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Gewerbeseite(documentId:gewerbe.id)),
+                        );
                         },
                         child: Container(
                           padding: EdgeInsets.all(0.5),
@@ -1448,16 +1446,17 @@ class _GewerbePageState extends State<GewerbePage> {
                               SizedBox(
                                 width: 150,
                                 height: 120,
-                                child: Getgewerbeimage(
-                                    documentId: cloudGewerbe.docIDs[index]),
+                                child:gewerbe.bild != null? Image.network(
+                                'https://blog.duolingo.com/content/images/2024/12/cover_why-is-duolingo-free.png',
+                                fit: BoxFit.contain,
+                                ): const Image(image: AssetImage('Assets/IconEichwalde.png')),
                               ),
                               SizedBox(
                                 height: 5,
                               ),
                               SizedBox(
                                 width: 160,
-                                child: Getgewerbename(
-                                    documentId: cloudGewerbe.docIDs[index]),
+                                child: Text(gewerbe.name)
                               ),
                             ]),
                           ),
