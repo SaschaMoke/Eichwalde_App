@@ -19,7 +19,9 @@ class GewerbePage extends StatefulWidget {
 class _GewerbePageState extends State<GewerbePage> {
   final Cloudgewerbe cloudGewerbe = Cloudgewerbe();
 
+  List<GewerbeModel> gewerbeFilteredListe = [];
   List<GewerbeModel> gewerbeSearchedListe = [];
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class _GewerbePageState extends State<GewerbePage> {
       width: MediaQuery.of(context).size.width*0.95,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {  
+          gewerbeFilteredListe = cloudGewerbe.gewerbeListe;//temp
           return Column(
               children: [
                 ElevatedButton(
@@ -44,6 +47,7 @@ class _GewerbePageState extends State<GewerbePage> {
                     //maxWidth: constraints.maxWidth*0.95,
                     minHeight: 50,
                   ),
+                  controller: searchController,
                   leading: const Icon(Icons.search_rounded),
                   hintText: 'Gewerbe suchen...',
                   elevation: const WidgetStatePropertyAll(0),
@@ -70,7 +74,7 @@ class _GewerbePageState extends State<GewerbePage> {
                     //wenn leer, dann alle anzeigen
                     //wenn gefüllt, aber kein ergebnis error
                     setState(() {
-                      gewerbeSearchedListe = cloudGewerbe.gewerbeListe.where(
+                      gewerbeSearchedListe = gewerbeFilteredListe.where(
                         (element) => element.name.toLowerCase().contains(value.toLowerCase())
                       ).toList();
                     });//im Grid/Wrap => gewerbeListe.isNotEmpty ? Wrap():Text('nix für ihre anfrage')      
@@ -79,18 +83,18 @@ class _GewerbePageState extends State<GewerbePage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height*0.5,
                   child: FutureBuilder(
-                  future: cloudGewerbe.getDocID(),
-                  builder: (context, snapshot) {
-                    return GridView.builder(
+                    future: cloudGewerbe.getDocID(),
+                    builder: (context, snapshot) {
+                      return GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisExtent: 250,
                         ),
                         //itemCount: cloudGewerbe.gewerbeListe.length,
-                        itemCount: gewerbeSearchedListe.length,
+                        itemCount: searchController.text.isNotEmpty ? gewerbeSearchedListe.length:gewerbeFilteredListe.length,
                         itemBuilder: (context, index) {
                           //final gewerbe = cloudGewerbe.gewerbeListe[index];
-                          final gewerbe = gewerbeSearchedListe[index];
+                          final gewerbe = searchController.text.isNotEmpty ? gewerbeSearchedListe[index]:gewerbeFilteredListe[index];
                           return GestureDetector(
                             onTap:() {Navigator.push(
                               context,
