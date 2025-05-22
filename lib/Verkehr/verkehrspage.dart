@@ -490,7 +490,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         child: ListTile(
                           leading: Icon(
                             size: constraints.maxWidth*0.1,
-                            Icons.warning_amber_rounded
+                            remark.remarkSummary == 'Information.' ? Icons.info_outline_rounded :
+                            remark.remarkSummary == 'Bauarbeiten.' ? Icons.construction_rounded:
+                            Icons.warning_amber_rounded,
                           ),
                           title: Text(
                             style: TextStyle(
@@ -520,11 +522,16 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     child: Row(
                                       children: [
                                         Icon(
-                                          size: constraints.maxWidth*0.15,
-                                          Icons.warning_amber_rounded
+                                          size: constraints.maxWidth*0.135,
+                                          remark.remarkSummary == 'Information.' ? Icons.info_outline_rounded :
+                                          remark.remarkSummary == 'Bauarbeiten.' ? Icons.construction_rounded:
+                                          Icons.warning_amber_rounded,
                                         ),
                                         SizedBox(
-                                          width: constraints.maxWidth*0.485,
+                                          width: constraints.maxWidth*0.005,
+                                        ),
+                                        SizedBox(
+                                          width: constraints.maxWidth*0.48,
                                           child: Text(
                                             style: TextStyle(
                                               fontSize: constraints.maxWidth*0.075,

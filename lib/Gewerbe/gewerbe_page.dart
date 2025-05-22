@@ -25,6 +25,12 @@ class _GewerbePageState extends State<GewerbePage> {
   TextEditingController searchController = TextEditingController();
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
     return SizedBox(
