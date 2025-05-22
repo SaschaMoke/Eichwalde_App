@@ -4,13 +4,15 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/gestures.dart';
 
-import 'package:eichwalde_app/Design/eichwalde_design.dart';
-import 'package:eichwalde_app/Verkehr/vbb_api.dart';
-import 'package:eichwalde_app/settings.dart';
-
+//Packages
 import 'package:http/http.dart' as http;
 import 'package:home_widget/home_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+//App-Files
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
+import 'package:eichwalde_app/Verkehr/vbb_api.dart';
+import 'package:eichwalde_app/settings.dart';
 
 class Verkehrspage extends StatefulWidget {
   const Verkehrspage({super.key});
@@ -478,11 +480,13 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     itemBuilder: (context, index) {
                       final remark = remarks[index];
                       final List<String> subStrings = remark.remarkContent.split('<a href="');
-                      subStrings[1] = subStrings[1].replaceRange(subStrings[1].indexOf('" target='), null, ''); 
+                      subStrings.length > 1 ? subStrings[1] = subStrings[1].replaceRange(subStrings[1].indexOf('" target='), null, ''):null; 
                       //Unsicher, ob das stabil funktioniert. Braucht eventuell nochmal überarbeitung
                       
                       return Card(
-                        surfaceTintColor: const Color.fromARGB(255, 255, 255, 0),
+                        surfaceTintColor: remark.remarkSummary == 'Information.' ? eichwaldeGreen :
+                                          remark.remarkSummary == 'Störung.' ? const Color.fromARGB(255, 255, 0, 0) :
+                                          const Color.fromARGB(255, 255, 255, 0),
                         child: ListTile(
                           leading: Icon(
                             size: constraints.maxWidth*0.1,
@@ -519,15 +523,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                           size: constraints.maxWidth*0.15,
                                           Icons.warning_amber_rounded
                                         ),
-                                        Text(
-                                          style: TextStyle(
-                                            fontSize: constraints.maxWidth*0.075,
-                                            fontWeight: FontWeight.bold
-                                          ),
-                                          'Störung'
-                                        ),
                                         SizedBox(
-                                          width: constraints.maxWidth*0.175,
+                                          width: constraints.maxWidth*0.485,
+                                          child: Text(
+                                            style: TextStyle(
+                                              fontSize: constraints.maxWidth*0.075,
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                            remark.remarkSummary!.replaceAll('.', ''),
+                                          ),
                                         ),
                                         IconButton(
                                           onPressed: () {
@@ -551,7 +555,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                           color: Color.fromARGB(255, 0, 0, 0),
                                         ),
                                         children: [
-                                          TextSpan(
+                                          subStrings.length > 1 ? TextSpan(
                                             text: 'Mehr Informationen',
                                             style: TextStyle(
                                               color: eichwaldeGreen,
@@ -564,15 +568,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                                 mode: LaunchMode.externalApplication,
                                               );
                                             },
-                                          ),
+                                          ):TextSpan(),
                                         ]
                                       )
                                     ),
-                                    //child: Text(
-                                      //remark.remarkContent
-                                    //)
                                   ),
-                                  surfaceTintColor: const Color.fromARGB(255, 255, 255, 0),
+                                  surfaceTintColor: remark.remarkSummary == 'Information.' ? eichwaldeGreen :
+                                                    remark.remarkSummary == 'Störung.' ? const Color.fromARGB(255, 255, 0, 0) :
+                                                    const Color.fromARGB(255, 255, 255, 0),
                                 )
                               );
                             },

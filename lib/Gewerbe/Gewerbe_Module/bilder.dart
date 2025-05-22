@@ -1,6 +1,7 @@
-import 'package:eichwalde_app/Design/eichwalde_design.dart';
-
 import 'package:flutter/material.dart';
+
+//App-Files
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
 
 class Bilder extends StatefulWidget {
   final List<String> imageLinks;

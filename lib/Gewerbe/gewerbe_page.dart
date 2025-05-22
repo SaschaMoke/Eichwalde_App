@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+//App-Files
 import 'package:eichwalde_app/Gewerbe/gewerbeseite.dart';
-import 'package:eichwalde_app/cloudgewerbe.dart';
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
+import 'package:eichwalde_app/cloudgewerbe.dart';
 
 //import 'package:eichwalde_app/Read%20data/get_gewerbe_adresse.dart';
 //import 'package:eichwalde_app/Read%20data/get_gewerbe_art.dart';
@@ -33,15 +34,6 @@ class _GewerbePageState extends State<GewerbePage> {
           gewerbeFilteredListe = cloudGewerbe.gewerbeListe;//temp
           return Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Gewerbeseite(documentId:'oXZDRgQtFI13dAo2MMkN')),
-                    );
-                  },
-                  child: Text('Test neue Seite'),              
-                ),
                 SearchBar(
                   constraints: BoxConstraints(
                     //maxWidth: constraints.maxWidth*0.95,
@@ -70,66 +62,149 @@ class _GewerbePageState extends State<GewerbePage> {
                   }),
                   overlayColor: const WidgetStatePropertyAll(Color.fromARGB(0, 0, 0, 0)),
                   onChanged: (String value) {
-                    //texteditingcontroller.text.isNotEmpty 
-                    //wenn leer, dann alle anzeigen
-                    //wenn gefüllt, aber kein ergebnis error
                     setState(() {
                       gewerbeSearchedListe = gewerbeFilteredListe.where(
                         (element) => element.name.toLowerCase().contains(value.toLowerCase())
                       ).toList();
-                    });//im Grid/Wrap => gewerbeListe.isNotEmpty ? Wrap():Text('nix für ihre anfrage')      
+                    });
                   },
                 ),
+                //Filter
                 SizedBox(
                   height: MediaQuery.of(context).size.height*0.5,
                   child: FutureBuilder(
                     future: cloudGewerbe.getDocID(),
                     builder: (context, snapshot) {
-                      return GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisExtent: 250,
-                        ),
-                        //itemCount: cloudGewerbe.gewerbeListe.length,
-                        itemCount: searchController.text.isNotEmpty ? gewerbeSearchedListe.length:gewerbeFilteredListe.length,
-                        itemBuilder: (context, index) {
-                          //final gewerbe = cloudGewerbe.gewerbeListe[index];
-                          final gewerbe = searchController.text.isNotEmpty ? gewerbeSearchedListe[index]:gewerbeFilteredListe[index];
-                          return GestureDetector(
-                            onTap:() {Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Gewerbeseite(documentId:gewerbe.id)),
-                            );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(0.5),
-                              child: Card(
-                                color: Color.fromARGB(255, 150, 200, 150),
-                                child: Column(children: [
-                                  SizedBox(
-                                    height: 10,
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator(
+                          color: eichwaldeGreen,
+                        ));
+                      }
+                      
+                      if (cloudGewerbe.gewerbeListe.isEmpty) {
+                        return Center(
+                          child: SizedBox(
+                            width: constraints.maxWidth*0.85,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.warning_amber_rounded,
+                                      size: constraints.maxWidth*0.15,
+                                      color: Color.fromARGB(255, 255, 0, 0),
+                                    ),
+                                    SizedBox(
+                                      width: constraints.maxWidth*0.015,
+                                    ),
+                                    Text(
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: constraints.maxWidth*0.1,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color.fromARGB(255, 255, 0, 0)
+                                      ),
+                                      'Fehler'
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: constraints.maxWidth*0.05,
                                   ),
-                                  SizedBox(
-                                    width: 150,
-                                    height: 120,
-                                    child:gewerbe.bild != null? Image.network(
-                                    'https://blog.duolingo.com/content/images/2024/12/cover_why-is-duolingo-free.png',
-                                    fit: BoxFit.contain,
-                                    ): const Image(image: AssetImage('Assets/IconEichwalde.png')),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  SizedBox(
-                                    width: 160,
-                                    child: Text(gewerbe.name)
-                                  ),
-                                ]),
-                              ),
+                                  'Es konnten keine Daten geladen werden. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später nocheinmal.'
+                                ),
+                              ],
                             ),
-                          );
-                        });
-                  }),
+                          ),
+                        );
+                      }
+
+                      if (searchController.text.isEmpty || gewerbeSearchedListe.isNotEmpty) {
+                        return GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisExtent: 250,
+                          ),
+                          //itemCount: cloudGewerbe.gewerbeListe.length,
+                          itemCount: searchController.text.isNotEmpty ? gewerbeSearchedListe.length:gewerbeFilteredListe.length,
+                          itemBuilder: (context, index) {
+                            //final gewerbe = cloudGewerbe.gewerbeListe[index];
+                            final gewerbe = searchController.text.isNotEmpty ? gewerbeSearchedListe[index]:gewerbeFilteredListe[index];
+                            return GestureDetector(
+                              onTap:() {Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => Gewerbeseite(documentId:gewerbe.id)),
+                              );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(0.5),
+                                child: Card(
+                                  color: Color.fromARGB(255, 150, 200, 150),
+                                  child: Column(children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    SizedBox(
+                                      width: 150,
+                                      height: 120,
+                                      child:gewerbe.bild != null? Image.network(
+                                      'https://blog.duolingo.com/content/images/2024/12/cover_why-is-duolingo-free.png',
+                                      fit: BoxFit.contain,
+                                      ): const Image(image: AssetImage('Assets/IconEichwalde.png')),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    SizedBox(
+                                      width: 160,
+                                      child: Text(gewerbe.name)
+                                    ),
+                                  ]),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return Center(
+                          child: SizedBox(
+                            width: constraints.maxWidth*0.85,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.search_rounded,
+                                  size: constraints.maxWidth*0.15,
+                                  color: eichwaldeGreen,
+                                ),
+                                Text(
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: constraints.maxWidth*0.05,
+                                  ),
+                                  'Kein passendes Ergebnis zu Ihrer Suchanfrage gefunden.'
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Gewerbeseite(documentId:'oXZDRgQtFI13dAo2MMkN')),
+                    );
+                  },
+                  child: Text('Test neue Seite'),              
                 )
             /* GridView.builder(
             itemCount: gewerbes.length,

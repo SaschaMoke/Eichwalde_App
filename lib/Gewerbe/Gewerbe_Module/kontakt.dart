@@ -1,10 +1,11 @@
-import 'package:eichwalde_app/Design/eichwalde_design.dart';
-
 import 'package:flutter/material.dart';
 
+//Packages
 import 'package:url_launcher/url_launcher.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
+//App-Files
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
 import 'Tools/urllauncher.dart';
 
 class Kontakt extends StatefulWidget {

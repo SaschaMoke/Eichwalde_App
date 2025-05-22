@@ -1,8 +1,10 @@
-import 'package:eichwalde_app/Design/eichwalde_design.dart';
-
 import 'package:flutter/material.dart';
 
+//Packages
 import 'package:url_launcher/url_launcher.dart';
+
+//App-Files
+import 'package:eichwalde_app/Design/eichwalde_design.dart';
 
 class SocialMedia extends StatefulWidget {
   final String instagramLink;

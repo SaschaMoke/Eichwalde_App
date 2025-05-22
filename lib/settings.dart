@@ -1,7 +1,11 @@
-import 'package:eichwalde_app/Verkehr/vbb_api.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+
+//Packages
 import 'package:shared_preferences/shared_preferences.dart';
 
+//App-Files
+import 'package:eichwalde_app/Verkehr/vbb_api.dart';
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
 
 class Settings {
@@ -229,6 +233,21 @@ class _SettingsState extends State<SettingsPage> {
                   '''Alle Rechte Vorbehalten. Keine Garantie für Richtigkeit und Aktualität von Angaben.
 Offiziell unterstützt durch die Gemeinde Eichwalde.'''
                 ),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: 'Über die App',
+                    style: TextStyle(
+                      color: eichwaldeGreen,
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w500,
+                      fontSize: constraints.maxWidth*0.025,
+                    ),
+                    recognizer: TapGestureRecognizer()..onTap = () {
+                      //MaterialPageRouteBuilder ding
+                    },
+                  )
+                ),
               ],
             ),
           );
@@ -236,36 +255,3 @@ Offiziell unterstützt durch die Gemeinde Eichwalde.'''
       );
   }
 }
-
-/*Text(
-                  style: TextStyle(
-                    fontSize: constraints.maxWidth*0.09,
-                    fontWeight: FontWeight.w500,
-                  ),
-                'Überschrift'
-                ), 
-                Text(
-                  style: TextStyle(
-                    height: 0.5,
-                    fontSize: constraints.maxWidth*0.05,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  'Kleine Überschrift'
-                ),
-                const SizedBox(height: 10),
-                SwitchListTile(
-                  value: setting1, 
-                  onChanged: (bool value) {
-                    setState(() {
-                      setting1 = value;
-                    });
-                  },
-                  secondary: Icon(Icons.face),    //Fronticon
-                  activeColor: eichwaldeGradientGreen,
-                  inactiveThumbColor: eichwaldeGradientBlue,
-                  //Design:
-                  tileColor: Color.fromARGB(255, 255, 255, 255),
-                  //title: ,
-                  //subtitle: ,
-                ),*/

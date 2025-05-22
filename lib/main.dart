@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+//Packages
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
-//File Imports:
+//App-Files
 import 'package:eichwalde_app/Verkehr/verkehrspage.dart';
 import 'package:eichwalde_app/Gewerbe/gewerbe_page.dart';
 import 'package:eichwalde_app/settings.dart';
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
 
+//Cloud
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'cloudgewerbe.dart';
 import 'newscloud.dart';

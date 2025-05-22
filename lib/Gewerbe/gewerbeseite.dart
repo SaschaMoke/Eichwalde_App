@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+//Packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//App-Files
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
 
-//module
+//Module
 import 'Gewerbe_Module/oeffnung.dart';
 import 'Gewerbe_Module/kontakt.dart';
 import 'Gewerbe_Module/social.dart';
