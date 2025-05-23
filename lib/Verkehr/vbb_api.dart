@@ -17,12 +17,14 @@ class Remarks {
   final String remarkContent;
   final String remarkType;
   final String? remarkSummary;
+  final String? remarkCode;
   
   const Remarks({
     this.remarkID,
     required this.remarkContent,
     required this.remarkType,
     this.remarkSummary,
+    this.remarkCode,
   });
 
   factory Remarks.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class Remarks {
       remarkContent: json['text'],
       remarkType: json['type'],
       remarkSummary: json['summary'] ?? 'Hinweis',
+      remarkCode: json['code'] ?? '',
     );
   }
 
@@ -38,9 +41,6 @@ class Remarks {
   bool operator ==(Object other) {
     return other is Remarks &&
       remarkID == other.remarkID;
-        //remarkContent == other.remarkContent &&
-        //remarkType == other.remarkType &&
-        //remarkSummary == other.remarkSummary;  
   }
 
 
@@ -48,13 +48,9 @@ class Remarks {
   @override
   int get hashCode =>
       remarkID.hashCode;
-      //remarkContent.hashCode ^
-      //remarkType.hashCode ^
-      //remarkSummary.hashCode;
 }
 
 //KW (für Schranke)
-
 List departuresKW = [];
 Future<void> dataRegioKW() async {
   try {

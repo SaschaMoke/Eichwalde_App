@@ -156,9 +156,9 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                     return ListView(
                       children: [
                         const SizedBox(height: 20),
-                        Image.network(
-                          //'https://i.ytimg.com/vi/yzCtDA6tHLo/maxresdefault.jpg'    //GewerbeImage
-                          gewerbeImage,
+                        FadeInImage.assetNetwork(
+                          placeholder: 'Assets/IconEichwalde.png', 
+                          image:gewerbeImage,
                         ),
                         const SizedBox(height: 20),
                         Text(
