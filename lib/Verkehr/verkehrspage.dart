@@ -615,10 +615,20 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             itemBuilder: (context, index) {
                               final departure = departures[index];
 
-                              bool shortTrip = false;
+                              bool additionalInfo = false;
+                              String additionalInfoText = '';
+                              Color additionalInfoColor = const Color.fromARGB(255, 0, 0, 0);
                               for (var element in List.from(departure.remarks.map((x) => Remarks.fromJson(x)),)) {
                                 if (element.remarkCode =='text.realtime.journey.partially.cancelled.between') {
-                                  shortTrip = true;
+                                  additionalInfoText = 'Fahrtverkürzung';
+                                  additionalInfoColor = const Color.fromARGB(255, 255, 0, 0);
+                                  additionalInfo = true;
+                                  break;
+                                } else if (element.remarkCode =='text.realtime.journey.additional.service') {
+                                  additionalInfoText = 'Zusatzfahrt';
+                                  additionalInfoColor = eichwaldeGreen;
+                                  additionalInfo = true;
+                                  break;
                                 }
                               }
 
@@ -720,14 +730,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                             ),
                                             deptime
                                           ),
-                                          shortTrip ?
+                                          additionalInfo ?
                                           Text(
                                             style: TextStyle(
                                               fontSize: 15,
-                                              color: const Color.fromARGB(255, 255, 0, 0),
+                                              //color: const Color.fromARGB(255, 255, 0, 0),
+                                              color: additionalInfoColor,
                                               fontStyle: FontStyle.italic,
                                             ),
-                                            'Fahrtverkürzung'
+                                            additionalInfoText,
                                           ):SizedBox(),
                                         ],
                                       ),
