@@ -638,6 +638,16 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     ),
                                     'Zusatzfahrt',
                                   ));
+                                } else if (element.remarkType == 'hint' && element.remarkContent == 'Ersatzverkehr') {
+                                  additionalInfoExists = true;
+                                  additionalInfo.add(Text(
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: const Color.fromARGB(255, 255, 100, 0),
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                    'Ersatzverkehr',
+                                  ));
                                 }
                               }
 
