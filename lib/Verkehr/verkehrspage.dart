@@ -615,20 +615,29 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             itemBuilder: (context, index) {
                               final departure = departures[index];
 
-                              bool additionalInfo = false;
-                              String additionalInfoText = '';
-                              Color additionalInfoColor = const Color.fromARGB(255, 0, 0, 0);
+                              bool additionalInfoExists = false;
+                              List<Widget> additionalInfo = [];
                               for (var element in List.from(departure.remarks.map((x) => Remarks.fromJson(x)),)) {
                                 if (element.remarkCode =='text.realtime.journey.partially.cancelled.between') {
-                                  additionalInfoText = 'Fahrtverkürzung';
-                                  additionalInfoColor = const Color.fromARGB(255, 255, 0, 0);
-                                  additionalInfo = true;
-                                  break;
+                                  additionalInfoExists = true;
+                                  additionalInfo.add(Text(
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: const Color.fromARGB(255, 255, 0, 0),
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                    'Fahrtverkürzung',
+                                  ));
                                 } else if (element.remarkCode =='text.realtime.journey.additional.service') {
-                                  additionalInfoText = 'Zusatzfahrt';
-                                  additionalInfoColor = eichwaldeGreen;
-                                  additionalInfo = true;
-                                  break;
+                                  additionalInfoExists = true;
+                                  additionalInfo.add(Text(
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: eichwaldeGreen,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                    'Zusatzfahrt',
+                                  ));
                                 }
                               }
 
@@ -730,8 +739,10 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                             ),
                                             deptime
                                           ),
-                                          additionalInfo ?
-                                          Text(
+                                          additionalInfoExists ? Column(
+                                            children: additionalInfo,
+                                          ):SizedBox(), 
+                                          /*Text(
                                             style: TextStyle(
                                               fontSize: 15,
                                               //color: const Color.fromARGB(255, 255, 0, 0),
@@ -739,7 +750,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                               fontStyle: FontStyle.italic,
                                             ),
                                             additionalInfoText,
-                                          ):SizedBox(),
+                                          ),*/
                                         ],
                                       ),
                                         /*subtitle: Text(
