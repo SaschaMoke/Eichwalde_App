@@ -24,6 +24,10 @@ class _GewerbePageState extends State<GewerbePage> {
   List<GewerbeModel> gewerbeSearchedListe = [];
   TextEditingController searchController = TextEditingController();
 
+  Set<String> filterKategorien = {};
+  bool filterFavoriten = false;
+  bool filterAlle = true;
+
   @override
   void dispose() {
     searchController.dispose();
@@ -33,49 +37,164 @@ class _GewerbePageState extends State<GewerbePage> {
   @override
   Widget build(BuildContext context) {
     // List<bool> expandableState = List.generate(gewerbes.length, (index) => false);
+    final gewerbeKategorien = cloudGewerbe.gewerbeListe.map((x) => x.kategorie).toSet().toList();
+    gewerbeKategorien.sort((a, b) {
+      final aAktiv = filterKategorien.contains(a);
+      final bAktiv = filterKategorien.contains(b);
+
+      if (aAktiv && !bAktiv) return -1;
+      if (!aAktiv && bAktiv) return 1;
+      return a.compareTo(b); // alphabetisch innerhalb Gruppen
+    });
+
+    //gewerbeFilteredListe = cloudGewerbe.gewerbeListe;//temp
+    gewerbeFilteredListe = cloudGewerbe.gewerbeListe.where((gewerbe) {
+      if (filterAlle) return true;
+
+      final filteredKategorie = filterKategorien.contains(gewerbe.kategorie);
+      //final istFavorit = widget.favoritenIds.contains(gewerbe.id);
+
+      //if (filterFavoriten && istFavorit) return true;
+      if (filterKategorien.isNotEmpty && !filteredKategorie) return false;
+
+      return true;
+    }).toList();
+
+
     return SizedBox(
       width: MediaQuery.of(context).size.width*0.95,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {  
-          gewerbeFilteredListe = cloudGewerbe.gewerbeListe;//temp
           return Column(
               children: [
-                SearchBar(
-                  constraints: BoxConstraints(
-                    //maxWidth: constraints.maxWidth*0.95,
-                    minHeight: 50,
-                  ),
-                  controller: searchController,
-                  leading: const Icon(Icons.search_rounded),
-                  hintText: 'Gewerbe suchen...',
-                  elevation: const WidgetStatePropertyAll(0),
-                  backgroundColor: const WidgetStatePropertyAll(Color.fromARGB(0, 0, 0, 0)),
-                  shape: WidgetStateProperty.fromMap(<WidgetStatesConstraint, OutlinedBorder>{
-                    WidgetState.focused: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        width: 2,
-                        color: eichwaldeGreen,
-                      )
+                Row(
+                  children: [
+                    SearchBar(
+                      constraints: BoxConstraints(
+                        maxWidth: constraints.maxWidth*0.8,
+                        minHeight: 50,
+                      ),
+                      controller: searchController,
+                      leading: const Icon(Icons.search_rounded),
+                      hintText: 'Gewerbe suchen...',
+                      elevation: const WidgetStatePropertyAll(0),
+                      backgroundColor: const WidgetStatePropertyAll(Color.fromARGB(0, 0, 0, 0)),
+                      shape: WidgetStateProperty.fromMap(<WidgetStatesConstraint, OutlinedBorder>{
+                        WidgetState.focused: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(
+                            width: 2,
+                            color: eichwaldeGreen,
+                          )
+                        ),
+                        WidgetState.any: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(
+                            width: 1.5,
+                            color: Color.fromARGB(255, 100, 100, 100),
+                          )
+                        ),
+                      }),
+                      overlayColor: const WidgetStatePropertyAll(Color.fromARGB(0, 0, 0, 0)),
+                      onChanged: (String value) {
+                        setState(() {
+                          gewerbeSearchedListe = gewerbeFilteredListe.where(
+                            (element) => element.name.toLowerCase().contains(value.toLowerCase())
+                          ).toList();
+                        });
+                      },
                     ),
-                    WidgetState.any: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        width: 1.5,
-                        color: Color.fromARGB(255, 100, 100, 100),
-                      )
+                    const SizedBox(width: 10),
+                    FilterChip(
+                      label: Icon(
+                        Icons.filter_alt_off_outlined,
+                        size: constraints.maxWidth*0.0625,
+                      ), 
+                      onSelected: (bool value) {
+                        setState(() {
+                          filterAlle = value;
+                          filterKategorien.clear();
+                          filterFavoriten = false;
+                        });
+                      },
+                      selectedColor: Color.fromARGB(100, 50, 150, 50),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: eichwaldeGreen,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(25)
+                      ),
+                      selected: filterAlle,
+                      showCheckmark: false,
                     ),
-                  }),
-                  overlayColor: const WidgetStatePropertyAll(Color.fromARGB(0, 0, 0, 0)),
-                  onChanged: (String value) {
-                    setState(() {
-                      gewerbeSearchedListe = gewerbeFilteredListe.where(
-                        (element) => element.name.toLowerCase().contains(value.toLowerCase())
-                      ).toList();
-                    });
-                  },
+                  ],
                 ),
-                //Filter
+                const SizedBox(height: 10),
+                Row(//Filter
+                  children: [
+                    FilterChip(
+                      label: Icon(
+                        Icons.favorite_border_rounded,
+                        size: constraints.maxWidth*0.0625,
+                      ), 
+                      onSelected: (bool value) {
+                        setState(() {
+                          filterFavoriten = value;
+                          filterAlle = false;
+                        });
+                      },
+                      selectedColor: Color.fromARGB(100, 50, 150, 50),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: eichwaldeGreen,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(25)
+                      ),
+                      selected: filterFavoriten,
+                      showCheckmark: false,
+                    ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      height: 50,
+                      width: constraints.maxWidth*0.8,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          for (var kategorie in gewerbeKategorien) 
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: FilterChip(
+                                label: Text(kategorie), 
+                                onSelected: (bool value) {
+                                  setState(() {
+                                    filterAlle = false;
+                                    if (value) {
+                                      filterKategorien.add(kategorie);
+                                    } else {
+                                      filterKategorien.remove(kategorie);
+                                    }
+                                  });
+                                },
+                                selectedColor: Color.fromARGB(100, 50, 150, 50),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    color: eichwaldeGreen,
+                                    width: 2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(25)
+                                ),
+                                selected: filterKategorien.contains(kategorie),
+                                showCheckmark: false,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 SizedBox(
                   height: MediaQuery.of(context).size.height*0.5,
                   child: FutureBuilder(
@@ -275,6 +394,28 @@ class _GewerbePageState extends State<GewerbePage> {
     );
   }
 }
+
+
+/*
+FilterChip(
+                  label: Text('Lebensmittel'), 
+                  onSelected: (bool value) {
+                    setState(() {
+                      GewerbeFilter.filterLebensmittel = value;
+                    });
+                  },
+                  selectedColor: Color.fromARGB(100, 50, 150, 50),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: eichwaldeGreen,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(25)
+                  ),
+                  selected: GewerbeFilter.filterLebensmittel,
+                  showCheckmark: false,
+                ),
+*/
 
 /*
 OverlayEntry? overlayEntry;

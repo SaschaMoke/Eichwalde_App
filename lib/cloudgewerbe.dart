@@ -4,8 +4,9 @@ class GewerbeModel {
   final String id;
   final String name;
   final String? bild;
+  final String kategorie;
 
-  GewerbeModel({required this.id, required this.name, this.bild});
+  GewerbeModel({required this.id, required this.name, this.bild, required this.kategorie});
 }
 
 class Cloudgewerbe {
@@ -35,6 +36,7 @@ class Cloudgewerbe {
           id: doc.id,
           name: data['name'] ?? 'Kein Name',
           bild: data['bild'],
+          kategorie: data['kategorie']
         ),
       );
     }

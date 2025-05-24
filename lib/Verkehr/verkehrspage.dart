@@ -93,9 +93,19 @@ class _VerkehrspageState extends State<Verkehrspage> {
               if (!remarks.contains(remark)) {
                 remarks.add(remark);
               }
+            } else if (remark.remarkType == "hint"&& remark.remarkContent == 'Ersatzverkehr') {
+              if (!remarks.contains(Remarks(remarkContent: '',remarkType: '', remarkID: 'SEV'))) {
+                remarks.add(Remarks(
+                  remarkID: 'SEV',
+                  remarkContent: 'Es verkehrt Schienenersatzverkehr in Eichwalde. Die Busse fahren vor dem Bahnhof in der August-Bebel-Allee ab.', 
+                  remarkType: '...',
+                  remarkSummary: 'Ersatzverkehr',
+                ));
+              }
             }
           }
         }
+
 
         /*remarks.add(Remarks(
           remarkContent: 'WALLAH KRISE\n<a href="https://www.youtube.com" target=', 
@@ -491,7 +501,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         leading: Icon(
                           size: constraints.maxWidth*0.1,
                           remark.remarkSummary == 'Information.' ? Icons.info_outline_rounded :
-                          remark.remarkSummary == 'Bauarbeiten.' ? Icons.construction_rounded:
+                          remark.remarkSummary == 'Bauarbeiten.' || remark.remarkSummary == 'Ersatzverkehr' ? Icons.construction_rounded:
                           Icons.warning_amber_rounded,
                         ),
                         title: Text(
@@ -524,7 +534,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                       Icon(
                                         size: constraints.maxWidth*0.135,
                                         remark.remarkSummary == 'Information.' ? Icons.info_outline_rounded :
-                                        remark.remarkSummary == 'Bauarbeiten.' ? Icons.construction_rounded:
+                                        remark.remarkSummary == 'Bauarbeiten.' || remark.remarkSummary == 'Ersatzverkehr' ? Icons.construction_rounded:
                                         Icons.warning_amber_rounded,
                                       ),
                                       SizedBox(
@@ -534,7 +544,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                         width: constraints.maxWidth*0.48,
                                         child: Text(
                                           style: TextStyle(
-                                            fontSize: constraints.maxWidth*0.075,
+                                            fontSize: constraints.maxWidth*0.07,
                                             fontWeight: FontWeight.bold
                                           ),
                                           remark.remarkSummary!.replaceAll('.', ''),
