@@ -36,7 +36,7 @@ class Cloudgewerbe {
           id: doc.id,
           name: data['name'] ?? 'Kein Name',
           bild: data['bild'],
-          kategorie: data['kategorie']
+          kategorie: data['kategorie'],
         ),
       );
     }
@@ -50,7 +50,6 @@ class Cloudgewerbe {
       }
     ),
     );
-
   }
 
 Future<void> updateGewerbe(String docId, String name, String gewerbeart, String adresse, int tel, String image) async {

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 //App-Files
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
+import 'package:eichwalde_app/settings.dart' as eichwalde_settings;
 
 //Module
 import 'Gewerbe_Module/oeffnung.dart';
@@ -26,19 +27,19 @@ class Gewerbeseite extends StatefulWidget{
 }
 
 class _GewerbeseiteState extends State<Gewerbeseite> {
+  bool favorit = false;
+  
   String gewerbeName = ''; 
   String gewerbeBeschreibung = '';
   String gewerbeImage = '';
   String gewerbeKat = '';
 
-  //bool kontaktModul = true;   //standard = false
   String kontaktActive = 'false';
   String kontaktTelefon = '';
   String kontaktMail = '';
   String kontaktWeb = '';
   String kontaktAdresse = '';
   
-  //bool oeffnungsModul = true;   //standard = false
   String oeffnungActive = 'false';
   String oeffnungsMo = '';
   String oeffnungsDi = '';
@@ -52,7 +53,6 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
   String oeffnungLeadingImportant = 'false';
   String oeffnungTrailingImportant = 'false';
 
-  //bool socialModul = true;   //standard = false
   String socialActive = 'false';
   String socialFacebookName = '';
   String socialFacebookLink = '';
@@ -67,7 +67,6 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
   String restaurantKarte = '';
   String restaurantTelefon = '';
 
-  //bool bilderModul = true; //standard = false
   String bilderActive = 'false';
   //nur beispiele
   String bilderLink1 = '';
@@ -132,15 +131,32 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
 
   @override
   Widget build(BuildContext context) {
+    favorit = eichwalde_settings.Settings.gewerbeFavoriten.contains(widget.documentId);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hi'),
         actions: [
           IconButton(
             onPressed: () {
+              setState(() {
+                favorit = !favorit;
               
-            }, //Favoritenoption hier
-            icon: const Icon(Icons.favorite_outline)        
+                if (favorit) {
+                  eichwalde_settings.Settings.gewerbeFavoriten.add(widget.documentId);
+                  eichwalde_settings.saveGewerbeFavoriten();
+                } else {
+                  eichwalde_settings.Settings.gewerbeFavoriten.remove(widget.documentId);
+                  eichwalde_settings.saveGewerbeFavoriten();
+                }
+              });
+            },
+            isSelected: favorit,
+            icon: const Icon(Icons.favorite_outline_rounded),
+            selectedIcon: Icon(
+              Icons.favorite_rounded,
+              color: eichwaldeGreen,
+            ),        
           )
         ],
       ),

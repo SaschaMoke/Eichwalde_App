@@ -11,12 +11,20 @@ import 'package:eichwalde_app/Design/eichwalde_design.dart';
 class Settings {
   static String standardSchranke = '';
   static String standardAbfahrt = '';
+
+  static List<String> gewerbeFavoriten = [];
 }
 
 Future<void> loadSettings() async {
   final prefs = await SharedPreferences.getInstance();
   Settings.standardSchranke = prefs.getString('schrankeStandard') ?? 'Lidl';
   Settings.standardAbfahrt = prefs.getString('abfahrtStandard') ?? 'eichwalde';
+  Settings.gewerbeFavoriten = prefs.getStringList('gewerbeFavoriten') ?? [];
+}
+
+Future<void> saveGewerbeFavoriten() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setStringList('gewerbeFavoriten', Settings.gewerbeFavoriten);
 }
 
 Future<void> saveSettings() async {

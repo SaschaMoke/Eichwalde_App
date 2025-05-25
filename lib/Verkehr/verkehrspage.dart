@@ -157,9 +157,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
       schrankeRed = Color.fromARGB(255, 255, 0, 0);
       schrankeGelb = Color.fromARGB(255, 50, 50, 50);
     } else {
-      schrankeFrame = Color.fromARGB(255, 0, 200, 0);
-      schrankeRed = Color.fromARGB(255, 50, 50, 50);
-      schrankeGelb = Color.fromARGB(255, 50, 50, 50);
+      schrankeFrame = eichwaldeGreen;
+      schrankeRed = const Color.fromARGB(255, 50, 50, 50);
+      schrankeGelb = const Color.fromARGB(255, 50, 50, 50);
     }
 
     String schrankeName;
@@ -258,7 +258,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                     color: schrankeFrame,
                   ),
                   borderRadius: BorderRadius.circular(20),
-                  //color: Color.fromARGB(255, 235, 235, 235),
                 ),
                 child: LayoutBuilder(
                   builder: (contextSchranke, constraints) {
@@ -603,7 +602,204 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 ),
               ),
               if (remarks.isNotEmpty) const SizedBox(height: 10),
-              Container(//Abfahrtencontainer
+              SizedBox(
+                height: constraints.maxHeight*0.75,//pixelwert
+                width: constraints.maxWidth*0.95,
+                child: Card(
+                  surfaceTintColor: eichwaldeGreen,
+                  elevation: 3,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                      width: 3,
+                      color: eichwaldeGreen,
+                    )
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: departures.isNotEmpty ? ListView.builder(
+                      itemCount: departures.length,
+                      itemBuilder: (context, index) {
+                        final departure = departures[index];
+                                
+                        bool additionalInfoExists = false;
+                        List<Widget> additionalInfo = [];
+                        for (var element in List.from(departure.remarks.map((x) => Remarks.fromJson(x)),)) {
+                          if (element.remarkCode =='text.realtime.journey.partially.cancelled.between') {
+                            additionalInfoExists = true;
+                            additionalInfo.add(Text(
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: const Color.fromARGB(255, 255, 0, 0),
+                                fontStyle: FontStyle.italic,
+                              ),
+                              'Fahrtverkürzung',
+                            ));
+                          } else if (element.remarkCode =='text.realtime.journey.additional.service') {
+                            additionalInfoExists = true;
+                            additionalInfo.add(Text(
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: eichwaldeGreen,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              'Zusatzfahrt',
+                            ));
+                          } else if (element.remarkType == 'hint' && element.remarkContent == 'Ersatzverkehr') {
+                            additionalInfoExists = true;
+                            additionalInfo.add(Text(
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: const Color.fromARGB(255, 255, 100, 0),
+                                fontStyle: FontStyle.italic,
+                              ),
+                              'Ersatzverkehr',
+                            ));
+                          }
+                        }
+                                
+                        var delay = (departure.delay) / 60;
+                        int mincount;
+                        String deptime;
+                        if (int.parse(departure.formattedHour) == currentHour) {
+                          mincount = (int.parse(departure.formattedMin) - currentMin);
+                        } else {
+                          mincount = (int.parse(departure.formattedMin) + (60 - currentMin));
+                        }
+                        if (mincount == 0) {
+                          if (delay > 0) {
+                            deptime = 'jetzt (+${delay.round()})';
+                          } else {
+                            deptime = 'jetzt';
+                          }
+                        } else {
+                          if (delay > 0) {
+                            deptime = 'in $mincount min (+${delay.round()})';
+                          } else {
+                            deptime = 'in $mincount min';
+                          }
+                        }
+                                    
+                        TextStyle deststyle;
+                        if (departure.when == 'Fahrt fällt aus') {
+                          deststyle = const TextStyle(
+                            fontSize: 17,
+                            color: Color.fromARGB(255, 255, 0, 0),
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: Color.fromARGB(255, 255, 0, 0),
+                          );
+                          deptime = 'Fahrt fällt aus';
+                        } else {
+                          deststyle = const TextStyle(
+                            fontSize: 17,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            decoration: TextDecoration.none,
+                          );
+                        }
+                                    
+                        AssetImage lineImage = const AssetImage('Assets/Bus.png');
+                        SizedBox linelogo;
+                        if (departure.product == 'suburban') {
+                          if (departure.line == 'S46') {
+                            lineImage = const AssetImage('Assets/S46.png');
+                          } else if (departure.line == 'S8') {
+                            lineImage = const AssetImage('Assets/S8.png');
+                          }
+                          linelogo = SizedBox(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width*0.094,
+                            child: Image(image: lineImage)
+                          );
+                        } else {
+                          linelogo = SizedBox(
+                            height: 60,
+                            width: MediaQuery.of(context).size.width*0.094,
+                            child: Column(
+                              children: [
+                                Image(
+                                  image: lineImage,
+                                  height: 30,
+                                  width: MediaQuery.of(context).size.width*0.07,
+                                ),
+                                Text(
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  departure.line,
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                                
+                        return Card(
+                          elevation: 3,
+                          child: ListTile(
+                            leading: linelogo, 
+                            title: Text(
+                              style: deststyle,
+                              departure.destination
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: delay > 0 && delay < 5 ? const Color.fromARGB(255, 255, 135, 0): 
+                                          delay > 5 || departure.when == 'Fahrt fällt aus' ? const Color.fromARGB(255, 255, 0, 0): 
+                                          const Color.fromARGB(255, 0, 0, 0),
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                  deptime
+                                ),
+                                additionalInfoExists ? Column(
+                                  children: additionalInfo,
+                                ):SizedBox(), 
+                                
+                              ],
+                            ),                     
+                            trailing: '${departure.platform}' != "null" ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color:const Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                  'Gleis:'
+                                ),
+                                Text(
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color:const Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                  '${departure.platform}'
+                                ),
+                              ],
+                            ):SizedBox(),
+                            shape: Border(),
+                          ),
+                        );
+                      },
+                    ): Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25
+                        ),
+                        'Es konnten keine Daten empfangen werden.'
+                      ),
+                    ),
+                  ),
+                )
+              ),
+              
+              
+              /*Container(//Abfahrtencontainer
                 height: 400,
                 decoration: BoxDecoration(
                   //color: eichwaldeGreen,
@@ -613,218 +809,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: LayoutBuilder(
-                  builder: (contextDeparture, constraintsDepartures) {
-                    return Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: constraintsDepartures.maxHeight*0.75,//pixelwert
-                          child: departures.isNotEmpty ? ListView.builder(
-                            itemCount: departures.length,
-                            itemBuilder: (context, index) {
-                              final departure = departures[index];
-
-                              bool additionalInfoExists = false;
-                              List<Widget> additionalInfo = [];
-                              for (var element in List.from(departure.remarks.map((x) => Remarks.fromJson(x)),)) {
-                                if (element.remarkCode =='text.realtime.journey.partially.cancelled.between') {
-                                  additionalInfoExists = true;
-                                  additionalInfo.add(Text(
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: const Color.fromARGB(255, 255, 0, 0),
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                    'Fahrtverkürzung',
-                                  ));
-                                } else if (element.remarkCode =='text.realtime.journey.additional.service') {
-                                  additionalInfoExists = true;
-                                  additionalInfo.add(Text(
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: eichwaldeGreen,
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                    'Zusatzfahrt',
-                                  ));
-                                } else if (element.remarkType == 'hint' && element.remarkContent == 'Ersatzverkehr') {
-                                  additionalInfoExists = true;
-                                  additionalInfo.add(Text(
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: const Color.fromARGB(255, 255, 100, 0),
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                    'Ersatzverkehr',
-                                  ));
-                                }
-                              }
-
-                              var delay = (departure.delay) / 60;
-                              int mincount;
-                              String deptime;
-                              if (int.parse(departure.formattedHour) == currentHour) {
-                                mincount = (int.parse(departure.formattedMin) - currentMin);
-                              } else {
-                                mincount = (int.parse(departure.formattedMin) + (60 - currentMin));
-                              }
-                              if (mincount == 0) {
-                                if (delay > 0) {
-                                  deptime = 'jetzt (+${delay.round()})';
-                                } else {
-                                  deptime = 'jetzt';
-                                }
-                              } else {
-                                if (delay > 0) {
-                                  deptime = 'in $mincount min (+${delay.round()})';
-                                } else {
-                                  deptime = 'in $mincount min';
-                                }
-                              }
-                    
-                              TextStyle deststyle;
-                              if (departure.when == 'Fahrt fällt aus') {
-                                deststyle = const TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 255, 0, 0),
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: Color.fromARGB(255, 255, 0, 0),
-                                );
-                                deptime = 'Fahrt fällt aus';
-                              } else {
-                                deststyle = const TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                  decoration: TextDecoration.none,
-                                );
-                              }
-                    
-                              AssetImage lineImage = const AssetImage('Assets/Bus.png');
-                              SizedBox linelogo;
-                              if (departure.product == 'suburban') {
-                                if (departure.line == 'S46') {
-                                  lineImage = const AssetImage('Assets/S46.png');
-                                } else if (departure.line == 'S8') {
-                                  lineImage = const AssetImage('Assets/S8.png');
-                                }
-                                linelogo = SizedBox(
-                                  height: 40,
-                                  width: MediaQuery.of(contextDeparture).size.width*0.094,
-                                  child: Image(image: lineImage)
-                                );
-                              } else {
-                                linelogo = SizedBox(
-                                  height: 60,
-                                  width: MediaQuery.of(contextDeparture).size.width*0.094,
-                                  child: Column(
-                                    children: [
-                                      Image(
-                                        image: lineImage,
-                                        height: 30,
-                                        width: MediaQuery.of(contextDeparture).size.width*0.07,
-                                      ),
-                                      Text(
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        departure.line,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-
-                              return Center(
-                                child: SizedBox(
-                                  width: constraintsDepartures.maxWidth*0.95,
-                                  child: Card(
-                                    child: ListTile(
-                                      leading: linelogo, 
-                                      title: Text(
-                                        style: deststyle,
-                                        departure.destination
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: delay > 0 && delay < 5 ? const Color.fromARGB(255, 255, 135, 0): 
-                                                    delay > 5 || departure.when == 'Fahrt fällt aus' ? const Color.fromARGB(255, 255, 0, 0): 
-                                                    const Color.fromARGB(255, 0, 0, 0),
-                                              fontStyle: FontStyle.italic,
-                                            ),
-                                            deptime
-                                          ),
-                                          additionalInfoExists ? Column(
-                                            children: additionalInfo,
-                                          ):SizedBox(), 
-                                          /*Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              //color: const Color.fromARGB(255, 255, 0, 0),
-                                              color: additionalInfoColor,
-                                              fontStyle: FontStyle.italic,
-                                            ),
-                                            additionalInfoText,
-                                          ),*/
-                                        ],
-                                      ),
-                                        /*subtitle: Text(
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: delay > 0 && delay < 5 ? const Color.fromARGB(255, 255, 135, 0): 
-                                                  delay > 5 || departure.when == 'Fahrt fällt aus' ? const Color.fromARGB(255, 255, 0, 0): const Color.fromARGB(255, 0, 0, 0),
-                                            //color: timecolor,
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                          deptime
-                                        ),*/                               
-                                      trailing: '${departure.platform}' != "null" ? Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color:const Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                            'Gleis:'
-                                          ),
-                                          Text(
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color:const Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                            '${departure.platform}'
-                                          ),
-                                        ],
-                                      ):SizedBox(),
-                                      shape: Border(),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ): Center(
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25
-                              ),
-                              'Es konnten keine Daten empfangen werden.'
-                            ),
-                          )
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
+              ),*/
               const SizedBox(height: 10),
               Text(
                 textAlign: TextAlign.center,

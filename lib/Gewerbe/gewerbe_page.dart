@@ -1,3 +1,4 @@
+import 'package:eichwalde_app/settings.dart';
 import 'package:flutter/material.dart';
 
 //App-Files
@@ -52,9 +53,9 @@ class _GewerbePageState extends State<GewerbePage> {
       if (filterAlle) return true;
 
       final filteredKategorie = filterKategorien.contains(gewerbe.kategorie);
-      //final istFavorit = widget.favoritenIds.contains(gewerbe.id);
+      final favorit = Settings.gewerbeFavoriten.contains(gewerbe.id);
 
-      //if (filterFavoriten && istFavorit) return true;
+      if (filterFavoriten && !favorit) return false;
       if (filterKategorien.isNotEmpty && !filteredKategorie) return false;
 
       return true;
@@ -255,42 +256,48 @@ class _GewerbePageState extends State<GewerbePage> {
                             crossAxisCount: 2,
                             mainAxisExtent: 250,
                           ),
-                          //itemCount: cloudGewerbe.gewerbeListe.length,
                           itemCount: searchController.text.isNotEmpty ? gewerbeSearchedListe.length:gewerbeFilteredListe.length,
                           itemBuilder: (context, index) {
-                            //final gewerbe = cloudGewerbe.gewerbeListe[index];
                             final gewerbe = searchController.text.isNotEmpty ? gewerbeSearchedListe[index]:gewerbeFilteredListe[index];
                             return GestureDetector(
-                              onTap:() {Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => Gewerbeseite(documentId:gewerbe.id)),
-                              );
+                              onTap:() {
+                                Navigator.push(context,MaterialPageRoute(builder: (context) => Gewerbeseite(documentId:gewerbe.id)),);
                               },
-                              child: Container(
-                                padding: EdgeInsets.all(0.5),
-                                child: Card(
-                                  color: Color.fromARGB(255, 150, 200, 150),
-                                  child: Column(children: [
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    SizedBox(
-                                      width: 150,
-                                      height: 120,
-                                      child:gewerbe.bild != null? Image.network(
+                              child: Card(
+                                //color: Color.fromARGB(255, 150, 200, 150),
+                                elevation: 3,
+                                shape: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(
+                                    width: 3,
+                                    color: eichwaldeGreen,
+                                  )
+                                ),
+                                child: Column(children: [
+                                  const SizedBox(height: 10),
+                                  SizedBox(
+                                    width: 150,
+                                    height: 120,
+                                    child:gewerbe.bild != null? Image.network(
                                       'https://blog.duolingo.com/content/images/2024/12/cover_why-is-duolingo-free.png',
                                       fit: BoxFit.contain,
-                                      ): const Image(image: AssetImage('Assets/IconEichwalde.png')),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    SizedBox(
+                                    ): const Image(image: AssetImage('Assets/IconEichwalde.png')),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(15,0,15,0),
+                                    child: SizedBox(
                                       width: 160,
-                                      child: Text(gewerbe.name)
+                                      child: Text(
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: constraints.maxWidth*0.05,
+                                        ),
+                                        gewerbe.name,
+                                      )
                                     ),
-                                  ]),
-                                ),
+                                  ),
+                                ]),
                               ),
                             );
                           },
@@ -322,6 +329,226 @@ class _GewerbePageState extends State<GewerbePage> {
                     },
                   ),
                 ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                /*FutureBuilder(
+                  future: cloudGewerbe.getDocID(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator(color: eichwaldeGreen));
+                    }
+
+                    if (cloudGewerbe.gewerbeListe.isEmpty) {
+                      return Center(
+                        child: SizedBox(
+                          width: constraints.maxWidth*0.85,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.warning_amber_rounded,
+                                    size: constraints.maxWidth*0.15,
+                                    color: Color.fromARGB(255, 255, 0, 0),
+                                  ),
+                                  SizedBox(
+                                    width: constraints.maxWidth*0.015,
+                                  ),
+                                  Text(
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: constraints.maxWidth*0.1,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color.fromARGB(255, 255, 0, 0)
+                                    ),
+                                    'Fehler'
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: constraints.maxWidth*0.05,
+                                ),
+                                'Es konnten keine Daten geladen werden. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später nocheinmal.'
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Column(
+                      children: [
+                        Row(//Filter
+                          children: [
+                            FilterChip(
+                              label: Icon(
+                                Icons.favorite_border_rounded,
+                                size: constraints.maxWidth*0.0625,
+                              ), 
+                              onSelected: (bool value) {
+                                setState(() {
+                                  filterFavoriten = value;
+                                  filterAlle = false;
+                               });
+                              },
+                              selectedColor: Color.fromARGB(100, 50, 150, 50),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: eichwaldeGreen,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(25)
+                              ),
+                              selected: filterFavoriten,
+                              showCheckmark: false,
+                            ),
+                            const SizedBox(width: 10),
+                            SizedBox(
+                              height: 50,
+                              width: constraints.maxWidth*0.8,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  for (var kategorie in gewerbeKategorien) 
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: FilterChip(
+                                        label: Text(kategorie), 
+                                        onSelected: (bool value) {
+                                         setState(() {
+                                          filterAlle = false;
+                                            if (value) {
+                                              filterKategorien.add(kategorie);
+                                            } else {
+                                              filterKategorien.remove(kategorie);
+                                            }
+                                          });
+                                        },
+                                        selectedColor: Color.fromARGB(100, 50, 150, 50),
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            color: eichwaldeGreen,
+                                            width: 2,
+                                          ),
+                                          borderRadius: BorderRadius.circular(25)
+                                        ),
+                                        selected: filterKategorien.contains(kategorie),
+                                        showCheckmark: false,
+                                      ),
+                                    ),
+                                  ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height*0.5,
+                          child: LayoutBuilder(
+                            builder:(context, constraints) {
+                              if (searchController.text.isEmpty || gewerbeSearchedListe.isNotEmpty) {
+                                return GridView.builder(
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisExtent: 250,
+                                  ),
+                                  //itemCount: cloudGewerbe.gewerbeListe.length,
+                                  itemCount: searchController.text.isNotEmpty ? gewerbeSearchedListe.length:gewerbeFilteredListe.length,
+                                  itemBuilder: (context, index) {
+                                    //final gewerbe = cloudGewerbe.gewerbeListe[index];
+                                    final gewerbe = searchController.text.isNotEmpty ? gewerbeSearchedListe[index]:gewerbeFilteredListe[index];
+                                    return GestureDetector(
+                                      onTap:() {Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => Gewerbeseite(documentId:gewerbe.id)),
+                                      );
+                                      },
+                                      child: Card(
+                                        //color: Color.fromARGB(255, 150, 200, 150),
+                                        elevation: 3,
+                                        shape: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                          borderSide: BorderSide(
+                                            width: 3,
+                                            color: eichwaldeGreen,
+                                          )
+                                        ),
+                                        child: Column(children: [
+                                          const SizedBox(height: 10),
+                                          SizedBox(
+                                            width: 150,
+                                            height: 120,
+                                            child:gewerbe.bild != null? Image.network(
+                                              'https://blog.duolingo.com/content/images/2024/12/cover_why-is-duolingo-free.png',
+                                              fit: BoxFit.contain,
+                                            ): const Image(image: AssetImage('Assets/IconEichwalde.png')),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(15,0,15,0),
+                                            child: SizedBox(
+                                              width: 160,
+                                              child: Text(
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: constraints.maxWidth*0.05,
+                                                ),
+                                                gewerbe.name,
+                                              )
+                                            ),
+                                          ),
+                                        ]),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                return Center(
+                                  child: SizedBox(
+                                    width: constraints.maxWidth*0.85,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.search_rounded,
+                                          size: constraints.maxWidth*0.15,
+                                          color: eichwaldeGreen,
+                                        ),
+                                        Text(
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: constraints.maxWidth*0.05,
+                                          ),
+                                          'Kein passendes Ergebnis zu Ihrer Suchanfrage gefunden.'
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                ),*/
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
