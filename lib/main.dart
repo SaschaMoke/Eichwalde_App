@@ -56,15 +56,7 @@ void main() async {
       appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
     ));
   } else {
-    await Firebase.initializeApp(
-        /*   options: FirebaseOptions(
-      apiKey: "AIzaSyAkZE6Au_U_2O_OXfQXunONitfyUKRLBNc",
-      projectId: "eichwalde-app-3527e",
-      storageBucket: "eichwalde-app-3527e.firebasestorage.app",
-      messagingSenderId: "684116063569",
-      appId: "1:684116063569:web:5987b4a433b4ea3f644f70",
-    )*/
-    );
+    await Firebase.initializeApp();
   }
  
   //NotificationService().initNotification();   //init notifications
@@ -160,52 +152,56 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          child: NavigationBar(
-            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-            //backgroundColor: Color.fromRGBO(150, 200, 150, 1),
-            //backgroundColor: eichwaldeGreen,    => etwas heller & Text/Icons weiß
-            //backgroundColor: Colors.grey[50],
-            onDestinationSelected: (int index) {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            indicatorColor: indicatorColorLight,
-            indicatorShape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: indicatorColor,
-                width: 2.5,
+          child: Card(
+            clipBehavior: Clip.hardEdge,
+            elevation: 5,
+            //shape: 
+            child: NavigationBar(
+              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+              labelTextStyle: WidgetStatePropertyAll(TextStyle(fontWeight: FontWeight.w500)),
+              backgroundColor: Color.fromARGB(25, 50, 150, 50),
+              onDestinationSelected: (int index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+              indicatorColor: indicatorColorLight,
+              indicatorShape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: indicatorColor,
+                  width: 2.5,
+                ),
+                borderRadius: BorderRadius.circular(16)
               ),
-              borderRadius: BorderRadius.circular(16)
+              selectedIndex: selectedIndex,
+              destinations: const <Widget>[
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.home),
+                  icon: Icon(Icons.home_outlined),
+                  label: 'Home',
+                ),
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.route),
+                  icon: Icon(Icons.route_outlined),
+                  label: 'Verkehr',
+                ),
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.store),
+                  icon: Icon(Icons.store_outlined),
+                  label: 'Gewerbe',
+                ),
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.calendar_month),
+                  icon: Icon(Icons.calendar_month_outlined),
+                  label: 'Termine',
+                ),
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.settings),
+                  icon: Icon(Icons.settings_outlined),
+                  label: 'Admin', //=> Einstellungen
+                ),
+              ],
             ),
-            selectedIndex: selectedIndex,
-            destinations: const <Widget>[
-              NavigationDestination(
-                selectedIcon: Icon(Icons.home),
-                icon: Icon(Icons.home_outlined),
-                label: 'Home',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.route),
-                icon: Icon(Icons.route_outlined),
-                label: 'Verkehr',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.store),
-                icon: Icon(Icons.store_outlined),
-                label: 'Gewerbe',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.calendar_month),
-                icon: Icon(Icons.calendar_month_outlined),
-                label: 'Termine',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.settings),
-                icon: Icon(Icons.settings_outlined),
-                label: 'Admin', //=> Einstellungen
-              ),
-            ],
           ),
         ),
         body: SafeArea(
@@ -334,6 +330,7 @@ class _HomepageState extends State<Homepage> {
   }
 }
 
+//CODE FORMATIEREN (aber kommt ja wahrscheinlich auch weg)
 class AdminCheckPage extends StatefulWidget {
   const AdminCheckPage({super.key});
 
@@ -341,7 +338,6 @@ class AdminCheckPage extends StatefulWidget {
   State<AdminCheckPage> createState() => _AdminCheckPageState();
 }
 
-//CODE FORMATIEREN (aber kommt ja wahrscheinlich auch weg)
 class _AdminCheckPageState extends State<AdminCheckPage> {
   bool obscureText = true;
 

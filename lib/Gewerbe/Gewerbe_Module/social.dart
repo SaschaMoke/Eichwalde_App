@@ -82,7 +82,7 @@ class _SocialMediaState extends State<SocialMedia> {
       );
     }
 
-  if (widget.instagramLink.isNotEmpty) {
+    if (widget.instagramLink.isNotEmpty) {
       gridTiles.add(
         SizedBox(
           width: widget.constraints.maxWidth*0.45,

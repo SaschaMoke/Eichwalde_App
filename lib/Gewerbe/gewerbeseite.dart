@@ -175,6 +175,9 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                         FadeInImage.assetNetwork(
                           placeholder: 'Assets/IconEichwalde.png', 
                           image:gewerbeImage,
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Image(image: AssetImage('Assets/IconEichwalde.png'));
+                          },
                         ),
                         const SizedBox(height: 20),
                         Text(

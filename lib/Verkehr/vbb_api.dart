@@ -12,6 +12,10 @@ enum Stations {
   final int stationID;
 }
 
+///////////
+//Remarks//
+///////////
+
 class Remarks {
   final String? remarkID;
   final String remarkContent;
@@ -43,32 +47,50 @@ class Remarks {
       remarkID == other.remarkID;
   }
 
-
-    
   @override
   int get hashCode =>
       remarkID.hashCode;
 }
 
-//KW (für Schranke)
+////////////
+//Schranke//
+////////////
+
 List departuresKW = [];
 Future<void> dataRegioKW() async {
   try {
     final response = await http.get(
-        Uri.parse(
-          'https://v6.vbb.transport.rest/stops/900260001/departures?linesOfStops=false&bus=false&suburban=false&remarks=false&duration=60'),
-      );
+      Uri.parse('https://v6.vbb.transport.rest/stops/900260001/departures?linesOfStops=false&bus=false&suburban=false&remarks=false&duration=60'),
+    );
 
-      if (response.statusCode == 200) {
-        final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
-        departuresKW = apiResponse.departures;
-      } else {
-        throw Exception('Regio: Failed to load data');
-      }
-    } catch (error) {
-      throw Exception('Regio: Error fetching data: $error');
+    if (response.statusCode == 200) {
+      final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
+      departuresKW = apiResponse.departures;
+    } else {
+      throw Exception('Regio: Failed to load data');
     }
+  } catch (error) {
+    throw Exception('Regio: Error fetching data: $error');
   }
+}
+
+List departuresEW = [];
+Future<void> dataRegioEW() async {
+  try {
+    final response = await http.get(
+      Uri.parse('https://v6.vbb.transport.rest/stops/900260004/departures?linesOfStops=false&bus=false&remarks=false&duration=60'),
+    );
+
+    if (response.statusCode == 200) {
+      final apiResponse = VBBApiResponse.fromJson(jsonDecode(response.body));
+      departuresEW = apiResponse.departures;
+    } else {
+      throw Exception('S-Bahn: Failed to load data');
+    }
+  } catch (error) {
+    throw Exception('S-Bahn: Error fetching data: $error');
+  }
+}
 
 List directionsBerlin = [
   'Dessau, Hauptbahnhof', 'Nauen, Bahnhof', 'Potsdam, Golm Bhf',
@@ -80,8 +102,7 @@ List directionsCottbus = [
 List<Departure> schrankeTrains = [];
 int nextClose = 100;
 int nextOpen = 100; 
-//check ausfall - evtl. schon automatisch
-bool checkSchranke(List departures, String schrankeOrt) {
+bool checkSchranke(List departures, String schrankeOrt) {//departures rausnehmen, wenn funktioniert
   DateTime nowSchranke = DateTime.now();
   var currentHourSchranke = int.parse(DateFormat('HH').format(nowSchranke));
   var currentMinSchranke = int.parse(DateFormat('mm').format(nowSchranke));
@@ -91,44 +112,43 @@ bool checkSchranke(List departures, String schrankeOrt) {
   nextOpen = 0; 
 
   dataRegioKW();
+  dataRegioEW();
 
-  for (var dep in departures) {
-    if (dep.product == 'suburban') {
-      int mincountSchranke;
-      var formattedHour = int.parse(dep.formattedHour);
-      var formattedMin = int.parse(dep.formattedMin);
-      if (formattedHour == currentHourSchranke) {
-        mincountSchranke = (formattedMin-currentMinSchranke);
-      } else {
-        mincountSchranke = (formattedMin+(60-currentMinSchranke));
+  for (var dep in departuresEW) {
+    int mincountSchranke;
+    var formattedHour = int.parse(dep.formattedHour);
+    var formattedMin = int.parse(dep.formattedMin);
+    if (formattedHour == currentHourSchranke) {
+      mincountSchranke = (formattedMin-currentMinSchranke);
+    } else {
+      mincountSchranke = (formattedMin+(60-currentMinSchranke));
+    }
+
+    if (schrankeOrt == 'Lidl') {
+      if (dep.platform == '4') {
+        mincountSchranke = mincountSchranke - 1;
+      } else if (dep.platform == '3') {
+        mincountSchranke = mincountSchranke + 1;
+      }
+    } else {
+      if (dep.platform == '3') {
+        mincountSchranke = mincountSchranke - 1;
+      } else if (dep.platform == '4') {
+        mincountSchranke = mincountSchranke + 1;
+      }
+    }
+
+    if (mincountSchranke < nextClose) {
+      nextClose = mincountSchranke;
+    }
+
+    if (mincountSchranke < 2) {
+      if (!schrankeTrains.contains(dep)) {
+        schrankeTrains.add(dep);
       }
 
-      if (schrankeOrt == 'Lidl') {
-        if (dep.platform == '4') {
-          mincountSchranke = mincountSchranke - 1;
-        } else if (dep.platform == '3') {
-          mincountSchranke = mincountSchranke + 1;
-        }
-      } else {
-         if (dep.platform == '3') {
-          mincountSchranke = mincountSchranke - 1;
-        } else if (dep.platform == '4') {
-          mincountSchranke = mincountSchranke + 1;
-        }
-      }
-
-      if (mincountSchranke < nextClose) {
-        nextClose = mincountSchranke;
-      }
-
-      if (mincountSchranke < 2) {
-        if (!schrankeTrains.contains(dep)) {
-          schrankeTrains.add(dep);
-        }
-
-        if (mincountSchranke > nextOpen) {
-          nextOpen = mincountSchranke;
-        }
+      if (mincountSchranke > nextOpen) {
+        nextOpen = mincountSchranke;
       }
     }
   }
@@ -180,6 +200,10 @@ bool checkSchranke(List departures, String schrankeOrt) {
     return true;
   }
 }
+
+//////////////
+//Departures//
+//////////////
 
 class Departure {
   final String destination;

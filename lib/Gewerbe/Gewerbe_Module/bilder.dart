@@ -73,7 +73,7 @@ class _BilderState extends State<Bilder> {
           fontWeight: FontWeight.w600,
           fontSize: widget.constraints.maxWidth*0.075,
         ),
-        'Galerie / Bilder!!!!!'
+        'Galerie'
       ),
       shape: const Border(),
       tilePadding: const EdgeInsets.all(1),

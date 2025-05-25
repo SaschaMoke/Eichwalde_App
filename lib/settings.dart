@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 //App-Files
 import 'package:eichwalde_app/Verkehr/vbb_api.dart';
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
+import 'package:eichwalde_app/about.dart';
 
 class Settings {
   static String standardSchranke = '';
@@ -225,13 +226,13 @@ class _SettingsState extends State<SettingsPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Image(
                   //width: constraints.maxWidth*0.01,
                   height: constraints.maxWidth*0.2,
                   image: const AssetImage('Assets/IconEichwaldeneu2.png')
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -252,9 +253,17 @@ Offiziell unterstützt durch die Gemeinde Eichwalde.'''
                       fontSize: constraints.maxWidth*0.025,
                     ),
                     recognizer: TapGestureRecognizer()..onTap = () {
-                      //MaterialPageRouteBuilder ding
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => AboutPage()),);
                     },
                   )
+                ),
+                Text(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: constraints.maxWidth*0.02
+                  ),
+                  'App-Version: 1.0'
                 ),
               ],
             ),

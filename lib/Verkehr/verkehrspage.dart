@@ -82,7 +82,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
           return aTime.compareTo(bTime);
         });
         
-        schranke = checkSchranke(departures, schrankeWahl);
+        schranke = checkSchranke(departures, schrankeWahl); //departures rausnehmen, wenn funktioniert
 
         remarks = [];
         for (var element in departures) {
@@ -93,7 +93,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
               if (!remarks.contains(remark)) {
                 remarks.add(remark);
               }
-            } else if (remark.remarkType == "hint"&& remark.remarkContent == 'Ersatzverkehr') {
+            } else if (remark.remarkType == "hint" && remark.remarkContent == 'Ersatzverkehr') {
               if (!remarks.contains(Remarks(remarkContent: '',remarkType: '', remarkID: 'SEV'))) {
                 remarks.add(Remarks(
                   remarkID: 'SEV',
@@ -181,7 +181,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
     return SizedBox(
       width: MediaQuery.of(context).size.width*0.95,
-      height: MediaQuery.of(context).size.height*0.75,
+      height: MediaQuery.of(context).size.height*0.745,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return ListView(
@@ -601,7 +601,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   },
                 ),
               ),
-              if (remarks.isNotEmpty) const SizedBox(height: 10),
+              if (remarks.isNotEmpty) const SizedBox(height: 5),
               SizedBox(
                 height: constraints.maxHeight*0.75,//pixelwert
                 width: constraints.maxWidth*0.95,
