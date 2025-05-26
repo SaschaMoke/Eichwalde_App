@@ -41,9 +41,7 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsState();
 }
 
-class _SettingsState extends State<SettingsPage> {
-  bool setting1 = false; //=> Einstellungsbools
-  
+class _SettingsState extends State<SettingsPage> {  
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(

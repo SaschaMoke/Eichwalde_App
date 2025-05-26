@@ -102,7 +102,7 @@ List directionsCottbus = [
 List<Departure> schrankeTrains = [];
 int nextClose = 100;
 int nextOpen = 100; 
-bool checkSchranke(List departures, String schrankeOrt) {//departures rausnehmen, wenn funktioniert
+bool checkSchranke(String schrankeOrt) {
   DateTime nowSchranke = DateTime.now();
   var currentHourSchranke = int.parse(DateFormat('HH').format(nowSchranke));
   var currentMinSchranke = int.parse(DateFormat('mm').format(nowSchranke));
@@ -193,8 +193,6 @@ bool checkSchranke(List departures, String schrankeOrt) {//departures rausnehmen
       }
     }
   }
-
-  //print('Schließen: $nextClose');
 
   if (schrankeTrains.isEmpty) {
     return false;

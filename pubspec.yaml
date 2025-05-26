@@ -53,9 +53,9 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "Assets/IconEichwalde.png"
-  adaptive_icon_background: "Assets/IconEichwalde.png"
-  adaptive_icon_foreground: "Assets/IconEichwalde.png"
+  image_path: "Assets/IconEichwalde_Launch.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "Assets/IconEichwalde_Launch.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -67,22 +67,6 @@ flutter:
     - Assets/Bus.png
     - Assets/S8.png
     - Assets/wappen_Eichwalde.png
-    - Assets/image2.png
-    - Assets/image3.png
-    - Assets/image4.png
-    - Assets/image5.png
-    - Assets/image6.png
-    - Assets/image7.png
-    - Assets/image8.png
-    - Assets/image9.png
-    - Assets/image10.png
-    - Assets/image11.png
-    - Assets/image12.png
-    - Assets/image13.png
-    - Assets/image14.png
-    - Assets/image15.png
-    - Assets/image16.png
-    - Assets/image17.png
     - Assets/Facebook_icon.png
     - Assets/Instagram_icon.png
     - Assets/Youtube_icon.png

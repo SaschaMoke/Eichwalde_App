@@ -11,8 +11,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
 //App-Files
+import 'package:eichwalde_app/homepage.dart';
 import 'package:eichwalde_app/Verkehr/verkehrspage.dart';
 import 'package:eichwalde_app/Gewerbe/gewerbe_page.dart';
+import 'package:eichwalde_app/ort.dart';
 import 'package:eichwalde_app/settings.dart';
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
 
@@ -118,11 +120,11 @@ class _MyHomePageState extends State<MyHomePage> {
         pagename = 'Gewerbe';
         indicatorColor = const Color.fromARGB(255, 35, 120, 110);
         indicatorColorLight = const Color.fromARGB(100, 35, 120, 110);
-        //page = GewerbeLayoutNeu();
         break;
       case 3:
         //page = Terminepage();
-        pagename = 'Termine';
+        page = OrtPage();
+        pagename = 'Ort';
         indicatorColor = const Color.fromARGB(255, 20, 100, 130);
         indicatorColorLight = const Color.fromARGB(100, 20, 100, 130);
         break;
@@ -191,14 +193,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   label: 'Gewerbe',
                 ),
                 NavigationDestination(
-                  selectedIcon: Icon(Icons.calendar_month),
-                  icon: Icon(Icons.calendar_month_outlined),
-                  label: 'Termine',
+                  selectedIcon: Icon(Icons.house_rounded),
+                  icon: Icon(Icons.house_outlined),
+                  label: 'Ort',
                 ),
                 NavigationDestination(
                   selectedIcon: Icon(Icons.settings),
                   icon: Icon(Icons.settings_outlined),
-                  label: 'Admin', //=> Einstellungen
+                  label: 'Einst.',
                 ),
               ],
             ),
@@ -238,95 +240,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     });
-  }
-}
-
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
-
-  @override
-  State<Homepage> createState() => _HomepageState();
-}
-
-class _HomepageState extends State<Homepage> {
-  int selectedIndex = 0;
-
-  final Cloudnews cloudNews = Cloudnews();
-  final CollectionReference newsCollection = FirebaseFirestore.instance.collection('News');
-
-  @override
-  Widget build(BuildContext context) {
-      return Column(
-        children: [
-          SizedBox(
-            height:500,
-            width: MediaQuery.of(context).size.width*0.95,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 150, 200, 150),
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: EdgeInsets.all(10),
-              child: Column(children: [
-                  Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                "📰 Aktuelle News", // 🔹 HINZUGEFÜGT: Überschrift für den News-Bereich
-                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                stream: newsCollection.orderBy('timestamp', descending: true).snapshots(),
-                builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                  }
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text("Keine News gefunden"));
-                  }
-
-            return ListView(
-          children: snapshot.data!.docs.map((doc) {
-            Map<String, dynamic> data = doc.data() as Map<String, dynamic>? ?? {};
-            //print("Daten aus Firestore: $data");
-            return Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                child: ExpansionTile(
-                  leading: data['foto'] != null && data['foto'].isNotEmpty
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(data['foto'], width: 50, height: 50, fit: BoxFit.cover),
-                        )
-                      : Icon(Icons.image, size: 50),
-                  title: Text(
-                    (data['titel'] != null && data['titel'].toString().trim().isNotEmpty)
-                        ? data['titel']
-                        : "Ohne Titel",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text("Tippe, um mehr zu lesen"),
-                  shape: Border(),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(data['inhalt'] ?? "Kein Inhalt verfügbar"),
-                    ),
-                  ],
-                ),
-              );
-          }).toList(),
-            );
-            },
-          ),
-                ),
-           ],
-        ),
-            ),
-        ),
-      ],
-    );
   }
 }
 

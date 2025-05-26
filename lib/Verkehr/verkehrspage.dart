@@ -6,8 +6,8 @@ import 'package:flutter/gestures.dart';
 
 //Packages
 import 'package:http/http.dart' as http;
-import 'package:home_widget/home_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+//import 'package:home_widget/home_widget.dart';
 
 //App-Files
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
@@ -46,9 +46,16 @@ class _VerkehrspageState extends State<Verkehrspage> {
   @override
   void initState() {
     super.initState();
-    HomeWidget.setAppGroupId(appGroupId);
+    //HomeWidget.setAppGroupId(appGroupId);
     fetchAndUpdateData();
     timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
+    startUpdate();
+  }
+
+  void startUpdate() {
+    Future.delayed(Duration(seconds: 2), () {
+      fetchAndUpdateData();
+    });
   }
 
   @override
@@ -82,7 +89,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
           return aTime.compareTo(bTime);
         });
         
-        schranke = checkSchranke(departures, schrankeWahl); //departures rausnehmen, wenn funktioniert
+        schranke = checkSchranke(schrankeWahl);
 
         remarks = [];
         for (var element in departures) {
@@ -105,18 +112,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
             }
           }
         }
-
-
-        /*remarks.add(Remarks(
-          remarkContent: 'WALLAH KRISE\n<a href="https://www.youtube.com" target=', 
-          remarkType: 'warning',
-          remarkSummary: 'Hinweis',
-        ));
-        remarks.add(Remarks(
-          remarkContent: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n<a href="https://www.youtube.com" target=', 
-          remarkType: 'warning',
-          remarkSummary: 'Hinweis',
-        ));*/
 
         //-----------------------------//
 
@@ -213,7 +208,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             schrankeWahl = 'Lidl';
                           }
                         });
-                        schranke = checkSchranke(departures, schrankeWahl); 
+                        schranke = checkSchranke(schrankeWahl); 
                       }, 
                       icon: const Icon(Icons.swap_horiz_rounded),
                       iconSize: constraints.maxWidth*0.08,
