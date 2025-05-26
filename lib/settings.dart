@@ -45,228 +45,228 @@ class _SettingsState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (context, constraints) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height*0.7,  //ist eig kaka
-            width: constraints.maxWidth*0.95,
-            child: ListView(
-              children: [
-                //Einstellungen
-                Text(
-                  style: TextStyle(
-                    fontSize: constraints.maxWidth*0.09,
-                    fontWeight: FontWeight.w500,
-                  ),
-                'Verkehr'
-                ), 
-                Text(
-                  style: TextStyle(
-                    height: 0.5,
-                    fontSize: constraints.maxWidth*0.05,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  'Standardauswahl Schranke'
+      builder: (context, constraints) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height*0.745,  //ist eig kaka
+          width: constraints.maxWidth*0.95,
+          child: ListView(
+            children: [
+              //Einstellungen
+              Text(
+                style: TextStyle(
+                  fontSize: constraints.maxWidth*0.09,
+                  fontWeight: FontWeight.w500,
                 ),
-                const SizedBox(height: 10),
-                DropdownMenu(
-                  dropdownMenuEntries: [
-                    DropdownMenuEntry(
-                      value: 'Lidl', 
-                      label: 'Friedenstraße',
-                      style: MenuItemButton.styleFrom(
-                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                        overlayColor: eichwaldeGreen,
-                      ),
-                    ),
-                    DropdownMenuEntry(
-                      value: 'Wald', 
-                      label: 'Waldstraße',
-                      style: MenuItemButton.styleFrom(
-                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                        overlayColor: eichwaldeGreen,
-                      ),
-                    ),
-                  ],
-                  width: constraints.maxWidth*0.99,
-                  initialSelection: Settings.standardSchranke == 'Lidl' ? 'Lidl':'Wald',
-                  controller: TextEditingController(),
-                  requestFocusOnTap: true,
-                  onSelected: (String? val) {
-                    setState(() {
-                      Settings.standardSchranke = val!;
-                    });
-                    saveSettings();
-                  },
-                  hintText: Settings.standardSchranke == 'Lidl' ? 'Friedenstraße':'Waldstraße',
-                  keyboardType: TextInputType.none,
-                  menuStyle: MenuStyle(
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(
-                          width: 2,
-                          color: eichwaldeGreen,
-                        ),
-                      ),
+              'Verkehr'
+              ), 
+              Text(
+                style: TextStyle(
+                  height: 0.5,
+                  fontSize: constraints.maxWidth*0.05,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w500,
+                ),
+                'Standardauswahl Schranke'
+              ),
+              const SizedBox(height: 10),
+              DropdownMenu(
+                dropdownMenuEntries: [
+                  DropdownMenuEntry(
+                    value: 'Lidl', 
+                    label: 'Friedenstraße',
+                    style: MenuItemButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                      overlayColor: eichwaldeGreen,
                     ),
                   ),
-                  textStyle: TextStyle(
-                    color: const Color.fromARGB(255, 0, 0, 0),
+                  DropdownMenuEntry(
+                    value: 'Wald', 
+                    label: 'Waldstraße',
+                    style: MenuItemButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                      overlayColor: eichwaldeGreen,
+                    ),
                   ),
-                  inputDecorationTheme: InputDecorationTheme(
-                    border: textFeldNormalBorder,
-                    enabledBorder: textFeldNormalBorder,
-                    focusedBorder: textFeldfocusBorder,
+                ],
+                width: constraints.maxWidth*0.99,
+                initialSelection: Settings.standardSchranke == 'Lidl' ? 'Lidl':'Wald',
+                controller: TextEditingController(),
+                requestFocusOnTap: true,
+                onSelected: (String? val) {
+                  setState(() {
+                    Settings.standardSchranke = val!;
+                  });
+                  saveSettings();
+                },
+                hintText: Settings.standardSchranke == 'Lidl' ? 'Friedenstraße':'Waldstraße',
+                keyboardType: TextInputType.none,
+                menuStyle: MenuStyle(
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(
+                        width: 2,
+                        color: eichwaldeGreen,
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  style: TextStyle(
-                    height: 0.5,
-                    fontSize: constraints.maxWidth*0.05,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  'Standardauswahl Abfahrten'
+                textStyle: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0),
                 ),
-                const SizedBox(height: 10),
-                DropdownMenu(
-                  dropdownMenuEntries: [
-                    DropdownMenuEntry(
-                      value: 'eichwalde', 
-                      label: 'S Eichwalde',
-                      style: MenuItemButton.styleFrom(
-                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                        overlayColor: eichwaldeGreen,
-                      ),
-                    ),
-                    DropdownMenuEntry(
-                      value: 'friedenstr', 
-                      label: 'Eichwalde, Friedenstr.',
-                      style: MenuItemButton.styleFrom(
-                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                        overlayColor: eichwaldeGreen,
-                      ),
-                    ),
-                    DropdownMenuEntry(
-                      value: 'schmockwitz', 
-                      label: 'Eichwalde, Schmöckwitzer Str.',
-                      style: MenuItemButton.styleFrom(
-                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                        overlayColor: eichwaldeGreen,
-                      ),
-                    ),
-                  ],
-                  width: constraints.maxWidth*0.99,
-                  initialSelection: Settings.standardAbfahrt == 'eichwalde' ?
-                                    'eichwalde':Settings.standardAbfahrt == 'friedenstr' ?
-                                    'friedenstr':
-                                    'schmockwitz',
-                  controller: TextEditingController(),
-                  requestFocusOnTap: true,
-                  onSelected: (String? val) {
-                    setState(() {
-                      Settings.standardAbfahrt = val!;
-                    });
-                    saveSettings();
-                  },
-                  hintText: Settings.standardAbfahrt == 'eichwalde' ? 
-                            Stations.eichwalde.stationName:Settings.standardAbfahrt == 'friedenstr' ? 
-                            Stations.friedenstr.stationName:
-                            Stations.schmockwitz.stationName,
-                  keyboardType: TextInputType.none,
-                  menuStyle: MenuStyle(
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(
-                          width: 2,
-                          color: eichwaldeGreen,
-                        ),
-                      ),
+                inputDecorationTheme: InputDecorationTheme(
+                  border: textFeldNormalBorder,
+                  enabledBorder: textFeldNormalBorder,
+                  focusedBorder: textFeldfocusBorder,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                style: TextStyle(
+                  height: 0.5,
+                  fontSize: constraints.maxWidth*0.05,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w500,
+                ),
+                'Standardauswahl Abfahrten'
+              ),
+              const SizedBox(height: 10),
+              DropdownMenu(
+                dropdownMenuEntries: [
+                  DropdownMenuEntry(
+                    value: 'eichwalde', 
+                    label: 'S Eichwalde',
+                    style: MenuItemButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                      overlayColor: eichwaldeGreen,
                     ),
                   ),
-                  textStyle: TextStyle(
-                    color: const Color.fromARGB(255, 0, 0, 0),
+                  DropdownMenuEntry(
+                    value: 'friedenstr', 
+                    label: 'Eichwalde, Friedenstr.',
+                    style: MenuItemButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                      overlayColor: eichwaldeGreen,
+                    ),
                   ),
-                  inputDecorationTheme: InputDecorationTheme(
-                    border: textFeldNormalBorder,
-                    enabledBorder: textFeldNormalBorder,
-                    focusedBorder: textFeldfocusBorder,
+                  DropdownMenuEntry(
+                    value: 'schmockwitz', 
+                    label: 'Eichwalde, Schmöckwitzer Str.',
+                    style: MenuItemButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                      overlayColor: eichwaldeGreen,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                EichwaldeGradientBar(),
-                //Unten
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: constraints.maxWidth*0.025
+                ],
+                width: constraints.maxWidth*0.99,
+                initialSelection: Settings.standardAbfahrt == 'eichwalde' ?
+                                  'eichwalde':Settings.standardAbfahrt == 'friedenstr' ?
+                                  'friedenstr':
+                                  'schmockwitz',
+                controller: TextEditingController(),
+                requestFocusOnTap: true,
+                onSelected: (String? val) {
+                  setState(() {
+                    Settings.standardAbfahrt = val!;
+                  });
+                  saveSettings();
+                },
+                hintText: Settings.standardAbfahrt == 'eichwalde' ? 
+                          Stations.eichwalde.stationName:Settings.standardAbfahrt == 'friedenstr' ? 
+                          Stations.friedenstr.stationName:
+                          Stations.schmockwitz.stationName,
+                keyboardType: TextInputType.none,
+                menuStyle: MenuStyle(
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(
+                        width: 2,
+                        color: eichwaldeGreen,
                       ),
-                      'Made with '
                     ),
-                    Icon(
-                      color: const Color.fromARGB(255, 255, 0, 0),
-                      Icons.favorite,
-                      size: constraints.maxWidth*0.05,
-                    ),
-                    Text(
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: constraints.maxWidth*0.025
-                      ),
-                      ' in Eichwalde. Für Eichwalde.'
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Image(
-                  //width: constraints.maxWidth*0.01,
-                  height: constraints.maxWidth*0.2,
-                  image: const AssetImage('Assets/IconEichwaldeneu2.png')
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: constraints.maxWidth*0.02
                   ),
-                  '''Alle Rechte Vorbehalten. Keine Garantie für Richtigkeit und Aktualität von Angaben.
-Offiziell unterstützt durch die Gemeinde Eichwalde.'''
                 ),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    text: 'Über die App',
+                textStyle: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                ),
+                inputDecorationTheme: InputDecorationTheme(
+                  border: textFeldNormalBorder,
+                  enabledBorder: textFeldNormalBorder,
+                  focusedBorder: textFeldfocusBorder,
+                ),
+              ),
+              const SizedBox(height: 10),
+              EichwaldeGradientBar(),
+              //Unten
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
                     style: TextStyle(
-                      color: eichwaldeGreen,
-                      decoration: TextDecoration.underline,
                       fontWeight: FontWeight.w500,
-                      fontSize: constraints.maxWidth*0.025,
+                      fontSize: constraints.maxWidth*0.025
                     ),
-                    recognizer: TapGestureRecognizer()..onTap = () {
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => AboutPage()),);
-                    },
-                  )
-                ),
-                Text(
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: constraints.maxWidth*0.02
+                    'Made with '
                   ),
-                  'App-Version: 1.0'
+                  Icon(
+                    color: const Color.fromARGB(255, 255, 0, 0),
+                    Icons.favorite,
+                    size: constraints.maxWidth*0.05,
+                  ),
+                  Text(
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: constraints.maxWidth*0.025
+                    ),
+                    ' in Eichwalde. Für Eichwalde.'
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Image(
+                //width: constraints.maxWidth*0.01,
+                height: constraints.maxWidth*0.2,
+                image: const AssetImage('Assets/IconEichwaldeneu2.png')
+              ),
+              const SizedBox(height: 10),
+              Text(
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: constraints.maxWidth*0.02
                 ),
-              ],
-            ),
-          );
-        }
-      );
+                '''Alle Rechte Vorbehalten. Keine Garantie für Richtigkeit und Aktualität von Angaben.
+Offiziell unterstützt durch die Gemeinde Eichwalde.'''
+              ),
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: 'Über die App',
+                  style: TextStyle(
+                    color: eichwaldeGreen,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w500,
+                    fontSize: constraints.maxWidth*0.025,
+                  ),
+                  recognizer: TapGestureRecognizer()..onTap = () {
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => AboutPage()),);
+                  },
+                )
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: constraints.maxWidth*0.02
+                ),
+                'App-Version: 1.0'
+              ),
+            ],
+          ),
+        );
+      }
+    );
   }
 }

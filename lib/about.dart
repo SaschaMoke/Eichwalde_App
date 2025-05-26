@@ -34,7 +34,8 @@ class AboutPage extends StatelessWidget{
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
-                      fontSize: constraints.maxWidth*0.075
+                      fontSize: constraints.maxWidth*0.075,
+                      color: Color.fromARGB(255, 20, 60, 35)
                     ),
                     'App'
                   ), 
@@ -43,7 +44,7 @@ class AboutPage extends StatelessWidget{
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
-                      fontSize: constraints.maxWidth*0.05
+                      fontSize: constraints.maxWidth*0.04
                     ),
                     'Lorem Impsum projekt'
                   ), 

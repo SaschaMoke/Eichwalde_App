@@ -202,8 +202,10 @@ class _GewerbePageState extends State<GewerbePage> {
                   ],
                 ),
                 const SizedBox(height: 10),
+                EichwaldeGradientBar(),
+                const SizedBox(height: 10),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height*0.5,
+                  height: MediaQuery.of(context).size.height*0.575,
                   child: LayoutBuilder(
                     builder: (context, snapshot) {                      
                       if (gewerbeListe.isEmpty) {

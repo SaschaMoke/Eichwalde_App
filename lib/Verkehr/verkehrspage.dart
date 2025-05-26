@@ -619,6 +619,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         final departure = departures[index];
                                 
                         bool additionalInfoExists = false;
+                        String shortTripDest = '';
                         List<Widget> additionalInfo = [];
                         for (var element in List.from(departure.remarks.map((x) => Remarks.fromJson(x)),)) {
                           if (element.remarkCode =='text.realtime.journey.partially.cancelled.between') {
@@ -631,6 +632,8 @@ class _VerkehrspageState extends State<Verkehrspage> {
                               ),
                               'Fahrtverkürzung',
                             ));
+                            shortTripDest = element.remarkContent;
+                            shortTripDest = shortTripDest.substring(shortTripDest.indexOf("between")+8,shortTripDest.indexOf("and"));
                           } else if (element.remarkCode =='text.realtime.journey.additional.service') {
                             additionalInfoExists = true;
                             additionalInfo.add(Text(
@@ -735,7 +738,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                             leading: linelogo, 
                             title: Text(
                               style: deststyle,
-                              departure.destination
+                              shortTripDest.isEmpty ? departure.destination:shortTripDest,
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -753,7 +756,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                 additionalInfoExists ? Column(
                                   children: additionalInfo,
                                 ):SizedBox(), 
-                                
                               ],
                             ),                     
                             trailing: '${departure.platform}' != "null" ? Column(

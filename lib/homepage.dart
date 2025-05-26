@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //App-Files
 import 'package:eichwalde_app/newscloud.dart';
 import 'Design/eichwalde_design.dart';
+import 'Gewerbe/Gewerbe_Module/Tools/pdf_viewer.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -25,7 +26,7 @@ class _HomepageState extends State<Homepage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SizedBox(
-          height: MediaQuery.of(context).size.height*0.7,
+          height: MediaQuery.of(context).size.height*0.745,
           width: constraints.maxWidth*0.95,
           child: ListView(
             children: [   
@@ -43,6 +44,59 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ],
               ), 
+              SizedBox(
+                height: 150,
+                width: constraints.maxWidth*0.95,
+                child: Card(
+                  surfaceTintColor: eichwaldeGreen,
+                  elevation: 3,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                      width: 3,
+                      color: eichwaldeGreen,
+                    )
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Card(
+                      child: ListTile(
+                        leading: Icon(Icons.newspaper_rounded),
+                        title: Text('Newsletter Beispiel'),
+                        trailing: IconButton(
+                          onPressed: () => Navigator.push(context, 
+                            MaterialPageRoute(
+                              builder: (_) => PDFViewer(
+                                constraints: constraints, 
+                                url: 'https://www.eichwalde.de/wp-content/uploads/2025/05/Newsletter-Ausgabe-1_2025.pdf',
+                                title: 'Test',
+                              ),
+                            ), 
+                          ),
+                          icon: Icon(Icons.preview_rounded)
+                        ),
+                      ),
+                    ),
+                  )
+                ),
+              ),
+              const SizedBox(height: 15),
+              EichwaldeGradientBar(),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  SizedBox(
+                    width: constraints.maxWidth*0.025,
+                  ),
+                  Text(
+                    style: TextStyle(
+                      fontSize: constraints.maxWidth*0.09,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    'Aktuelles'
+                  ),
+                ],
+              ),
               SizedBox(
                 height: 300,
                 width: constraints.maxWidth*0.95,
@@ -98,23 +152,6 @@ class _HomepageState extends State<Homepage> {
                   )
                 ),
               ),
-              const SizedBox(height: 15),
-              EichwaldeGradientBar(),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  SizedBox(
-                    width: constraints.maxWidth*0.025,
-                  ),
-                  Text(
-                    style: TextStyle(
-                      fontSize: constraints.maxWidth*0.09,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    'Aktuelles'
-                  ),
-                ],
-              ),   
             ],
           )
         );

@@ -14,16 +14,16 @@ class _OrtPageState extends State<OrtPage> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (context, constraints) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height*0.7,  //ist eig kaka
-            width: constraints.maxWidth*0.95,
-            child: ListView(
-              children: [
-              ],
-            ),
-          );
-        }
-      );
+      builder: (context, constraints) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height*0.745,  //ist eig kaka
+          width: constraints.maxWidth*0.95,
+          child: ListView(
+            children: [
+            ],
+          ),
+        );
+      }
+    );
   }
 }
