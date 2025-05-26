@@ -261,6 +261,7 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                         restaurantModul ? Restaurant(                 //gewerbeData!['restaurant']['active'] == 'true'
                           telefon: '+69 1234 56789',
                           karte: 'https://pane-vino-eichwalde.de/wp-content/uploads/2024/02/Pane-Vino-Eichwalde-Speisekarte.pdf',
+                          //karte: 'https://www.eichwalde.de/wp-content/uploads/2025/05/Newsletter-Ausgabe-1_2025.pdf',
                           orderLink: 'xx',
                           gewerbeName: 'Bertrams Restaurant GmbH',//Gewerbename
                           constraints: constraints

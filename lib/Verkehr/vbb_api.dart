@@ -194,6 +194,8 @@ bool checkSchranke(List departures, String schrankeOrt) {//departures rausnehmen
     }
   }
 
+  //print('Schließen: $nextClose');
+
   if (schrankeTrains.isEmpty) {
     return false;
   } else {

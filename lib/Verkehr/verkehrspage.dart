@@ -120,6 +120,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
 
         //-----------------------------//
 
+        /*
         //Widget Stuff
         schrankeWidget = checkSchranke(departures, 'Lidl'); //<= settingSchrankeWidget      <= Design rot/grün
         //nextOpen, nextClose <= Zeit
@@ -133,7 +134,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
         await HomeWidget.updateWidget(
           iOSName: iOSWidgetName,
           androidName: androidWidgetName,
-        );
+        );*/
 
       } else {
         throw Exception('Failed to load data');
