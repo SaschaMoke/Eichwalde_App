@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:gradient_borders/gradient_borders.dart';
 
 //App-Files
 import 'package:eichwalde_app/Verkehr/verkehrspage.dart';
@@ -150,11 +151,15 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Card(
             clipBehavior: Clip.hardEdge,
             elevation: 5,
-            //shape: 
+            shape: GradientOutlineInputBorder(
+              gradient: eichwaldeGradient,
+              width: 5,
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: NavigationBar(
               labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
               labelTextStyle: WidgetStatePropertyAll(TextStyle(fontWeight: FontWeight.w500)),
-              backgroundColor: Color.fromARGB(25, 50, 150, 50),
+              //backgroundColor: Color.fromARGB(25, 50, 150, 50),
               onDestinationSelected: (int index) {
                 setState(() {
                   selectedIndex = index;

@@ -278,10 +278,13 @@ class _GewerbePageState extends State<GewerbePage> {
                                   SizedBox(
                                     width: 150,
                                     height: 120,
-                                    child:gewerbe.bild != null? Image.network(
-                                      'https://blog.duolingo.com/content/images/2024/12/cover_why-is-duolingo-free.png',
-                                      fit: BoxFit.contain,
-                                    ): const Image(image: AssetImage('Assets/IconEichwalde.png')),
+                                    child: FadeInImage.assetNetwork(
+                                      placeholder: 'Assets/IconEichwalde.png', 
+                                      image: gewerbe.bild!,
+                                      imageErrorBuilder: (context, error, stackTrace) {
+                                        return Image(image: AssetImage('Assets/IconEichwalde.png'));
+                                      },
+                                    ),
                                   ),
                                   const SizedBox(height: 5),
                                   Padding(
