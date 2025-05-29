@@ -176,7 +176,7 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                           placeholder: 'Assets/IconEichwalde.png', 
                           image:gewerbeImage,
                           imageErrorBuilder: (context, error, stackTrace) {
-                            return Image(image: AssetImage('Assets/IconEichwalde.png'));
+                            return Image(image: eichwaldeLogo);
                           },
                         ),
                         const SizedBox(height: 20),
@@ -185,7 +185,6 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                             fontWeight: FontWeight.w700,
                             fontSize: constraints.maxWidth*0.1
                           ),
-                          //'Bertram GmbH'                                //Gewerbename
                           gewerbeName,
                         ),
                         Text(
@@ -195,7 +194,6 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                             fontStyle: FontStyle.italic,
                             height: constraints.maxWidth*0.0025,
                           ),
-                          //'Comedy',                                //Kategorie  
                           gewerbeKat, 
                         ),
                         const SizedBox(height: 20),
@@ -222,9 +220,8 @@ class _GewerbeseiteState extends State<Gewerbeseite> {
                                 fontWeight: FontWeight.w500,
                                 fontSize: constraints.maxWidth*0.04
                               ),
-                              //'Lorem ipsum salami hallo ich bin ein langer Text um das mal ein bisschen zu füllen Bom schalom Schames lalala Moke bom'
                               gewerbeBeschreibung,
-                            )         //Gewerbebeschreibung
+                            )
                           ],
                         ),
               

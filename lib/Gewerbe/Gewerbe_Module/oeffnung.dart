@@ -62,8 +62,7 @@ class _OeffnungszeitenState extends State<Oeffnungszeiten> {
             color: widget.leadingImportant == 'true' ? Color.fromARGB(255, 255, 0, 0):Color.fromARGB(255, 0, 0, 0),
           ),
           textAlign: TextAlign.center,
-          '''${widget.leadingHint}          
-'''                                           //FORMATIERUNG NICHT ÄNDERN!
+          '${widget.leadingHint}\n'
         ):SizedBox(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -104,9 +103,7 @@ ${widget.sunday}'''                           //FORMATIERUNG NICHT ÄNDERN!
             color: widget.trailingImportant == 'true' ? Color.fromARGB(255, 255, 0, 0):Color.fromARGB(255, 0, 0, 0),
           ),
           textAlign: TextAlign.center,
-          '''
-
-${widget.trailingHint}'''//FORMATIERUNG NICHT ÄNDERN!
+          '\n${widget.trailingHint}'
         ):SizedBox(),
       ],
     );

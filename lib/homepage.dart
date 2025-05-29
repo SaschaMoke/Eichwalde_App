@@ -2,11 +2,115 @@ import 'package:flutter/material.dart';
 
 //Packages
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //App-Files
 import 'package:eichwalde_app/newscloud.dart';
 import 'Design/eichwalde_design.dart';
 import 'Gewerbe/Gewerbe_Module/Tools/pdf_viewer.dart';
+
+Future<void> showUpdateLog(BuildContext context) async {
+  final prefs = await SharedPreferences.getInstance();
+  final currentVersion = '1.0';
+  final lastVersion = prefs.getString('appVersion') ?? currentVersion;
+
+  if (lastVersion != currentVersion) {
+    await showModalBottomSheet(
+      context: context, 
+      showDragHandle: true,
+      builder:(context) {
+        Size constraints = MediaQuery.of(context).size;
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(10,0,10,10),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Image(
+                    width: constraints.width*0.225,
+                    image: eichwaldeLogo,
+                  ),
+                  SizedBox(
+                    width: constraints.width*0.025,
+                  ),
+                  Text(
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: constraints.width*0.075,
+                    ),
+                    'Neues in der App'
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              EichwaldeGradientBar(),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: constraints.height*0.4,
+                child: ListView(
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(width: constraints.width*0.04),
+                        Container(
+                          height: constraints.width*0.03,
+                          width: constraints.width*0.03,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        SizedBox(width: constraints.width*0.025),
+                        SizedBox(
+                          width: constraints.width*0.815,
+                          child: Text(
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: constraints.width*0.04,
+                            ),
+                            'Neue Funktion xy aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        SizedBox(width: constraints.width*0.04),
+                        Container(
+                          height: constraints.width*0.03,
+                          width: constraints.width*0.03,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        SizedBox(width: constraints.width*0.025),
+                        SizedBox(
+                          width: constraints.width*0.815,
+                          child: Text(
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: constraints.width*0.04,
+                            ),
+                            'Neue Funktion xy '
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    await prefs.setString('appVersion', currentVersion);
+  }
+}
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -20,6 +124,14 @@ class _HomepageState extends State<Homepage> {
 
   final Cloudnews cloudNews = Cloudnews();
   final CollectionReference newsCollection = FirebaseFirestore.instance.collection('News');
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showUpdateLog(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

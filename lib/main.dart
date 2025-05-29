@@ -28,7 +28,6 @@ import 'cloudtermine.dart';
 /*Unused Files:
 import 'package:eichwalde_app/notification_service.dart';
 import 'Gewerbecloud.dart';
-import 'package:eichwalde_app/gewerbe_layout_neu.dart';
 import 'package:eichwalde_app/vbb_api.dart';
 import 'Gewerbe/gewerbeseite.dart';
 
@@ -218,7 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: MediaQuery.of(context).size.height*0.08,   
                     width: MediaQuery.of(context).size.width*0.175,   
                     child: Image(
-                      image: const AssetImage('Assets/IconEichwalde.png'),
+                      image: eichwaldeLogo,
                     ),
                   ),
                   SizedBox(width: 5),

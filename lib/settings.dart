@@ -177,6 +177,7 @@ class _SettingsState extends State<SettingsPage> {
                           Stations.schmockwitz.stationName,
                 keyboardType: TextInputType.none,
                 menuStyle: MenuStyle(
+                  //fixedSize
                   shape: WidgetStatePropertyAll(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

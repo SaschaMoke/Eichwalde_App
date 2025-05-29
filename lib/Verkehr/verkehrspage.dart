@@ -7,7 +7,6 @@ import 'package:flutter/gestures.dart';
 //Packages
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-//import 'package:home_widget/home_widget.dart';
 
 //App-Files
 import 'package:eichwalde_app/Design/eichwalde_design.dart';
@@ -37,16 +36,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
   int currentPickedHour = 0;
   int currentPickedMinute = 0;
 
-  //Home Widget:
-  String appGroupId = "group.eichwaldeApp";
-  String iOSWidgetName = "EichwaldeAppHomeWidget";
-  String androidWidgetName = "EichwaldeAppHomeWidget";
-  String dataKey = "rom_eichwalde_app";
-
   @override
   void initState() {
     super.initState();
-    //HomeWidget.setAppGroupId(appGroupId);
     fetchAndUpdateData();
     timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchAndUpdateData());
     startUpdate();
@@ -112,25 +104,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
             }
           }
         }
-
-        //-----------------------------//
-
-        /*
-        //Widget Stuff
-        schrankeWidget = checkSchranke(departures, 'Lidl'); //<= settingSchrankeWidget      <= Design rot/grün
-        //nextOpen, nextClose <= Zeit
-
-        //save Widget
-        String widgetData = schrankeWidget ? 'Öffnung: $nextOpen':'Schließung: $nextClose';
-        //String widgetData = 'Hi';
-        await HomeWidget.saveWidgetData(dataKey, widgetData);
-
-        //update Widget
-        await HomeWidget.updateWidget(
-          iOSName: iOSWidgetName,
-          androidName: androidWidgetName,
-        );*/
-
       } else {
         throw Exception('Failed to load data');
       }
