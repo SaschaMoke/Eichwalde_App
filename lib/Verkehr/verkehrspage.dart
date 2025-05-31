@@ -423,7 +423,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                       value: station,
                       label: station.stationName,
                       style: MenuItemButton.styleFrom(
-                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                         overlayColor: eichwaldeGreen,
                       ),
                     );
@@ -438,9 +437,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         ),
                       ),
                     ),
-                  ),
-                  textStyle: TextStyle(
-                    color: const Color.fromARGB(255, 0, 0, 0),
                   ),
                   inputDecorationTheme: InputDecorationTheme(
                     border: textFeldNormalBorder,
@@ -664,7 +660,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         } else {
                           deststyle = const TextStyle(
                             fontSize: 17,
-                            color: Color.fromARGB(255, 0, 0, 0),
                             decoration: TextDecoration.none,
                           );
                         }
@@ -720,8 +715,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: delay > 0 && delay < 5 ? const Color.fromARGB(255, 255, 135, 0): 
-                                          delay > 5 || departure.when == 'Fahrt fällt aus' ? const Color.fromARGB(255, 255, 0, 0): 
-                                          const Color.fromARGB(255, 0, 0, 0),
+                                          delay > 5 || departure.when == 'Fahrt fällt aus' ? const Color.fromARGB(255, 255, 0, 0):null,
                                     fontStyle: FontStyle.italic,
                                   ),
                                   deptime
@@ -738,14 +732,12 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                 Text(
                                   style: TextStyle(
                                     fontSize: 15,
-                                    color:const Color.fromARGB(255, 0, 0, 0),
                                   ),
                                   'Gleis:'
                                 ),
                                 Text(
                                   style: TextStyle(
                                     fontSize: 15,
-                                    color:const Color.fromARGB(255, 0, 0, 0),
                                   ),
                                   '${departure.platform}'
                                 ),

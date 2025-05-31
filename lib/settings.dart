@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:provider/provider.dart';
 
 //Packages
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,7 @@ import 'package:eichwalde_app/about.dart';
 class Settings {
   static String standardSchranke = '';
   static String standardAbfahrt = '';
+  static String themeSetting = '';
 
   static List<String> gewerbeFavoriten = [];
 }
@@ -21,6 +23,7 @@ Future<void> loadSettings() async {
   Settings.standardSchranke = prefs.getString('schrankeStandard') ?? 'Lidl';
   Settings.standardAbfahrt = prefs.getString('abfahrtStandard') ?? 'eichwalde';
   Settings.gewerbeFavoriten = prefs.getStringList('gewerbeFavoriten') ?? [];
+  //Settings.themeSetting = prefs.getString('themeSetting') ?? 'light';
 }
 
 Future<void> saveGewerbeFavoriten() async {
@@ -57,6 +60,33 @@ class _SettingsState extends State<SettingsPage> {
                   fontSize: constraints.maxWidth*0.09,
                   fontWeight: FontWeight.w500,
                 ),
+              'Erscheinungsbild'
+              ),
+              SwitchListTile(
+                title: const Text('Dark Mode'),
+                value: Provider.of<ThemeNotifier>(context).isDarkMode,
+                onChanged: (value) {
+                  Provider.of<ThemeNotifier>(context, listen: false).toggleTheme();
+                  value ? Settings.themeSetting = 'dark':'light';
+                },
+                shape: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: eichwaldeGreen,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(10),  
+                ),
+                activeColor: eichwaldeGreen,
+                inactiveThumbColor:const Color.fromARGB(255, 200, 25, 0),
+              ),
+              const SizedBox(height: 10),
+              EichwaldeGradientBar(),
+              const SizedBox(height: 10),
+              Text(
+                style: TextStyle(
+                  fontSize: constraints.maxWidth*0.09,
+                  fontWeight: FontWeight.w500,
+                ),
               'Verkehr'
               ), 
               Text(
@@ -75,7 +105,6 @@ class _SettingsState extends State<SettingsPage> {
                     value: 'Lidl', 
                     label: 'Friedenstraße',
                     style: MenuItemButton.styleFrom(
-                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                       overlayColor: eichwaldeGreen,
                     ),
                   ),
@@ -83,7 +112,6 @@ class _SettingsState extends State<SettingsPage> {
                     value: 'Wald', 
                     label: 'Waldstraße',
                     style: MenuItemButton.styleFrom(
-                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                       overlayColor: eichwaldeGreen,
                     ),
                   ),
@@ -111,9 +139,6 @@ class _SettingsState extends State<SettingsPage> {
                     ),
                   ),
                 ),
-                textStyle: TextStyle(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                ),
                 inputDecorationTheme: InputDecorationTheme(
                   border: textFeldNormalBorder,
                   enabledBorder: textFeldNormalBorder,
@@ -137,7 +162,6 @@ class _SettingsState extends State<SettingsPage> {
                     value: 'eichwalde', 
                     label: 'S Eichwalde',
                     style: MenuItemButton.styleFrom(
-                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                       overlayColor: eichwaldeGreen,
                     ),
                   ),
@@ -145,7 +169,6 @@ class _SettingsState extends State<SettingsPage> {
                     value: 'friedenstr', 
                     label: 'Eichwalde, Friedenstr.',
                     style: MenuItemButton.styleFrom(
-                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                       overlayColor: eichwaldeGreen,
                     ),
                   ),
@@ -153,7 +176,6 @@ class _SettingsState extends State<SettingsPage> {
                     value: 'schmockwitz', 
                     label: 'Eichwalde, Schmöckwitzer Str.',
                     style: MenuItemButton.styleFrom(
-                      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                       overlayColor: eichwaldeGreen,
                     ),
                   ),
@@ -187,9 +209,6 @@ class _SettingsState extends State<SettingsPage> {
                       ),
                     ),
                   ),
-                ),
-                textStyle: TextStyle(
-                  color: const Color.fromARGB(255, 0, 0, 0),
                 ),
                 inputDecorationTheme: InputDecorationTheme(
                   border: textFeldNormalBorder,

@@ -59,7 +59,12 @@ void main() async {
   //NotificationService().initNotification();   //init notifications
   initializeDateFormatting('de_DE', null);      // Deutsch aktivieren
   loadSettings();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create:(_) => ThemeNotifier(),
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -67,14 +72,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
         title: 'Eichwalde',
-        theme: ThemeData(
+        theme: themeNotifier.currentTheme,
+        /*theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
-        ),
+        ),*/
         home: MyHomePage(),
       ),
     );
