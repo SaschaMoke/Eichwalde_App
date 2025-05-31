@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //Colors
 Color eichwaldeGreen = const Color.fromARGB(255, 50, 150, 50);
@@ -45,99 +46,50 @@ AssetImage eichwaldeLogo = const AssetImage('Assets/IconEichwalde.png');
 ThemeData eichwaldeStandardTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
-
-  //InputDecorationTheme
-  //ColorScheme? colorScheme,
-  //Brightness? brightness,
-  //cardColor: Color.fromARGB(255, 125, 125, 125),
-  //Color? disabledColor,
-  //Color? focusColor,
-  //Color? highlightColor,
-  //Color? hintColor,
-  //Color? hoverColor,
-  //Color? primaryColor,
-  //Color? primaryColorDark,
-  //Color? primaryColorLight,
-  //Color? scaffoldBackgroundColor,
-  //Color? secondaryHeaderColor,
-  //Color? shadowColor,
-  //Color? splashColor,
-  //Color? unselectedWidgetColor,
-  //Color? dialogBackgroundColor,
-  //Color? indicatorColor,
-
-  //IconThemeData? iconTheme,
-  //IconThemeData? primaryIconTheme,
-  //ActionIconThemeData? actionIconTheme,
-  //AppBarTheme? appBarTheme,
-  //BottomNavigationBarThemeData? bottomNavigationBarTheme,
-  //BottomSheetThemeData? bottomSheetTheme,
-  //ButtonThemeData? buttonTheme,
-  //CardThemeData? cardTheme,
-  //ChipThemeData? chipTheme,
-  //DialogThemeData? dialogTheme,
-  //DropdownMenuThemeData? dropdownMenuTheme,
-  //ExpansionTileThemeData? expansionTileTheme,
-  //IconButtonThemeData? iconButtonTheme,
-  //ListTileThemeData? listTileTheme,
-  //NavigationBarThemeData? navigationBarTheme,
-  //ProgressIndicatorThemeData? progressIndicatorTheme,
-  //SearchBarThemeData? searchBarTheme,
-  //SnackBarThemeData? snackBarTheme,
-  //SwitchThemeData? switchTheme,
-  //TextButtonThemeData? textButtonTheme,
-  //TooltipThemeData? tooltipTheme,
-
-  //z.B. primary eichwaldeGreen => variable ersetzen durch theme.of
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: eichwaldeGreen,
+    selectionHandleColor: eichwaldeGreen,
+  ),
 );
 ThemeData eichwaldeDarkTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: eichwaldeGreen,
+    selectionHandleColor: eichwaldeGreen,
+  ),
 );
-//ThemeData eichwaldeSpackenTheme = ThemeData(
-
-//);
 
 class ThemeNotifier extends ChangeNotifier {
-  ThemeData _currentTheme;
-  bool _isDarkMode;
+  ThemeData _currentTheme = eichwaldeStandardTheme;
+  bool _isDarkMode = false;
+  bool _isLoaded = false;
 
   ThemeData get currentTheme => _currentTheme;
   bool get isDarkMode => _isDarkMode;
+  bool get isLoaded => _isLoaded;
 
-  ThemeNotifier({bool isDarkMode = false})
-      : _isDarkMode = isDarkMode,
-        _currentTheme = isDarkMode ? eichwaldeDarkTheme : eichwaldeStandardTheme;
-
-  /*ThemeNotifier() {
+  ThemeNotifier() {
     _loadTheme();
+  }
+
+  void toggleTheme() {
+    _isDarkMode = !_isDarkMode;
+    _currentTheme = _isDarkMode ? eichwaldeDarkTheme : eichwaldeStandardTheme;
+    notifyListeners();
+    _saveTheme();
   }
 
   Future<void> _loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
     _isDarkMode = prefs.getBool('isDarkMode') ?? false;
     _currentTheme = _isDarkMode ? eichwaldeDarkTheme : eichwaldeStandardTheme;
+    _isLoaded = true;
     notifyListeners();
   }
 
   Future<void> _saveTheme() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isDarkMode', _isDarkMode);
-  }
-  */
-
-  void toggleTheme() {
-    _isDarkMode = !_isDarkMode;
-    _currentTheme = _isDarkMode ? eichwaldeDarkTheme : eichwaldeStandardTheme;
-    notifyListeners();
-  }
-
-  void setTheme(String theme) {
-    if (theme == 'light') {
-      _currentTheme = eichwaldeStandardTheme;
-    } else if (theme == 'dark') {
-      _currentTheme = eichwaldeDarkTheme;
-    }//..weitere theme sachen wie adhs und so
-    notifyListeners();
   }
 }

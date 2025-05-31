@@ -437,10 +437,11 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         ),
                       ),
                     ),
+                    fixedSize: WidgetStatePropertyAll(Size.fromWidth(constraints.maxWidth*0.99,))
                   ),
                   inputDecorationTheme: InputDecorationTheme(
-                    border: textFeldNormalBorder,
-                    enabledBorder: textFeldNormalBorder,
+                    border: textFeldfocusBorder,
+                    enabledBorder: textFeldfocusBorder,
                     focusedBorder: textFeldfocusBorder,
                   ),
                 ),

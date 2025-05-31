@@ -13,7 +13,7 @@ import 'package:eichwalde_app/about.dart';
 class Settings {
   static String standardSchranke = '';
   static String standardAbfahrt = '';
-  static String themeSetting = '';
+  static bool simpleLanguage = false;
 
   static List<String> gewerbeFavoriten = [];
 }
@@ -22,8 +22,8 @@ Future<void> loadSettings() async {
   final prefs = await SharedPreferences.getInstance();
   Settings.standardSchranke = prefs.getString('schrankeStandard') ?? 'Lidl';
   Settings.standardAbfahrt = prefs.getString('abfahrtStandard') ?? 'eichwalde';
+  Settings.simpleLanguage = prefs.getBool('simpleLanguage') ?? false;
   Settings.gewerbeFavoriten = prefs.getStringList('gewerbeFavoriten') ?? [];
-  //Settings.themeSetting = prefs.getString('themeSetting') ?? 'light';
 }
 
 Future<void> saveGewerbeFavoriten() async {
@@ -35,6 +35,7 @@ Future<void> saveSettings() async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('schrankeStandard', Settings.standardSchranke);
   await prefs.setString('abfahrtStandard', Settings.standardAbfahrt);
+  await prefs.setBool('simpleLanguage', Settings.simpleLanguage);
 }
 
 class SettingsPage extends StatefulWidget {
@@ -63,11 +64,40 @@ class _SettingsState extends State<SettingsPage> {
               'Erscheinungsbild'
               ),
               SwitchListTile(
-                title: const Text('Dark Mode'),
+                title: const Text('Dunkeler Modus'),
                 value: Provider.of<ThemeNotifier>(context).isDarkMode,
                 onChanged: (value) {
                   Provider.of<ThemeNotifier>(context, listen: false).toggleTheme();
-                  value ? Settings.themeSetting = 'dark':'light';
+                },
+                shape: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: eichwaldeGreen,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(10),  
+                ),
+                activeColor: eichwaldeGreen,
+                inactiveThumbColor:const Color.fromARGB(255, 200, 25, 0),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                style: TextStyle(
+                  height: 0.5,
+                  fontSize: constraints.maxWidth*0.05,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w500,
+                ),
+                'Barrierefreiheit'
+              ),
+              const SizedBox(height: 10),
+              SwitchListTile(
+                title: const Text('Einfache Sprache'),
+                value: Settings.simpleLanguage,
+                onChanged: (value) {
+                  setState(() {
+                    Settings.simpleLanguage = value;
+                  });
+                  saveSettings();
                 },
                 shape: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -81,7 +111,7 @@ class _SettingsState extends State<SettingsPage> {
               ),
               const SizedBox(height: 10),
               EichwaldeGradientBar(),
-              const SizedBox(height: 10),
+              //const SizedBox(height: 10),
               Text(
                 style: TextStyle(
                   fontSize: constraints.maxWidth*0.09,
@@ -138,10 +168,11 @@ class _SettingsState extends State<SettingsPage> {
                       ),
                     ),
                   ),
+                  fixedSize: WidgetStatePropertyAll(Size.fromWidth(constraints.maxWidth*0.95,))
                 ),
                 inputDecorationTheme: InputDecorationTheme(
-                  border: textFeldNormalBorder,
-                  enabledBorder: textFeldNormalBorder,
+                  border: textFeldfocusBorder,
+                  enabledBorder: textFeldfocusBorder,
                   focusedBorder: textFeldfocusBorder,
                 ),
               ),
@@ -199,7 +230,6 @@ class _SettingsState extends State<SettingsPage> {
                           Stations.schmockwitz.stationName,
                 keyboardType: TextInputType.none,
                 menuStyle: MenuStyle(
-                  //fixedSize
                   shape: WidgetStatePropertyAll(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -209,10 +239,11 @@ class _SettingsState extends State<SettingsPage> {
                       ),
                     ),
                   ),
+                  fixedSize: WidgetStatePropertyAll(Size.fromWidth(constraints.maxWidth*0.95,))
                 ),
                 inputDecorationTheme: InputDecorationTheme(
-                  border: textFeldNormalBorder,
-                  enabledBorder: textFeldNormalBorder,
+                  border: textFeldfocusBorder,
+                  enabledBorder: textFeldfocusBorder,
                   focusedBorder: textFeldfocusBorder,
                 ),
               ),

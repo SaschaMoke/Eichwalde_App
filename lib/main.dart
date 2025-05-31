@@ -74,15 +74,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
+    if (!themeNotifier.isLoaded) {
+      return MaterialApp(
+        home: Scaffold(
+          body: Center(child: CircularProgressIndicator(
+            color: eichwaldeGreen,
+          )),
+        ),
+      );
+    }
+
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
         title: 'Eichwalde',
         theme: themeNotifier.currentTheme,
-        /*theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
-        ),*/
         home: MyHomePage(),
       ),
     );
