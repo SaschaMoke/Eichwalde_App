@@ -16,6 +16,8 @@ class Settings {
   static bool simpleLanguage = false;
 
   static List<String> gewerbeFavoriten = [];
+
+  static bool updateAndMessageNotShown = true;
 }
 
 Future<void> loadSettings() async {

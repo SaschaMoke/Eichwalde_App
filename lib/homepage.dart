@@ -6,13 +6,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 //App-Files
 import 'package:eichwalde_app/newscloud.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'Design/eichwalde_design.dart';
 import 'Gewerbe/Gewerbe_Module/Tools/pdf_viewer.dart';
+import 'settings.dart' as appSettings;
 
 Future<void> showUpdateLog(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   final currentVersion = '1.0';
-  final lastVersion = prefs.getString('appVersion') ?? currentVersion;
+  final lastVersion = prefs.getString('appVersion') ?? '1.0';
 
   if (lastVersion != currentVersion) {
     await showModalBottomSheet(
@@ -110,6 +112,148 @@ Future<void> showUpdateLog(BuildContext context) async {
 
     await prefs.setString('appVersion', currentVersion);
   }
+  return;
+}
+
+Future<void> showMessage(BuildContext context) async {
+  bool forceRepeat;
+  String messageContent;
+  String messageTitle;
+  bool moreInfo;
+  String moreInfoLink;
+  int messageID;
+
+  try {
+    final docSnapshot = await FirebaseFirestore.instance.collection('Message').doc('appMessage').get();
+    final data = docSnapshot.data();
+
+    if (data != null) {
+      forceRepeat = data['forceRepeat']; 
+      messageContent = data['messageContent']; 
+      messageTitle = data['messageTitle']; 
+      moreInfo = data['moreInfo']; 
+      moreInfoLink = data['moreInfoLink']; 
+      messageID = data['ID']; 
+    } else { 
+      return;
+    }
+  } catch(e) {
+    return;
+  }
+  
+  final prefs = await SharedPreferences.getInstance();
+  final lastMessage = prefs.getInt('messageID') ?? messageID+1;
+
+  if (lastMessage != messageID) {
+    await showModalBottomSheet(
+      context: context, 
+      isDismissible: false,
+      enableDrag: false,
+      builder:(context) {
+        Size constraints = MediaQuery.of(context).size;
+
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Image(
+                    width: constraints.width*0.225,
+                    image: eichwaldeLogo,
+                  ),
+                  SizedBox(
+                    width: constraints.width*0.025,
+                  ),
+                  Text(
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: constraints.width*0.085,
+                    ),
+                    'Information',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              EichwaldeGradientBar(),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: constraints.height*0.35,
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      width: constraints.width*0.9,
+                      child: Text(
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: constraints.width*0.065,
+                        ),
+                        messageTitle,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: constraints.width*0.9,
+                      child: Text(
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: constraints.width*0.035,
+                        ),
+                        messageContent,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    if (moreInfo) TextButton(
+                      onPressed: () async {
+                        final Uri url =  Uri.parse(moreInfoLink);
+                        await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      }, 
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(eichwaldeGreen)
+                      ),
+                      child: Text(
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          fontSize: constraints.width*0.05,
+                        ),
+                        'Mehr Informationen'
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              EichwaldeGradientBar(),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                }, 
+                style: ButtonStyle(
+                  fixedSize: WidgetStatePropertyAll(Size.fromWidth(constraints.width*0.85)),
+                  backgroundColor: WidgetStatePropertyAll(eichwaldeGreen)
+                ),
+                child: Text(
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    fontSize: constraints.width*0.05,
+                  ),
+                  'Fortfahren'
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+
+    if (!forceRepeat) {
+      await prefs.setInt('messageID', messageID);
+    }
+ }
 }
 
 class Homepage extends StatefulWidget {
@@ -125,12 +269,19 @@ class _HomepageState extends State<Homepage> {
   final Cloudnews cloudNews = Cloudnews();
   final CollectionReference newsCollection = FirebaseFirestore.instance.collection('News');
 
+  Future<void> showUpdateAndMessage(BuildContext context) async {
+    await showUpdateLog(context);
+    await Future.delayed(Duration(milliseconds: 300));
+    await showMessage(context);
+    appSettings.Settings.updateAndMessageNotShown = false;
+  }
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showUpdateLog(context);
-    });
+    appSettings.Settings.updateAndMessageNotShown ? WidgetsBinding.instance.addPostFrameCallback((_) {
+      showUpdateAndMessage(context);
+    }):null;
   }
 
   @override
