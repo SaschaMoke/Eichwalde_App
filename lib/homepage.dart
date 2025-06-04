@@ -9,7 +9,7 @@ import 'package:eichwalde_app/newscloud.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Design/eichwalde_design.dart';
 import 'Gewerbe/Gewerbe_Module/Tools/pdf_viewer.dart';
-import 'settings.dart' as appSettings;
+import 'settings.dart' as appsettings;
 
 Future<void> showUpdateLog(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
@@ -117,6 +117,7 @@ Future<void> showUpdateLog(BuildContext context) async {
 
 Future<void> showMessage(BuildContext context) async {
   bool forceRepeat;
+  bool showMessage;
   String messageContent;
   String messageTitle;
   bool moreInfo;
@@ -134,6 +135,7 @@ Future<void> showMessage(BuildContext context) async {
       moreInfo = data['moreInfo']; 
       moreInfoLink = data['moreInfoLink']; 
       messageID = data['ID']; 
+      showMessage = data['showMessage'];
     } else { 
       return;
     }
@@ -141,119 +143,121 @@ Future<void> showMessage(BuildContext context) async {
     return;
   }
   
-  final prefs = await SharedPreferences.getInstance();
-  final lastMessage = prefs.getInt('messageID') ?? messageID+1;
+  if (showMessage) {
+    final prefs = await SharedPreferences.getInstance();
+    final lastMessage = prefs.getInt('messageID') ?? messageID+1;
 
-  if (lastMessage != messageID) {
-    await showModalBottomSheet(
-      context: context, 
-      isDismissible: false,
-      enableDrag: false,
-      builder:(context) {
-        Size constraints = MediaQuery.of(context).size;
+    if (lastMessage != messageID) {
+      await showModalBottomSheet(
+        context: context, 
+        isDismissible: false,
+        enableDrag: false,
+        builder:(context) {
+          Size constraints = MediaQuery.of(context).size;
 
-        return Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Image(
-                    width: constraints.width*0.225,
-                    image: eichwaldeLogo,
-                  ),
-                  SizedBox(
-                    width: constraints.width*0.025,
-                  ),
-                  Text(
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: constraints.width*0.085,
-                    ),
-                    'Information',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              EichwaldeGradientBar(),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: constraints.height*0.35,
-                child: ListView(
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    SizedBox(
-                      width: constraints.width*0.9,
-                      child: Text(
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: constraints.width*0.065,
-                        ),
-                        messageTitle,
-                      ),
+                    Image(
+                      width: constraints.width*0.225,
+                      image: eichwaldeLogo,
                     ),
-                    const SizedBox(height: 10),
                     SizedBox(
-                      width: constraints.width*0.9,
-                      child: Text(
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: constraints.width*0.035,
-                        ),
-                        messageContent,
-                      ),
+                      width: constraints.width*0.025,
                     ),
-                    const SizedBox(height: 10),
-                    if (moreInfo) TextButton(
-                      onPressed: () async {
-                        final Uri url =  Uri.parse(moreInfoLink);
-                        await launchUrl(
-                          url,
-                          mode: LaunchMode.externalApplication,
-                        );
-                      }, 
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(eichwaldeGreen)
+                    Text(
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: constraints.width*0.085,
                       ),
-                      child: Text(
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          fontSize: constraints.width*0.05,
-                        ),
-                        'Mehr Informationen'
-                      ),
+                      'Information',
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 10),
-              EichwaldeGradientBar(),
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                }, 
-                style: ButtonStyle(
-                  fixedSize: WidgetStatePropertyAll(Size.fromWidth(constraints.width*0.85)),
-                  backgroundColor: WidgetStatePropertyAll(eichwaldeGreen)
-                ),
-                child: Text(
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    fontSize: constraints.width*0.05,
+                const SizedBox(height: 10),
+                EichwaldeGradientBar(),
+                const SizedBox(height: 10),
+                SizedBox(
+                  height: constraints.height*0.35,
+                  child: ListView(
+                    children: [
+                      SizedBox(
+                        width: constraints.width*0.9,
+                        child: Text(
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: constraints.width*0.065,
+                          ),
+                          messageTitle,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: constraints.width*0.9,
+                        child: Text(
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: constraints.width*0.035,
+                          ),
+                          messageContent,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      if (moreInfo) TextButton(
+                        onPressed: () async {
+                          final Uri url =  Uri.parse(moreInfoLink);
+                          await launchUrl(
+                            url,
+                            mode: LaunchMode.externalApplication,
+                          );
+                        }, 
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(eichwaldeGreen)
+                        ),
+                        child: Text(
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            fontSize: constraints.width*0.05,
+                          ),
+                          'Mehr Informationen'
+                        ),
+                      ),
+                    ],
                   ),
-                  'Fortfahren'
                 ),
-              )
-            ],
-          ),
-        );
-      },
-    );
+                const SizedBox(height: 10),
+                EichwaldeGradientBar(),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }, 
+                  style: ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(Size.fromWidth(constraints.width*0.85)),
+                    backgroundColor: WidgetStatePropertyAll(eichwaldeGreen)
+                  ),
+                  child: Text(
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      fontSize: constraints.width*0.05,
+                    ),
+                    'Fortfahren'
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      );
 
-    if (!forceRepeat) {
-      await prefs.setInt('messageID', messageID);
+      if (!forceRepeat) {
+        await prefs.setInt('messageID', messageID);
+      }
     }
- }
+  }
 }
 
 class Homepage extends StatefulWidget {
@@ -273,13 +277,13 @@ class _HomepageState extends State<Homepage> {
     await showUpdateLog(context);
     await Future.delayed(Duration(milliseconds: 300));
     await showMessage(context);
-    appSettings.Settings.updateAndMessageNotShown = false;
+    appsettings.Settings.updateAndMessageNotShown = false;
   }
 
   @override
   void initState() {
     super.initState();
-    appSettings.Settings.updateAndMessageNotShown ? WidgetsBinding.instance.addPostFrameCallback((_) {
+    appsettings.Settings.updateAndMessageNotShown ? WidgetsBinding.instance.addPostFrameCallback((_) {
       showUpdateAndMessage(context);
     }):null;
   }

@@ -534,7 +534,6 @@ class _VerkehrspageState extends State<Verkehrspage> {
                                     text: TextSpan(
                                       text: subStrings[0],
                                         style: TextStyle(
-                                        color: Color.fromARGB(255, 0, 0, 0),
                                       ),
                                       children: [
                                         subStrings.length > 1 ? TextSpan(
