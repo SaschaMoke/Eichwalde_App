@@ -32,6 +32,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
   String schrankeWahl = Settings.standardSchranke;
   final updateFormatTime = DateFormat('HH:mm:ss');
   final updateFormatDate = DateFormat('dd.MM.yyyy');
+  bool apiStatus = true;
 
   int currentPickedHour = 0;
   int currentPickedMinute = 0;
@@ -104,7 +105,9 @@ class _VerkehrspageState extends State<Verkehrspage> {
             }
           }
         }
+        apiStatus = true;
       } else {
+        apiStatus = false;
         throw Exception('Failed to load data');
       }
     } catch (error) {
@@ -230,7 +233,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                 ),
                 child: LayoutBuilder(
                   builder: (contextSchranke, constraints) {
-                    return departures.isNotEmpty ? Column(
+                    return apiStatus ? Column(
                       children: [
                         SizedBox(
                           height: constraints.maxHeight*0.025,
@@ -418,6 +421,7 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   },
                   hintText: selectedStation?.stationName,
                   enableFilter: true,
+                  keyboardType: TextInputType.none, //<=Je nach Menge an Stationen
                   dropdownMenuEntries: Stations.values.map<DropdownMenuEntry<Stations>>((Stations station) {
                     return DropdownMenuEntry<Stations>(
                       value: station,
@@ -748,7 +752,14 @@ class _VerkehrspageState extends State<Verkehrspage> {
                         );
                       },
                     ): Center(
-                      child: Text(
+                      child: apiStatus ? const Text(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25
+                        ),
+                        'Keine Abfahrten in den nächsten 60 min.'
+                      ):const Text(
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,

@@ -1,3 +1,4 @@
+import 'package:eichwalde_app/News/newsseite.dart';
 import 'package:flutter/material.dart';
 
 //Packages
@@ -418,6 +419,10 @@ class _HomepageState extends State<Homepage> {
                     ),
                   )
                 ),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.push(context,MaterialPageRoute(builder: (context) => Newsseite(documentId:'')),), 
+                child: Text('Test'),
               ),
             ],
           )

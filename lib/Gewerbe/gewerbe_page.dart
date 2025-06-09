@@ -87,18 +87,11 @@ class _GewerbePageState extends State<GewerbePage> {
                       elevation: const WidgetStatePropertyAll(0),
                       backgroundColor: const WidgetStatePropertyAll(Color.fromARGB(0, 0, 0, 0)),
                       shape: WidgetStateProperty.fromMap(<WidgetStatesConstraint, OutlinedBorder>{
-                        WidgetState.focused: RoundedRectangleBorder(
+                        WidgetState.any: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                           side: BorderSide(
                             width: 2,
                             color: eichwaldeGreen,
-                          )
-                        ),
-                        WidgetState.any: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: BorderSide(
-                            width: 1.5,
-                            color: Color.fromARGB(255, 100, 100, 100),
                           )
                         ),
                       }),
