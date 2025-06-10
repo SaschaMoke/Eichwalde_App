@@ -421,7 +421,7 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () => Navigator.push(context,MaterialPageRoute(builder: (context) => Newsseite(documentId:'')),), 
+                onPressed: () => Navigator.push(context,MaterialPageRoute(builder: (context) => Newsseite(documentId:'TestNews')),), 
                 child: Text('Test'),
               ),
             ],
