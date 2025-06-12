@@ -12,6 +12,21 @@ import 'Design/eichwalde_design.dart';
 import 'Gewerbe/Gewerbe_Module/Tools/pdf_viewer.dart';
 import 'settings.dart' as appsettings;
 
+//Newsfunktionen => wenn News extra Datei, dann diese Funktionen mitnehmen
+class NewsList{
+  String title;
+  String date;
+  String previewImg;
+  String docID;
+
+  NewsList({
+    required this.title,
+    required this.date,
+    required this.previewImg,
+    required this.docID,
+  });
+}
+
 Future<void> showUpdateLog(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   final currentVersion = '1.0';
@@ -287,7 +302,30 @@ class _HomepageState extends State<Homepage> {
     appsettings.Settings.updateAndMessageNotShown ? WidgetsBinding.instance.addPostFrameCallback((_) {
       showUpdateAndMessage(context);
     }):null;
+    loadNews();//Newsfunktionen => wenn News extra Datei, dann diese Funktionen mitnehmen
   }
+
+  //Newsfunktionen => wenn News extra Datei, dann diese Funktionen mitnehmen
+
+  List<NewsList> newsList = [];
+
+  Future<void> loadNews() async {
+    final snapshot = await FirebaseFirestore.instance.collection('NewsEichwalde').get();
+    setState(() {
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        newsList.add(
+          NewsList(
+            title: data['Title'], 
+            date: data['Date'], 
+            previewImg: data['Preview'],
+            docID: doc.id,
+          ),
+        );
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -380,7 +418,41 @@ class _HomepageState extends State<Homepage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(5),
-                    child: StreamBuilder<QuerySnapshot>(
+                    child: newsList.isNotEmpty ? ListView.builder(
+                      itemCount: newsList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final item = newsList[index];
+                        
+                        return Card(
+                          child: ListTile(
+                            leading: SizedBox(
+                              width: constraints.maxWidth*0.1,
+                              child: FadeInImage.assetNetwork(
+                                placeholder: 'Assets/IconEichwalde.png', 
+                                image: item.previewImg,
+                                imageErrorBuilder: (context, error, stackTrace) {
+                                  return Image(image: AssetImage('Assets/IconEichwalde.png'));
+                                },
+                              ),
+                            ),
+                            title: item.title.isNotEmpty ? Text(item.title):Text(style: TextStyle(fontStyle: FontStyle.italic), 'Kein Titel angegeben'),
+                            subtitle: Text('Vom: ${item.date}'),
+                            onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => Newsseite(documentId: item.docID)),),
+                          ),
+                        );
+                      },
+                    ):Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 25,
+                        ),
+                        'Keine Neuigkeiten vorhanden'
+                      ),
+                    ),
+                    
+                    /*child: StreamBuilder<QuerySnapshot>(
                       stream: newsCollection.orderBy('timestamp', descending: true).snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -416,13 +488,9 @@ class _HomepageState extends State<Homepage> {
                           }).toList(),
                         );
                       },
-                    ),
+                    ),*/
                   )
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.push(context,MaterialPageRoute(builder: (context) => Newsseite(documentId:'TestNews')),), 
-                child: Text('Test'),
               ),
             ],
           )

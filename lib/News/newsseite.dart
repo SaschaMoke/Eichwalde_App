@@ -42,12 +42,8 @@ class Newsseite extends StatefulWidget{
   State<Newsseite> createState() => _NewsseiteState();
 }
 
-//Bild: content ist Link, ContentSimple ist Untertitel
-
 class _NewsseiteState extends State<Newsseite> {
-  //test
   bool simpleAvailable = false;
-
   bool simpleLanguage = eichwalde_settings.Settings.simpleLanguage;
   String newsTitle = '';
   String newsAuthor = '';
@@ -87,26 +83,31 @@ class _NewsseiteState extends State<Newsseite> {
                   fontWeight: FontWeight.w500,
                   fontSize: MediaQuery.of(context).size.width*0.04,
                 ),
-                simpleLanguage ? section.contentSimple:section.content, 
+                simpleLanguage && section.contentSimple.isNotEmpty ? section.contentSimple:section.content, 
               ),
             );
           } else if (section.type == 'image') {
-            newsItems.add(//entsprechend style anpassen
+            newsItems.add(
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FadeInImage.assetNetwork(
-                    placeholder: 'Assets/IconEichwalde.png', 
-                    image: section.content,
-                    imageErrorBuilder: (context, error, stackTrace) {
-                       return Image(image: eichwaldeLogo);
-                    },
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadiusGeometry.circular(15),
+                      child: FadeInImage.assetNetwork(
+                        placeholder: 'Assets/IconEichwalde.png', 
+                        image: section.content,
+                        imageErrorBuilder: (context, error, stackTrace) {
+                           return Image(image: eichwaldeLogo);
+                        },
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 5),
-                  Text(
+                  if (section.contentSimple.isNotEmpty) Text(
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: MediaQuery.of(context).size.width*0.035,
+                      fontSize: MediaQuery.of(context).size.width*0.03,
                       fontStyle: FontStyle.italic,
                     ),
                     section.contentSimple, 
