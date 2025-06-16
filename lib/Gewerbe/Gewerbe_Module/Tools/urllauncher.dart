@@ -16,7 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showErrorBar(BoxConstraints constraints, BuildContext context) {
   return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Color.fromARGB(255, 50, 150, 50),
+        backgroundColor: const Color.fromARGB(255, 50, 150, 50),
         content: Text(
         style: TextStyle(
           fontWeight: FontWeight.w500,

@@ -204,21 +204,17 @@ class _VerkehrspageState extends State<Verkehrspage> {
                   ),
                 ],
               ), 
-              Row(
-                children: [
-                  SizedBox(
-                    width: constraints.maxWidth*0.025,
+              Padding(
+                padding: EdgeInsets.only(left: constraints.maxWidth*0.025),
+                child: Text(
+                  style: TextStyle(
+                    height: 0.5,
+                    fontSize: constraints.maxWidth*0.05,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w500,
                   ),
-                  Text(
-                    style: TextStyle(
-                      height: 0.5,
-                      fontSize: constraints.maxWidth*0.05,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    'Ort: $schrankeName'
-                  ),
-                ],
+                  'Ort: $schrankeName'
+                ),
               ),
               const SizedBox(height: 15),
               AnimatedContainer(//Schrankencontainer
@@ -393,19 +389,15 @@ class _VerkehrspageState extends State<Verkehrspage> {
               EichwaldeGradientBar(),
               //Abfahrtenbereich
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  SizedBox(
-                    width: constraints.maxWidth*0.025,
+              Padding(
+                padding: EdgeInsets.only(left: constraints.maxWidth*0.025),
+                child: Text(
+                  style: TextStyle(
+                    fontSize: constraints.maxWidth*0.09,
+                    fontWeight: FontWeight.w500,
                   ),
-                  Text(
-                    style: TextStyle(
-                      fontSize: constraints.maxWidth*0.09,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    'Abfahrten'
-                  ),
-                ],
+                  'Abfahrten'
+                ),
               ),   
               Align(
                 child: DropdownMenu<Stations>(

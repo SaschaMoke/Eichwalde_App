@@ -6,13 +6,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //App-Files
-import 'package:eichwalde_app/newscloud.dart';
+//import 'package:eichwalde_app/newscloud.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Design/eichwalde_design.dart';
 import 'Gewerbe/Gewerbe_Module/Tools/pdf_viewer.dart';
 import 'settings.dart' as appsettings;
+import 'package:eichwalde_app/Gewerbe/Gewerbe_Module/Tools/urllauncher.dart';
 
-//Newsfunktionen => wenn News extra Datei, dann diese Funktionen mitnehmen
+//"homepage.dart" umbenennen zu "news.dart", neue homepage datei
+
 class NewsList{
   String title;
   String date;
@@ -284,10 +286,10 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  int selectedIndex = 0;
+  //int selectedIndex = 0;
 
-  final Cloudnews cloudNews = Cloudnews();
-  final CollectionReference newsCollection = FirebaseFirestore.instance.collection('News');
+  //final Cloudnews cloudNews = Cloudnews();
+  //final CollectionReference newsCollection = FirebaseFirestore.instance.collection('News');
 
   Future<void> showUpdateAndMessage(BuildContext context) async {
     await showUpdateLog(context);
@@ -302,15 +304,18 @@ class _HomepageState extends State<Homepage> {
     appsettings.Settings.updateAndMessageNotShown ? WidgetsBinding.instance.addPostFrameCallback((_) {
       showUpdateAndMessage(context);
     }):null;
-    loadNews();//Newsfunktionen => wenn News extra Datei, dann diese Funktionen mitnehmen
+    loadNews();
   }
 
-  //Newsfunktionen => wenn News extra Datei, dann diese Funktionen mitnehmen
-
   List<NewsList> newsList = [];
+  String newsletterLink = '';
+  String newsletterEdition = '';
 
   Future<void> loadNews() async {
     final snapshot = await FirebaseFirestore.instance.collection('NewsEichwalde').get();
+    final snapshotNewsletter = await FirebaseFirestore.instance.collection('Newsletter').doc('Eichwalde').get();
+    final newsletterData = snapshotNewsletter.data();
+    
     setState(() {
       for (var doc in snapshot.docs) {
         final data = doc.data();
@@ -323,9 +328,10 @@ class _HomepageState extends State<Homepage> {
           ),
         );
       }
+      newsletterLink = newsletterData?['Link'];
+      newsletterEdition = newsletterData?['Edition'];
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -335,73 +341,100 @@ class _HomepageState extends State<Homepage> {
           height: MediaQuery.of(context).size.height*0.745,
           width: constraints.maxWidth*0.95,
           child: ListView(
-            children: [   
-              Row(
-                children: [
-                  SizedBox(
-                    width: constraints.maxWidth*0.025,
-                  ),
-                  Text(
-                    style: TextStyle(
-                      fontSize: constraints.maxWidth*0.09,
-                      fontWeight: FontWeight.w500,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: constraints.maxWidth*0.025), 
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          style: TextStyle(
+                            fontSize: constraints.maxWidth*0.09,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          'Newsletter'
+                        ),
+                        Text(
+                          style: TextStyle(
+                            height: 0.5,
+                            fontSize: constraints.maxWidth*0.05,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          'Ausgabe $newsletterEdition'
+                        ),
+                      ],
                     ),
-                    'Newsletter'
-                  ),
-                ],
-              ), 
-              SizedBox(
-                height: 150,
-                width: constraints.maxWidth*0.95,
-                child: Card(
-                  surfaceTintColor: eichwaldeGreen,
-                  elevation: 3,
-                  shape: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                      width: 3,
-                      color: eichwaldeGreen,
-                    )
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Card(
-                      child: ListTile(
-                        leading: Icon(Icons.newspaper_rounded),
-                        title: Text('Newsletter Beispiel'),
-                        trailing: IconButton(
-                          onPressed: () => Navigator.push(context, 
+                    SizedBox(
+                      width: constraints.maxWidth*0.15,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        if (newsletterLink.isNotEmpty) {
+                          Navigator.push(context, 
                             MaterialPageRoute(
                               builder: (_) => PDFViewer(
                                 constraints: constraints, 
-                                url: 'https://www.eichwalde.de/wp-content/uploads/2025/05/Newsletter-Ausgabe-1_2025.pdf',
+                                url: newsletterLink,
                                 title: 'Test',
                               ),
                             ), 
-                          ),
-                          icon: Icon(Icons.preview_rounded)
-                        ),
-                      ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: const Color.fromARGB(255, 200, 25, 0),
+                              content: Text(
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                fontWeight: FontWeight.w500,
+                                fontSize: constraints.maxWidth*0.035,
+                              ),
+                              'Fehler: Zurzeit ist kein Newsletter hinterlegt.'
+                              )
+                            )
+                          );
+                        } 
+                      },
+                      iconSize: constraints.maxWidth*0.085,
+                      color: newsletterLink.isNotEmpty ? eichwaldeGreen: const Color.fromARGB(255, 200, 25, 0),
+                      icon: const Icon(Icons.read_more_rounded),
                     ),
-                  )
+                    SizedBox(
+                      width: constraints.maxWidth*0.025,
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        final Uri url =  Uri.parse('https://www.eichwalde.de/newsletter-archiv/');
+                        if (!await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        )) {
+                          showErrorBar(constraints, context);
+                        }
+                      },
+                      iconSize: constraints.maxWidth*0.085,
+                      color: eichwaldeGreen,
+                      icon: const Icon(Icons.list_rounded),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 15),
               EichwaldeGradientBar(),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  SizedBox(
-                    width: constraints.maxWidth*0.025,
+              Padding(
+                padding: EdgeInsets.only(left: constraints.maxWidth*0.025),
+                child: Text(
+                  style: TextStyle(
+                    fontSize: constraints.maxWidth*0.09,
+                    fontWeight: FontWeight.w500,
                   ),
-                  Text(
-                    style: TextStyle(
-                      fontSize: constraints.maxWidth*0.09,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    'Aktuelles'
-                  ),
-                ],
+                  'Aktuelles'
+                ),
               ),
               SizedBox(
                 height: 300,
